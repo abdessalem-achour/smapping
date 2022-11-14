@@ -1,0 +1,8 @@
+prefix=/home/abdessalem/smapping/devel
+
+Name: openni2_camera
+Description: Description of openni2_camera
+Version: 1.6.0
+Cflags: -I/home/abdessalem/smapping/devel/include -I/home/abdessalem/smapping/src/openni2_camera/openni2_camera/include
+Libs: -L${prefix}/lib -lopenni2_wrapper
+Requires: camera_info_manager dynamic_reconfigure image_transport nodelet sensor_msgs roscpp message_runtime

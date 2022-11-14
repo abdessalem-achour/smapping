@@ -1,0 +1,44 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/abdessalem/smapping/src/openni2_camera/openni2_camera/include/openni2_camera/openni2_device_info.h
+ostream
+-
+boost/cstdint.hpp
+-
+
+/home/abdessalem/smapping/src/openni2_camera/openni2_camera/include/openni2_camera/openni2_device_manager.h
+openni2_camera/openni2_device_info.h
+/home/abdessalem/smapping/src/openni2_camera/openni2_camera/include/openni2_camera/openni2_camera/openni2_device_info.h
+boost/thread/mutex.hpp
+-
+vector
+-
+string
+-
+ostream
+-
+
+/home/abdessalem/smapping/src/openni2_camera/openni2_camera/include/openni2_camera/openni2_exception.h
+cstdarg
+-
+cstdio
+-
+exception
+-
+string
+-
+
+/home/abdessalem/smapping/src/openni2_camera/openni2_camera/src/list_devices.cpp
+iostream
+-
+openni2_camera/openni2_device_manager.h
+/home/abdessalem/smapping/src/openni2_camera/openni2_camera/src/openni2_camera/openni2_device_manager.h
+openni2_camera/openni2_exception.h
+/home/abdessalem/smapping/src/openni2_camera/openni2_camera/src/openni2_camera/openni2_exception.h
+

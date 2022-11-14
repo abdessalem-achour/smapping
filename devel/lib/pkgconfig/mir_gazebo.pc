@@ -1,0 +1,8 @@
+prefix=/home/abdessalem/smapping/devel
+
+Name: mir_gazebo
+Description: Description of mir_gazebo
+Version: 1.1.6
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,15 @@
+(cl:defpackage hypermap_msgs-msg
+  (:use )
+  (:export
+   "<HYPERMAPMETADATA>"
+   "HYPERMAPMETADATA"
+   "<LAYERMETADATA>"
+   "LAYERMETADATA"
+   "<SEMANTICMAP>"
+   "SEMANTICMAP"
+   "<SEMANTICMAPUPDATE>"
+   "SEMANTICMAPUPDATE"
+   "<SEMANTICOBJECT>"
+   "SEMANTICOBJECT"
+  ))
+

@@ -1,0 +1,19 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~euc_min_cluster" : \b [int] min cluster size for euclidean clustering min: 0, default: 250, max: 10000
+- \b "~euc_tolerance" : \b [double] tolerance for euclidean clustering min: 0.0, default: 0.1, max: 1.0
+- \b "~mps_min_inliers" : \b [int] min inlier size for mps min: 0, default: 1000, max: 100000
+- \b "~mps_angular_threshold" : \b [double] Angular threshold for mps min: 0.0, default: 3.0, max: 180.0
+- \b "~mps_distance_threshold" : \b [double] distance threshold for mps min: 0.0, default: 0.02, max: 1.0
+- \b "~ne_depth_change_factor" : \b [double] depth change factor for ne min: 0.0, default: 0.1, max: 1.0
+- \b "~ne_smoothing_size" : \b [double] smoothing size for ne min: 0.0, default: 50.0, max: 180.0
+- \b "~eapc_distance_threshold" : \b [double] distance threshold for eapc min: 0.0, default: 0.01, max: 1.0
+- \b "~links_min" : \b [double] links min min: -1.0, default: 0.2, max: 1.0
+- \b "~links_max" : \b [double] links max min: 0.0, default: 0.1, max: 10.0
+- \b "~rechts_min" : \b [double] recht min min: 0.0, default: 0.9, max: 1.0
+- \b "~rechts_max" : \b [double] rechts max min: 0.0, default: 0.1, max: 10.0
+- \b "~hinten_min" : \b [double] hinten min min: 0.0, default: 1.0, max: 5.0
+- \b "~hinten_max" : \b [double] hinten max min: 5.0, default: 5.0, max: 10.0
+

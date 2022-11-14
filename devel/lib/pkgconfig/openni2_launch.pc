@@ -1,0 +1,8 @@
+prefix=/home/abdessalem/smapping/devel
+
+Name: openni2_launch
+Description: Description of openni2_launch
+Version: 1.6.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

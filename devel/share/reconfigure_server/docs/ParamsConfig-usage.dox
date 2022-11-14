@@ -1,0 +1,20 @@
+\subsubsection usage Usage
+\verbatim
+<node name="mapping" pkg="semmapping" type="mapping">
+  <param name="euc_min_cluster" type="int" value="250" />
+  <param name="euc_tolerance" type="double" value="0.1" />
+  <param name="mps_min_inliers" type="int" value="1000" />
+  <param name="mps_angular_threshold" type="double" value="3.0" />
+  <param name="mps_distance_threshold" type="double" value="0.02" />
+  <param name="ne_depth_change_factor" type="double" value="0.1" />
+  <param name="ne_smoothing_size" type="double" value="50.0" />
+  <param name="eapc_distance_threshold" type="double" value="0.01" />
+  <param name="links_min" type="double" value="0.2" />
+  <param name="links_max" type="double" value="0.1" />
+  <param name="rechts_min" type="double" value="0.9" />
+  <param name="rechts_max" type="double" value="0.1" />
+  <param name="hinten_min" type="double" value="1.0" />
+  <param name="hinten_max" type="double" value="5.0" />
+</node>
+\endverbatim
+

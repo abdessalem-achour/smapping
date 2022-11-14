@@ -1,0 +1,8 @@
+prefix=/home/abdessalem/smapping/install
+
+Name: hypermap_rviz_plugin
+Description: Description of hypermap_rviz_plugin
+Version: 0.1.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lhypermap_rviz_plugin
+Requires: 

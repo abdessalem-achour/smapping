@@ -1,0 +1,8 @@
+prefix=/home/abdessalem/smapping/devel
+
+Name: move_slow_and_clear
+Description: Description of move_slow_and_clear
+Version: 1.17.2
+Cflags: -I/home/abdessalem/smapping/src/navigation/move_slow_and_clear/include
+Libs: -L${prefix}/lib -lmove_slow_and_clear
+Requires: geometry_msgs nav_core pluginlib roscpp

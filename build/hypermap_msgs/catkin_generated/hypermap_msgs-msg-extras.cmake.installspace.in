@@ -1,0 +1,2 @@
+set(hypermap_msgs_MESSAGE_FILES "msg/LayerMetaData.msg;msg/HypermapMetaData.msg;msg/SemanticObject.msg;msg/SemanticMap.msg;msg/SemanticMapUpdate.msg")
+set(hypermap_msgs_SERVICE_FILES "srv/GetIntAtPoint.srv;srv/GetIntsByArea.srv;srv/GetLocationsByInt.srv;srv/GetLocationsByString.srv;srv/GetSemanticByArea.srv;srv/GetSemanticByString.srv;srv/GetStringAtPoint.srv;srv/GetStringsByArea.srv;srv/LoadMap.srv;srv/StoreMap.srv")
