@@ -209,13 +209,9 @@ namespace semmapping
 
         public:
             SemanticMap(tf2_ros::Buffer &tfBuffer, pcl::visualization::PCLVisualizer* &viewer, boost::mutex &viewer_mtx, int &semmap_vport0, int &semmap_vport1, semmapping::ParamsConfig &param_config );
-
             void addEvidence(const std::string &name, const polygon &pg, double mean_height,  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
             void removeEvidence(const polygon &visibilityArea, const point &robot);
-
-            //int deleteLeastConsistentShape(size_t id);
             void deleteLeastConsistentShape(size_t id);
-            //void cleanupShapes(SemanticObject &obj);
             void updateUnion(size_t id);
             void filterIntersectionThresh(std::set<size_t> &object_list, const polygon &pg);
             int findFittingExistingShape(std::vector<UncertainShape> &shapes, const polygon &pg);
