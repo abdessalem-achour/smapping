@@ -180,6 +180,7 @@ semmapping::polygon getPolygonInMap(pcl::PointCloud<pcl::PointXYZ>::ConstPtr clo
     coefficients->values[2] = 1.0;
     coefficients->values[3] = 0;
 
+    // Project the cloud in the XY-plane
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_projected(new pcl::PointCloud<pcl::PointXYZ>);
     pcl::ProjectInliers<pcl::PointXYZ> proj;
     proj.setModelType(pcl::SACMODEL_PLANE);
@@ -187,12 +188,15 @@ semmapping::polygon getPolygonInMap(pcl::PointCloud<pcl::PointXYZ>::ConstPtr clo
     proj.setInputCloud(cloud);
     proj.filter(*cloud_projected);
 
+    // Filter the projected points
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered(new pcl::PointCloud<pcl::PointXYZ>());
     pcl::VoxelGrid<pcl::PointXYZ> sor;
     sor.setInputCloud(cloud_projected);
     sor.setLeafSize(0.02f, 0.02f, 0.02f);
     sor.filter(*cloud_filtered);
 
+
+    // Create a Concave Hull representation of the projected inliers
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_hull(new pcl::PointCloud<pcl::PointXYZ>);
     pcl::ConvexHull<pcl::PointXYZ> chull;
     chull.setInputCloud(cloud_filtered);
@@ -453,6 +457,7 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data)
             return;
         }
 
+        /*Filtering the point cloud: downsample the original point clouds using a leaf size of 2cm*/
         pcl::PointCloud<pcl::PointXYZ>::Ptr ds_cloud(new pcl::PointCloud<pcl::PointXYZ>());
         pcl::VoxelGrid<pcl::PointXYZ> sor;
         sor.setInputCloud(pclCloud);
@@ -463,6 +468,7 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data)
         pcl::PointCloud<pcl::PointXYZ>::Ptr orig_cloud = pclCloud;
         pclCloud = ds_cloud;
 
+        /*Identifying and deleting floor, wall, table points from the point cloud*/
         pcl::PointIndices::Ptr floor_inds(new pcl::PointIndices);
         pcl::PointIndices::Ptr without_floor_inds(new pcl::PointIndices);
         std::vector<pcl::PointIndices> floor_ind_vector;
@@ -496,11 +502,13 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data)
         pcl::PointIndices::Ptr inds_outlier_free(new pcl::PointIndices);
         inds_outlier_free = removeOutliers(pclCloud, inds_without_floor_wall_and_table);
 
+        /*Clustering object point clouds*/
         std::vector<pcl::PointIndices> debug_vis_box_clusters;
         std::vector<pcl::PointIndices> clusters;
         std::vector<pcl::PointIndices> table_clusters;
         clusters = getObjectPointsEuc(pclCloud, inds_outlier_free);
 
+        /*Saving tables clusters*/
         if (table_inds->indices.empty() == false)
             table_clusters = getObjectPointsEuc(pclCloud, table_inds);
 
@@ -510,6 +518,7 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data)
             box_inds = dsBoxPoints(box.ymin, box.xmin, box.ymax - box.ymin, box.xmax - box.xmin, orig_cloud, sor);
             std::string Class = box.Class;
 
+            /*Associate clusters to detection boxes*/
             if (box.Class == "Table") {
                 if (table_clusters.size() > 0)
                     indiceBoxAssociaton(table_clusters, box_inds, best_inds, true, Class);
@@ -518,7 +527,9 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data)
                 indiceBoxAssociaton(clusters, box_inds, best_inds, false, Class);
             }
 
+            /*Save object 3D model in res_cloud*/
             pcl::PointCloud<pcl::PointXYZ>::Ptr res_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+
             if (best_inds.size() > 0)
                 res_cloud = pointCloudFromInd(best_inds, pclCloud);
             else {
@@ -531,7 +542,9 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data)
                 continue;
             }
 
+            /*Create the polygon convex from the 3D model (res_cloud) and save it in res_pg*/
             semmapping::polygon res_pg = getPolygonInMap(res_cloud);
+
             if (res_pg.outer().empty()) {
                 ROS_WARN_STREAM("Polygon in map could not be reconstructed for obj: " << box.Class);
                 continue;

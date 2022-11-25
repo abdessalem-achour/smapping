@@ -235,7 +235,7 @@ namespace semmapping
         return combinedId;
     }
 
-    // V1
+    // V1 - add new object or update existing object
     void SemanticMap::addEvidence(const std::string &name, const polygon &pg, double mean_height, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
     {
         //check if polygon lies on table and filter table plan
@@ -280,35 +280,36 @@ namespace semmapping
             updateUnion(objectId);
         }
 
-    pcl::PassThrough<pcl::PointXYZ> pass;
-    for (size_t table_id : tableList){
-        SemanticObject &table = objectList.at(table_id);
-        std::set<size_t> tableObjects = getObjectsInRange(table.shape_union);
-        for (size_t id : tableObjects)
-        {
-            SemanticObject &tableObj = objectList.at(id);
-            if (tableObj.name == "Table"){
-                continue;
-            }
-            pass.setInputCloud (tableObj.point_cloud);
-            pass.setFilterFieldName ("z");
-            pass.setFilterLimits (table.mean_height-0.20, table.mean_height+0.02);
-            pass.setNegative (true);
-            pass.filter(*tableObj.point_cloud);
-            if(tableObj.point_cloud->points.size() < 5)
+        pcl::PassThrough<pcl::PointXYZ> pass;
+        
+        for (size_t table_id : tableList){
+            SemanticObject &table = objectList.at(table_id);
+            std::set<size_t> tableObjects = getObjectsInRange(table.shape_union);
+            for (size_t id : tableObjects)
             {
-                ROS_INFO_STREAM("Object " << tableObj.name << " removed beacause it was in table points");
-                removeObject(id);
+                SemanticObject &tableObj = objectList.at(id);
+                if (tableObj.name == "Table"){
+                    continue;
+                }
+                pass.setInputCloud (tableObj.point_cloud);
+                pass.setFilterFieldName ("z");
+                pass.setFilterLimits (table.mean_height-0.20, table.mean_height+0.02);
+                pass.setNegative (true);
+                pass.filter(*tableObj.point_cloud);
+                if(tableObj.point_cloud->points.size() < 5)
+                {
+                    ROS_INFO_STREAM("Object " << tableObj.name << " removed beacause it was in table points");
+                    removeObject(id);
+                }
+                else{
+                    double angel;
+                    tableObj.shape_union = computeConvexHullPcl(tableObj.point_cloud);
+                    tableObj.oriented_box = create_oriented_box(tableObj.shape_union, angel);
+                    tableObj.rotation_angle = angel;
+                    tableObj.obb = polygonFromBox(tableObj.oriented_box, tableObj.rotation_angle);}
             }
-            else{
-                double angel;
-                tableObj.shape_union = computeConvexHullPcl(tableObj.point_cloud);
-                tableObj.oriented_box = create_oriented_box(tableObj.shape_union, angel);
-                tableObj.rotation_angle = angel;
-                tableObj.obb = polygonFromBox(tableObj.oriented_box, tableObj.rotation_angle);}
         }
     }
-}
 
     double calculateCertainty(std::queue<int> counting_queue){
         int hit = 0;
