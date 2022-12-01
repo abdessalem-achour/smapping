@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -40,7 +40,7 @@ struct ResourcesState_
    typedef  ::std_msgs::Header_<ContainerAllocator>  _header_type;
   _header_type header;
 
-   typedef std::vector< ::mir_msgs::ResourceState_<ContainerAllocator> , typename ContainerAllocator::template rebind< ::mir_msgs::ResourceState_<ContainerAllocator> >::other >  _resources_type;
+   typedef std::vector< ::mir_msgs::ResourceState_<ContainerAllocator> , typename std::allocator_traits<ContainerAllocator>::template rebind_alloc< ::mir_msgs::ResourceState_<ContainerAllocator> >> _resources_type;
   _resources_type resources;
 
 

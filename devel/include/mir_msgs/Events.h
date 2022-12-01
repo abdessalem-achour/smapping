@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -40,7 +40,7 @@ struct Events_
    typedef  ::std_msgs::Header_<ContainerAllocator>  _header_type;
   _header_type header;
 
-   typedef std::vector< ::mir_msgs::Event_<ContainerAllocator> , typename ContainerAllocator::template rebind< ::mir_msgs::Event_<ContainerAllocator> >::other >  _events_type;
+   typedef std::vector< ::mir_msgs::Event_<ContainerAllocator> , typename std::allocator_traits<ContainerAllocator>::template rebind_alloc< ::mir_msgs::Event_<ContainerAllocator> >> _events_type;
   _events_type events;
 
 

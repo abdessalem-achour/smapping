@@ -84,6 +84,24 @@ ros/message_operations.h
 geometry_msgs/Point.h
 -
 
+/home/abdessalem/smapping/devel/include/mapping_msgs/ObbMap.h
+string
+-
+vector
+-
+memory
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+geometry_msgs/Polygon.h
+-
+
 /home/abdessalem/smapping/devel/include/mapping_msgs/ObjectPositions.h
 string
 -
@@ -237,6 +255,10 @@ chrono
 -
 pcl/surface/concave_hull.h
 -
+geometry_msgs/Polygon.h
+-
+mapping_msgs/ObbMap.h
+-
 
 /home/abdessalem/smapping/src/sem_mapping/semmapping/src/mapping.cpp
 ros/ros.h
@@ -375,6 +397,8 @@ mapping_msgs/SemanticMap.h
 /home/abdessalem/smapping/src/sem_mapping/semmapping/src/mapping_msgs/SemanticMap.h
 geometry_msgs/PolygonStamped.h
 -
+geometry_msgs/Polygon.h
+-
 pcl/filters/model_outlier_removal.h
 -
 boxsyncpolicy.h
@@ -396,6 +420,8 @@ mapping_msgs/BoxesAndClouds.h
 mapping_msgs/FindObjects.h
 -
 mapping_msgs/ObjectPositions.h
+-
+mapping_msgs/ObbMap.h
 -
 rosgraph_msgs/Clock.h
 /home/abdessalem/smapping/src/sem_mapping/semmapping/src/rosgraph_msgs/Clock.h

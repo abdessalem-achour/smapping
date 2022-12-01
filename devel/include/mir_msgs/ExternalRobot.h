@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -70,7 +70,7 @@ struct ExternalRobot_
    typedef uint32_t _type_id_type;
   _type_id_type type_id;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _name_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _name_type;
   _name_type name;
 
    typedef double _robot_length_type;
@@ -79,10 +79,10 @@ struct ExternalRobot_
    typedef double _robot_width_type;
   _robot_width_type robot_width;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _footprint_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _footprint_type;
   _footprint_type footprint;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _ip_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _ip_type;
   _ip_type ip;
 
    typedef uint32_t _map_id_type;
@@ -367,15 +367,15 @@ struct Printer< ::mir_msgs::ExternalRobot_<ContainerAllocator> >
     s << indent << "type_id: ";
     Printer<uint32_t>::stream(s, indent + "  ", v.type_id);
     s << indent << "name: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.name);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.name);
     s << indent << "robot_length: ";
     Printer<double>::stream(s, indent + "  ", v.robot_length);
     s << indent << "robot_width: ";
     Printer<double>::stream(s, indent + "  ", v.robot_width);
     s << indent << "footprint: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.footprint);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.footprint);
     s << indent << "ip: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.ip);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.ip);
     s << indent << "map_id: ";
     Printer<uint32_t>::stream(s, indent + "  ", v.map_id);
     s << indent << "priority: ";

@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -40,7 +40,7 @@ struct ExternalRobots_
    typedef  ::std_msgs::Header_<ContainerAllocator>  _header_type;
   _header_type header;
 
-   typedef std::vector< ::mir_msgs::ExternalRobot_<ContainerAllocator> , typename ContainerAllocator::template rebind< ::mir_msgs::ExternalRobot_<ContainerAllocator> >::other >  _robots_type;
+   typedef std::vector< ::mir_msgs::ExternalRobot_<ContainerAllocator> , typename std::allocator_traits<ContainerAllocator>::template rebind_alloc< ::mir_msgs::ExternalRobot_<ContainerAllocator> >> _robots_type;
   _robots_type robots;
 
 

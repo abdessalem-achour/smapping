@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -55,10 +55,10 @@ struct EncoderTestEntry_
    typedef double _right_dist_type;
   _right_dist_type right_dist;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _suggested_direction_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _suggested_direction_type;
   _suggested_direction_type suggested_direction;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _user_direction_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _user_direction_type;
   _user_direction_type user_direction;
 
 
@@ -233,9 +233,9 @@ struct Printer< ::mir_msgs::EncoderTestEntry_<ContainerAllocator> >
     s << indent << "right_dist: ";
     Printer<double>::stream(s, indent + "  ", v.right_dist);
     s << indent << "suggested_direction: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.suggested_direction);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.suggested_direction);
     s << indent << "user_direction: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.user_direction);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.user_direction);
   }
 };
 

@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -34,7 +34,7 @@ struct PlanSegments_
 
 
 
-   typedef std::vector< ::mir_msgs::PlanSegment_<ContainerAllocator> , typename ContainerAllocator::template rebind< ::mir_msgs::PlanSegment_<ContainerAllocator> >::other >  _p_segments_type;
+   typedef std::vector< ::mir_msgs::PlanSegment_<ContainerAllocator> , typename std::allocator_traits<ContainerAllocator>::template rebind_alloc< ::mir_msgs::PlanSegment_<ContainerAllocator> >> _p_segments_type;
   _p_segments_type p_segments;
 
 

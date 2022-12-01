@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -164,7 +164,7 @@ struct MirMoveBaseGoal_
    typedef uint8_t _same_goal_type;
   _same_goal_type same_goal;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _pose_frame_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _pose_frame_type;
   _pose_frame_type pose_frame;
 
    typedef  ::geometry_msgs::Pose2D_<ContainerAllocator>  _pose_type;
@@ -593,7 +593,7 @@ struct Printer< ::mir_actions::MirMoveBaseGoal_<ContainerAllocator> >
     s << indent << "same_goal: ";
     Printer<uint8_t>::stream(s, indent + "  ", v.same_goal);
     s << indent << "pose_frame: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.pose_frame);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.pose_frame);
     s << indent << "pose: ";
     s << std::endl;
     Printer< ::geometry_msgs::Pose2D_<ContainerAllocator> >::stream(s, indent + "  ", v.pose);

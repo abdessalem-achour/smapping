@@ -78,6 +78,7 @@
 #include "mapping_msgs/BoundingBoxes.h"
 #include "mapping_msgs/SemanticMap.h"
 #include <geometry_msgs/PolygonStamped.h>
+#include <geometry_msgs/Polygon.h>
 #include <pcl/filters/model_outlier_removal.h>
 
 
@@ -93,6 +94,7 @@
 #include <mapping_msgs/BoxesAndClouds.h>
 #include <mapping_msgs/FindObjects.h>
 #include <mapping_msgs/ObjectPositions.h>
+#include <mapping_msgs/ObbMap.h>
 #include "rosgraph_msgs/Clock.h"
 #include <pcl/sample_consensus/sac_model_normal_plane.h>
 
@@ -110,6 +112,7 @@ ros::Publisher semanticMapPub;
 ros::Publisher debugCloudPub;
 ros::Publisher debug2CloudPub;
 ros::Publisher position_pub;
+ros::Publisher ObbMapPub;
 
 //pcl::visualization::CloudViewer *viewer;
 pcl::visualization::PCLVisualizer *viewer;
@@ -398,11 +401,12 @@ void mapUpdateAndPublish(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclCloud, semm
         comp_area_msg.header.frame_id = "map";
         comp_area_msg.header.stamp = cloud->header.stamp;
         completeAreaPgPub.publish(comp_area_msg);
-
         map.removeEvidence(comp_area, robot_position);
     }
     mapping_msgs::SemanticMap::Ptr map_msg = map.createMapMessage(robot_position, false);
     semanticMapPub.publish(map_msg);
+    mapping_msgs::ObbMap::Ptr obb_map_msg = map.createObbMapMessage();
+    ObbMapPub.publish(obb_map_msg);
     return;
 }
 
@@ -636,6 +640,7 @@ int main(int argc, char **argv) {
     debugCloudPub = nh.advertise<sensor_msgs::PointCloud2>("debug_cloud", 1, true);
     debug2CloudPub = nh.advertise<sensor_msgs::PointCloud2>("debug2_cloud", 1, true);
     position_pub = nh.advertise<mapping_msgs::ObjectPositions>("found_objects", 1, true);
+    ObbMapPub = nh.advertise<mapping_msgs::ObbMap>("/obb_map", 1, true);
 
     ros::AsyncSpinner spinner(16);
     spinner.start();

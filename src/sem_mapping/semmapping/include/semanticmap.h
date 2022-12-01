@@ -20,6 +20,8 @@
 #include <pcl/filters/radius_outlier_removal.h>
 #include <chrono>
 #include <pcl/surface/concave_hull.h>
+#include <geometry_msgs/Polygon.h>
+#include <mapping_msgs/ObbMap.h>
 
 namespace semmapping
 {
@@ -235,6 +237,7 @@ namespace semmapping
             std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsEuc(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
             std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsReg(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
             mapping_msgs::SemanticMap::Ptr createMapMessage(const point &robot,double loaded);
+            mapping_msgs::ObbMap::Ptr createObbMapMessage();
             mapping_msgs::ObjectPositions::Ptr findObjectPosition(const mapping_msgs::FindObjects &request);
             bool writeMapData(std::ostream &output);
             bool writeLikelihoodData(std::ostream &output);

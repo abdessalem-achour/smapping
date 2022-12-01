@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -37,7 +37,7 @@ struct MissionCtrlCommand_
 
 
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _description_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _description_type;
   _description_type description;
 
    typedef int32_t _cmd_type;
@@ -241,7 +241,7 @@ struct Printer< ::mir_msgs::MissionCtrlCommand_<ContainerAllocator> >
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::mir_msgs::MissionCtrlCommand_<ContainerAllocator>& v)
   {
     s << indent << "description: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.description);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.description);
     s << indent << "cmd: ";
     Printer<int32_t>::stream(s, indent + "  ", v.cmd);
     s << indent << "mission_id: ";

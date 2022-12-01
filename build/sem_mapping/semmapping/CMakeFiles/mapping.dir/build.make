@@ -265,8 +265,8 @@ mapping_EXTERNAL_OBJECTS =
 /home/abdessalem/smapping/devel/lib/semmapping/mapping: /usr/lib/x86_64-linux-gnu/libpcl_apps.so
 /home/abdessalem/smapping/devel/lib/semmapping/mapping: /usr/lib/x86_64-linux-gnu/libpcl_outofcore.so
 /home/abdessalem/smapping/devel/lib/semmapping/mapping: /usr/lib/x86_64-linux-gnu/libpcl_people.so
-/home/abdessalem/smapping/devel/lib/semmapping/mapping: /usr/lib/x86_64-linux-gnu/libboost_system.so
-/home/abdessalem/smapping/devel/lib/semmapping/mapping: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so
+/home/abdessalem/smapping/devel/lib/semmapping/mapping: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0
+/home/abdessalem/smapping/devel/lib/semmapping/mapping: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0
 /home/abdessalem/smapping/devel/lib/semmapping/mapping: /usr/lib/x86_64-linux-gnu/libboost_date_time.so
 /home/abdessalem/smapping/devel/lib/semmapping/mapping: /usr/lib/x86_64-linux-gnu/libboost_iostreams.so
 /home/abdessalem/smapping/devel/lib/semmapping/mapping: /usr/lib/x86_64-linux-gnu/libboost_regex.so

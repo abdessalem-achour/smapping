@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -102,16 +102,16 @@ struct RobotStatus_
    typedef float _distance_to_next_target_type;
   _distance_to_next_target_type distance_to_next_target;
 
-   typedef std::vector< ::mir_msgs::Error_<ContainerAllocator> , typename ContainerAllocator::template rebind< ::mir_msgs::Error_<ContainerAllocator> >::other >  _errors_type;
+   typedef std::vector< ::mir_msgs::Error_<ContainerAllocator> , typename std::allocator_traits<ContainerAllocator>::template rebind_alloc< ::mir_msgs::Error_<ContainerAllocator> >> _errors_type;
   _errors_type errors;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _footprint_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _footprint_type;
   _footprint_type footprint;
 
    typedef  ::mir_msgs::HookStatus_<ContainerAllocator>  _hook_status_type;
   _hook_status_type hook_status;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _map_id_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _map_id_type;
   _map_id_type map_id;
 
    typedef uint8_t _unloaded_map_changes_type;
@@ -120,13 +120,13 @@ struct RobotStatus_
    typedef int32_t _mission_queue_id_type;
   _mission_queue_id_type mission_queue_id;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _mission_text_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _mission_text_type;
   _mission_text_type mission_text;
 
    typedef int32_t _mode_id_type;
   _mode_id_type mode_id;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _mode_text_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _mode_text_type;
   _mode_text_type mode_text;
 
    typedef double _moved_type;
@@ -135,19 +135,19 @@ struct RobotStatus_
    typedef  ::mir_msgs::Pose2D_<ContainerAllocator>  _position_type;
   _position_type position;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _robot_name_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _robot_name_type;
   _robot_name_type robot_name;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _session_id_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _session_id_type;
   _session_id_type session_id;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _software_version_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _software_version_type;
   _software_version_type software_version;
 
    typedef uint8_t _state_id_type;
   _state_id_type state_id;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _state_text_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _state_text_type;
   _state_text_type state_text;
 
    typedef int32_t _uptime_type;
@@ -165,10 +165,10 @@ struct RobotStatus_
    typedef uint8_t _joystick_low_speed_mode_enabled_type;
   _joystick_low_speed_mode_enabled_type joystick_low_speed_mode_enabled;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _joystick_web_session_id_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _joystick_web_session_id_type;
   _joystick_web_session_id_type joystick_web_session_id;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _mode_key_state_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _mode_key_state_type;
   _mode_key_state_type mode_key_state;
 
 
@@ -488,37 +488,37 @@ struct Printer< ::mir_msgs::RobotStatus_<ContainerAllocator> >
       Printer< ::mir_msgs::Error_<ContainerAllocator> >::stream(s, indent + "    ", v.errors[i]);
     }
     s << indent << "footprint: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.footprint);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.footprint);
     s << indent << "hook_status: ";
     s << std::endl;
     Printer< ::mir_msgs::HookStatus_<ContainerAllocator> >::stream(s, indent + "  ", v.hook_status);
     s << indent << "map_id: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.map_id);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.map_id);
     s << indent << "unloaded_map_changes: ";
     Printer<uint8_t>::stream(s, indent + "  ", v.unloaded_map_changes);
     s << indent << "mission_queue_id: ";
     Printer<int32_t>::stream(s, indent + "  ", v.mission_queue_id);
     s << indent << "mission_text: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.mission_text);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.mission_text);
     s << indent << "mode_id: ";
     Printer<int32_t>::stream(s, indent + "  ", v.mode_id);
     s << indent << "mode_text: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.mode_text);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.mode_text);
     s << indent << "moved: ";
     Printer<double>::stream(s, indent + "  ", v.moved);
     s << indent << "position: ";
     s << std::endl;
     Printer< ::mir_msgs::Pose2D_<ContainerAllocator> >::stream(s, indent + "  ", v.position);
     s << indent << "robot_name: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.robot_name);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.robot_name);
     s << indent << "session_id: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.session_id);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.session_id);
     s << indent << "software_version: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.software_version);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.software_version);
     s << indent << "state_id: ";
     Printer<uint8_t>::stream(s, indent + "  ", v.state_id);
     s << indent << "state_text: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.state_text);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.state_text);
     s << indent << "uptime: ";
     Printer<int32_t>::stream(s, indent + "  ", v.uptime);
     s << indent << "velocity: ";
@@ -532,9 +532,9 @@ struct Printer< ::mir_msgs::RobotStatus_<ContainerAllocator> >
     s << indent << "joystick_low_speed_mode_enabled: ";
     Printer<uint8_t>::stream(s, indent + "  ", v.joystick_low_speed_mode_enabled);
     s << indent << "joystick_web_session_id: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.joystick_web_session_id);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.joystick_web_session_id);
     s << indent << "mode_key_state: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.mode_key_state);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.mode_key_state);
   }
 };
 

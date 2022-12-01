@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -61,7 +61,7 @@ struct HookExtendedStatus_
    typedef float _angle_type;
   _angle_type angle;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _qr_marker_name_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _qr_marker_name_type;
   _qr_marker_name_type qr_marker_name;
 
 
@@ -264,7 +264,7 @@ struct Printer< ::mir_msgs::HookExtendedStatus_<ContainerAllocator> >
     s << indent << "angle: ";
     Printer<float>::stream(s, indent + "  ", v.angle);
     s << indent << "qr_marker_name: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.qr_marker_name);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.qr_marker_name);
   }
 };
 

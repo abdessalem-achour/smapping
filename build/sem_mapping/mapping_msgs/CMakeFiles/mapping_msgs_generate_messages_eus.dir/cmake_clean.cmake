@@ -4,6 +4,7 @@ file(REMOVE_RECURSE
   "/home/abdessalem/smapping/devel/share/roseus/ros/mapping_msgs/msg/BoundingBoxes.l"
   "/home/abdessalem/smapping/devel/share/roseus/ros/mapping_msgs/msg/BoxesAndClouds.l"
   "/home/abdessalem/smapping/devel/share/roseus/ros/mapping_msgs/msg/FindObjects.l"
+  "/home/abdessalem/smapping/devel/share/roseus/ros/mapping_msgs/msg/ObbMap.l"
   "/home/abdessalem/smapping/devel/share/roseus/ros/mapping_msgs/msg/ObjectCount.l"
   "/home/abdessalem/smapping/devel/share/roseus/ros/mapping_msgs/msg/ObjectPositions.l"
   "/home/abdessalem/smapping/devel/share/roseus/ros/mapping_msgs/msg/SemanticMap.l"

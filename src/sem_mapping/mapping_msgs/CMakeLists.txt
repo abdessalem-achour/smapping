@@ -24,6 +24,7 @@ add_message_files(
     FindObjects.msg
     SemanticMap.msg
     SemanticObject.msg
+    ObbMap.msg
 )
 
 

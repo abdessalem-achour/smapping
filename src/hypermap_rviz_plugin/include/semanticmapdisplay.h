@@ -9,7 +9,6 @@
 #include "rviz/properties/bool_property.h"
 #include "rviz/properties/float_property.h"
 #include "rviz/properties/status_property.h"
-// #include "hypermap_msgs/SemanticMap.h"
 #include "mapping_msgs/SemanticMap.h"
 
 namespace hypermap {
@@ -41,6 +40,7 @@ protected:
 
   rviz::RosTopicProperty *topic_property_;
   rviz::BoolProperty *show_polygons_property_;
+  rviz::BoolProperty *show_obbs_property_;
   rviz::BoolProperty *show_labels_property_;
   rviz::FloatProperty *char_height_property_;
 

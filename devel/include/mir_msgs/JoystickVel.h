@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -36,7 +36,7 @@ struct JoystickVel_
 
 
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _joystick_token_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _joystick_token_type;
   _joystick_token_type joystick_token;
 
    typedef  ::geometry_msgs::Twist_<ContainerAllocator>  _speed_command_type;
@@ -213,7 +213,7 @@ struct Printer< ::mir_msgs::JoystickVel_<ContainerAllocator> >
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::mir_msgs::JoystickVel_<ContainerAllocator>& v)
   {
     s << indent << "joystick_token: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.joystick_token);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.joystick_token);
     s << indent << "speed_command: ";
     s << std::endl;
     Printer< ::geometry_msgs::Twist_<ContainerAllocator> >::stream(s, indent + "  ", v.speed_command);

@@ -1,8 +1,0 @@
-prefix=/home/abdessalem/smapping/install
-
-Name: cob_gazebo_tools
-Description: Description of cob_gazebo_tools
-Version: 0.7.6
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

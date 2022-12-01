@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -34,7 +34,7 @@ struct Devices_
 
 
 
-   typedef std::vector< ::mir_msgs::Device_<ContainerAllocator> , typename ContainerAllocator::template rebind< ::mir_msgs::Device_<ContainerAllocator> >::other >  _devices_type;
+   typedef std::vector< ::mir_msgs::Device_<ContainerAllocator> , typename std::allocator_traits<ContainerAllocator>::template rebind_alloc< ::mir_msgs::Device_<ContainerAllocator> >> _devices_type;
   _devices_type devices;
 
 

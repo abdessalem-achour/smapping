@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -38,7 +38,7 @@ struct RobotState_
    typedef uint8_t _robotState_type;
   _robotState_type robotState;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _robotStateString_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _robotStateString_type;
   _robotStateString_type robotStateString;
 
 
@@ -292,7 +292,7 @@ struct Printer< ::mir_msgs::RobotState_<ContainerAllocator> >
     s << indent << "robotState: ";
     Printer<uint8_t>::stream(s, indent + "  ", v.robotState);
     s << indent << "robotStateString: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.robotStateString);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.robotStateString);
   }
 };
 

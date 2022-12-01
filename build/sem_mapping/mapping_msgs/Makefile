@@ -111,18 +111,6 @@ install/local/fast: preinstall/fast
 	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
 .PHONY : install/local/fast
 
-# Special rule for the target install/strip
-install/strip: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip
-
-# Special rule for the target install/strip
-install/strip/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip/fast
-
 # Special rule for the target install
 install: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
@@ -134,6 +122,18 @@ install/fast: preinstall/fast
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
 	/usr/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -198,6 +198,21 @@ mapping_msgs_genlisp/fast:
 .PHONY : mapping_msgs_genlisp/fast
 
 # Convenience name for target.
+sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_geneus.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_geneus.dir/rule
+.PHONY : sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_geneus.dir/rule
+
+# Convenience name for target.
+mapping_msgs_geneus: sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_geneus.dir/rule
+
+.PHONY : mapping_msgs_geneus
+
+# fast build rule for target.
+mapping_msgs_geneus/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_geneus.dir/build.make sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_geneus.dir/build
+.PHONY : mapping_msgs_geneus/fast
+
+# Convenience name for target.
 sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gennodejs.dir/rule:
 	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gennodejs.dir/rule
 .PHONY : sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gennodejs.dir/rule
@@ -226,21 +241,6 @@ _mapping_msgs_generate_messages_check_deps_SemanticObject: sem_mapping/mapping_m
 _mapping_msgs_generate_messages_check_deps_SemanticObject/fast:
 	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/mapping_msgs/CMakeFiles/_mapping_msgs_generate_messages_check_deps_SemanticObject.dir/build.make sem_mapping/mapping_msgs/CMakeFiles/_mapping_msgs_generate_messages_check_deps_SemanticObject.dir/build
 .PHONY : _mapping_msgs_generate_messages_check_deps_SemanticObject/fast
-
-# Convenience name for target.
-sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_geneus.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_geneus.dir/rule
-.PHONY : sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_geneus.dir/rule
-
-# Convenience name for target.
-mapping_msgs_geneus: sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_geneus.dir/rule
-
-.PHONY : mapping_msgs_geneus
-
-# fast build rule for target.
-mapping_msgs_geneus/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_geneus.dir/build.make sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_geneus.dir/build
-.PHONY : mapping_msgs_geneus/fast
 
 # Convenience name for target.
 sem_mapping/mapping_msgs/CMakeFiles/_mapping_msgs_generate_messages_check_deps_BoundingBox.dir/rule:
@@ -301,51 +301,6 @@ _mapping_msgs_generate_messages_check_deps_ObjectCount: sem_mapping/mapping_msgs
 _mapping_msgs_generate_messages_check_deps_ObjectCount/fast:
 	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/mapping_msgs/CMakeFiles/_mapping_msgs_generate_messages_check_deps_ObjectCount.dir/build.make sem_mapping/mapping_msgs/CMakeFiles/_mapping_msgs_generate_messages_check_deps_ObjectCount.dir/build
 .PHONY : _mapping_msgs_generate_messages_check_deps_ObjectCount/fast
-
-# Convenience name for target.
-sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_genpy.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_genpy.dir/rule
-.PHONY : sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_genpy.dir/rule
-
-# Convenience name for target.
-mapping_msgs_genpy: sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_genpy.dir/rule
-
-.PHONY : mapping_msgs_genpy
-
-# fast build rule for target.
-mapping_msgs_genpy/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_genpy.dir/build.make sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_genpy.dir/build
-.PHONY : mapping_msgs_genpy/fast
-
-# Convenience name for target.
-sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_nodejs.dir/rule
-.PHONY : sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-mapping_msgs_generate_messages_nodejs: sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_nodejs.dir/rule
-
-.PHONY : mapping_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-mapping_msgs_generate_messages_nodejs/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_nodejs.dir/build.make sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_nodejs.dir/build
-.PHONY : mapping_msgs_generate_messages_nodejs/fast
-
-# Convenience name for target.
-sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gencpp.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gencpp.dir/rule
-.PHONY : sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gencpp.dir/rule
-
-# Convenience name for target.
-mapping_msgs_gencpp: sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gencpp.dir/rule
-
-.PHONY : mapping_msgs_gencpp
-
-# fast build rule for target.
-mapping_msgs_gencpp/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gencpp.dir/build.make sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gencpp.dir/build
-.PHONY : mapping_msgs_gencpp/fast
 
 # Convenience name for target.
 sem_mapping/mapping_msgs/CMakeFiles/_mapping_msgs_generate_messages_check_deps_BoxesAndClouds.dir/rule:
@@ -423,6 +378,66 @@ _mapping_msgs_generate_messages_check_deps_FindObjects/fast:
 .PHONY : _mapping_msgs_generate_messages_check_deps_FindObjects/fast
 
 # Convenience name for target.
+sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_genpy.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_genpy.dir/rule
+.PHONY : sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_genpy.dir/rule
+
+# Convenience name for target.
+mapping_msgs_genpy: sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_genpy.dir/rule
+
+.PHONY : mapping_msgs_genpy
+
+# fast build rule for target.
+mapping_msgs_genpy/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_genpy.dir/build.make sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_genpy.dir/build
+.PHONY : mapping_msgs_genpy/fast
+
+# Convenience name for target.
+sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_nodejs.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_nodejs.dir/rule
+.PHONY : sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_nodejs.dir/rule
+
+# Convenience name for target.
+mapping_msgs_generate_messages_nodejs: sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_nodejs.dir/rule
+
+.PHONY : mapping_msgs_generate_messages_nodejs
+
+# fast build rule for target.
+mapping_msgs_generate_messages_nodejs/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_nodejs.dir/build.make sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_nodejs.dir/build
+.PHONY : mapping_msgs_generate_messages_nodejs/fast
+
+# Convenience name for target.
+sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gencpp.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gencpp.dir/rule
+.PHONY : sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gencpp.dir/rule
+
+# Convenience name for target.
+mapping_msgs_gencpp: sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gencpp.dir/rule
+
+.PHONY : mapping_msgs_gencpp
+
+# fast build rule for target.
+mapping_msgs_gencpp/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gencpp.dir/build.make sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_gencpp.dir/build
+.PHONY : mapping_msgs_gencpp/fast
+
+# Convenience name for target.
+sem_mapping/mapping_msgs/CMakeFiles/_mapping_msgs_generate_messages_check_deps_ObbMap.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 sem_mapping/mapping_msgs/CMakeFiles/_mapping_msgs_generate_messages_check_deps_ObbMap.dir/rule
+.PHONY : sem_mapping/mapping_msgs/CMakeFiles/_mapping_msgs_generate_messages_check_deps_ObbMap.dir/rule
+
+# Convenience name for target.
+_mapping_msgs_generate_messages_check_deps_ObbMap: sem_mapping/mapping_msgs/CMakeFiles/_mapping_msgs_generate_messages_check_deps_ObbMap.dir/rule
+
+.PHONY : _mapping_msgs_generate_messages_check_deps_ObbMap
+
+# fast build rule for target.
+_mapping_msgs_generate_messages_check_deps_ObbMap/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/mapping_msgs/CMakeFiles/_mapping_msgs_generate_messages_check_deps_ObbMap.dir/build.make sem_mapping/mapping_msgs/CMakeFiles/_mapping_msgs_generate_messages_check_deps_ObbMap.dir/build
+.PHONY : _mapping_msgs_generate_messages_check_deps_ObbMap/fast
+
+# Convenience name for target.
 sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_cpp.dir/rule:
 	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_cpp.dir/rule
 .PHONY : sem_mapping/mapping_msgs/CMakeFiles/mapping_msgs_generate_messages_cpp.dir/rule
@@ -464,24 +479,25 @@ help:
 	@echo "... test"
 	@echo "... mapping_msgs_generate_messages_py"
 	@echo "... mapping_msgs_genlisp"
-	@echo "... mapping_msgs_gennodejs"
-	@echo "... _mapping_msgs_generate_messages_check_deps_SemanticObject"
 	@echo "... install/local"
 	@echo "... mapping_msgs_geneus"
+	@echo "... mapping_msgs_gennodejs"
+	@echo "... _mapping_msgs_generate_messages_check_deps_SemanticObject"
 	@echo "... _mapping_msgs_generate_messages_check_deps_BoundingBox"
 	@echo "... mapping_msgs_generate_messages_lisp"
 	@echo "... _mapping_msgs_generate_messages_check_deps_SemanticMap"
 	@echo "... _mapping_msgs_generate_messages_check_deps_ObjectCount"
-	@echo "... install/strip"
-	@echo "... mapping_msgs_genpy"
-	@echo "... mapping_msgs_generate_messages_nodejs"
-	@echo "... mapping_msgs_gencpp"
 	@echo "... _mapping_msgs_generate_messages_check_deps_BoxesAndClouds"
 	@echo "... install"
 	@echo "... _mapping_msgs_generate_messages_check_deps_ObjectPositions"
 	@echo "... mapping_msgs_generate_messages"
 	@echo "... _mapping_msgs_generate_messages_check_deps_BoundingBoxes"
 	@echo "... _mapping_msgs_generate_messages_check_deps_FindObjects"
+	@echo "... install/strip"
+	@echo "... mapping_msgs_genpy"
+	@echo "... mapping_msgs_generate_messages_nodejs"
+	@echo "... mapping_msgs_gencpp"
+	@echo "... _mapping_msgs_generate_messages_check_deps_ObbMap"
 	@echo "... mapping_msgs_generate_messages_cpp"
 	@echo "... mapping_msgs_generate_messages_eus"
 .PHONY : help

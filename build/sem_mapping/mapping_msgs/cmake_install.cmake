@@ -47,6 +47,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/FindObjects.msg"
     "/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/SemanticMap.msg"
     "/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/SemanticObject.msg"
+    "/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/ObbMap.msg"
     )
 endif()
 

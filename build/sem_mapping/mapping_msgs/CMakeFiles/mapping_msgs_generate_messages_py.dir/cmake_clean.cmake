@@ -3,6 +3,7 @@ file(REMOVE_RECURSE
   "/home/abdessalem/smapping/devel/lib/python3/dist-packages/mapping_msgs/msg/_BoundingBoxes.py"
   "/home/abdessalem/smapping/devel/lib/python3/dist-packages/mapping_msgs/msg/_BoxesAndClouds.py"
   "/home/abdessalem/smapping/devel/lib/python3/dist-packages/mapping_msgs/msg/_FindObjects.py"
+  "/home/abdessalem/smapping/devel/lib/python3/dist-packages/mapping_msgs/msg/_ObbMap.py"
   "/home/abdessalem/smapping/devel/lib/python3/dist-packages/mapping_msgs/msg/_ObjectCount.py"
   "/home/abdessalem/smapping/devel/lib/python3/dist-packages/mapping_msgs/msg/_ObjectPositions.py"
   "/home/abdessalem/smapping/devel/lib/python3/dist-packages/mapping_msgs/msg/_SemanticMap.py"

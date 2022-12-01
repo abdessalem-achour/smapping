@@ -166,23 +166,23 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_lisp: /home/abdessalem/
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobot.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobot.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobot.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobot.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobot.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobot.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobot.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobot.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobot.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobot.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobot.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobot.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Generating Lisp code from mir_msgs/ExternalRobot.msg"
 	cd /home/abdessalem/smapping/build/mir_robot/mir_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobot.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg
 
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobots.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobots.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobots.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobots.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobots.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobots.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobots.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobots.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobot.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobots.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobots.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobots.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobot.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobots.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobots.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ExternalRobots.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Generating Lisp code from mir_msgs/ExternalRobots.msg"
 	cd /home/abdessalem/smapping/build/mir_robot/mir_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobots.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg
 
@@ -203,9 +203,9 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_lisp: /home/abdessalem/
 
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/HookExtendedStatus.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/HookExtendedStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/HookExtendedStatus.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/HookExtendedStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/GripperState.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/HookExtendedStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/BrakeState.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/HookExtendedStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/HeightState.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/HookExtendedStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/GripperState.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Generating Lisp code from mir_msgs/HookExtendedStatus.msg"
 	cd /home/abdessalem/smapping/build/mir_robot/mir_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/HookExtendedStatus.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg
 
@@ -222,8 +222,8 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_lisp: /home/abdessalem/
 
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/JoystickVel.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/JoystickVel.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/JoystickVel.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/JoystickVel.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/JoystickVel.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/JoystickVel.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Generating Lisp code from mir_msgs/JoystickVel.msg"
 	cd /home/abdessalem/smapping/build/mir_robot/mir_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/JoystickVel.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg
 
@@ -255,8 +255,8 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_lisp: /home/abdessalem/
 
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/Path.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/Path.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Path.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/Path.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Pose2D.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/Path.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/Path.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Pose2D.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Generating Lisp code from mir_msgs/Path.msg"
 	cd /home/abdessalem/smapping/build/mir_robot/mir_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Path.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg
 
@@ -268,21 +268,21 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_lisp: /home/abdessalem/
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegment.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegment.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/PlanSegment.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegment.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegment.lisp: /opt/ros/noetic/share/geometry_msgs/msg/PoseStamped.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegment.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegment.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegment.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegment.lisp: /opt/ros/noetic/share/geometry_msgs/msg/PoseStamped.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegment.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegment.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Generating Lisp code from mir_msgs/PlanSegment.msg"
 	cd /home/abdessalem/smapping/build/mir_robot/mir_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/PlanSegment.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg
 
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegments.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegments.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/PlanSegments.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegments.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegments.lisp: /opt/ros/noetic/share/geometry_msgs/msg/PoseStamped.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegments.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegments.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegments.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegments.lisp: /opt/ros/noetic/share/geometry_msgs/msg/PoseStamped.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegments.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/PlanSegment.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegments.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/PlanSegments.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Generating Lisp code from mir_msgs/PlanSegments.msg"
 	cd /home/abdessalem/smapping/build/mir_robot/mir_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/PlanSegments.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg
 
@@ -309,8 +309,8 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_lisp: /home/abdessalem/
 
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ResourcesState.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ResourcesState.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourcesState.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ResourcesState.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ResourcesState.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourceState.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ResourcesState.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/ResourcesState.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Generating Lisp code from mir_msgs/ResourcesState.msg"
 	cd /home/abdessalem/smapping/build/mir_robot/mir_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourcesState.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg
@@ -333,12 +333,12 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_lisp: /home/abdessalem/
 
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/RobotStatus.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/RobotStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/RobotStatus.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/RobotStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Pose2D.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/RobotStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/UserPrompt.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/RobotStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/HookStatus.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/RobotStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Error.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/RobotStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Trolley.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/RobotStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Twist2D.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/RobotStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Pose2D.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/RobotStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/HookStatus.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/RobotStatus.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/UserPrompt.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Generating Lisp code from mir_msgs/RobotStatus.msg"
 	cd /home/abdessalem/smapping/build/mir_robot/mir_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/RobotStatus.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg
 
@@ -360,8 +360,8 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_lisp: /home/abdessalem/
 
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/StampedEncoders.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/StampedEncoders.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/StampedEncoders.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/StampedEncoders.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Encoders.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/StampedEncoders.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/StampedEncoders.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Encoders.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Generating Lisp code from mir_msgs/StampedEncoders.msg"
 	cd /home/abdessalem/smapping/build/mir_robot/mir_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/StampedEncoders.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg
 
@@ -387,32 +387,32 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_lisp: /home/abdessalem/
 
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/WorldMap.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourceState.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobots.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobots.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourceState.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourcesState.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobot.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldMap.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Generating Lisp code from mir_msgs/WorldMap.msg"
 	cd /home/abdessalem/smapping/build/mir_robot/mir_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/WorldMap.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg
 
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/WorldModel.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/WorldMap.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourceState.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobots.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourcesState.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourceState.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourcesState.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/WorldMap.msg
+/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobot.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
-/home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg/WorldModel.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Generating Lisp code from mir_msgs/WorldModel.msg"
 	cd /home/abdessalem/smapping/build/mir_robot/mir_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/WorldModel.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/share/common-lisp/ros/mir_msgs/msg
 

@@ -45,12 +45,14 @@ SemanticMapDisplay::SemanticMapDisplay() : rviz::Display(), loaded_(false)
                                                  "hypermap_msgs::SemanticMap topic to subscribe to.", this, SLOT(updateTopic()));
 
     show_polygons_property_ = new rviz::BoolProperty("Show shapes", true, "Display shapes of semantic objects", this);
+    show_obbs_property_ = new rviz::BoolProperty("Show obbs", true, "Display obbs of semantic objects", this);
     show_labels_property_ = new rviz::BoolProperty("Show labels", true, "Display names of semantic objects", this);
     char_height_property_ = new rviz::FloatProperty("Char height", 0.3, "Char height for labels", this);
     show_classes_property_ = new rviz::Property("Select classes", QVariant(), "Change which classes are shown", this);
 
     connect(this, SIGNAL(mapReceived()), this, SLOT(updateVisual()));
     connect(show_polygons_property_, SIGNAL(changed()), this, SLOT(updateVisual()));
+    connect(show_obbs_property_, SIGNAL(changed()), this, SLOT(updateVisual()));
     connect(show_labels_property_, SIGNAL(changed()), this, SLOT(updateVisual()));
     connect(char_height_property_, SIGNAL(changed()), this, SLOT(updateVisual()));
 }
@@ -212,6 +214,52 @@ void SemanticMapDisplay::updateVisual()
             mo->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_TRIANGLE_LIST);
             bool shape_valid = true;
             for (const auto &point : obj.shape.points)
+            {
+                if (!std::isfinite(point.x) || !std::isfinite(point.y))
+                {
+                    ROS_WARN_STREAM("Invalid shape detected");
+                    shape_valid = false;
+                    break;
+                }
+                mo->position(point.x, point.y, 0);
+                mo->colour(col);
+                //ROS_INFO_STREAM("Point added: " <<  point.x << ", " << point.y);
+            }
+            if (!shape_valid)
+            {
+                delete mo;
+                continue;
+            }
+
+            for (uint32_t ind : indices)
+            {
+                mo->index(ind);
+            }
+            mo->end();
+            //double mo_prio = 1.0 / mo->getBoundingRadius();
+            //ROS_INFO_STREAM("Prio: " << mo_prio);
+            //ushort mo_prio_sh = (ushort)(mo_prio * 1000);
+            //mo->setRenderQueueGroupAndPriority(0, mo_prio_sh);
+            scene_node_->attachObject(mo);
+        }
+
+        if (show_obbs_property_->getBool())
+        {
+            std::vector<std::vector<geometry_msgs::Point32>> pg;
+            pg.push_back(obj.obb.points);
+            std::vector<uint32_t> indices = mapbox::earcut(pg);
+            //ROS_INFO_STREAM("Inds : " << indices.size());
+            Ogre::ManualObject *mo = scene_manager_->createManualObject();
+            //Ogre::ColourValue col(glasbey[cind][0] / 255.0, glasbey[cind][1] / 255.0, glasbey[cind][2] / 255.0);
+            //cind = (cind + 1) % 256;
+            uint8_t cind = (2 + c_it->second) % 256;
+            Ogre::ColourValue col(glasbey[cind][0] / 255.0, glasbey[cind][1] / 255.0, glasbey[cind][2] / 255.0);
+
+            mo->estimateVertexCount(obj.obb.points.size());
+            mo->estimateIndexCount(indices.size());
+            mo->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+            bool shape_valid = true;
+            for (const auto &point : obj.obb.points)
             {
                 if (!std::isfinite(point.x) || !std::isfinite(point.y))
                 {

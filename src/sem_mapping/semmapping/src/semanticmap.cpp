@@ -178,39 +178,39 @@ namespace semmapping
         if (obj.times_merged > 5){
             std::vector<pcl::PointCloud<pcl::PointXYZ>> point_cloud_cluster;
             if (!obj.point_cloud->empty()){
-    //            obj.point_cloud = removeOutliers(obj.point_cloud);
-                obj.times_merged = 0;
-                point_cloud_cluster = getObjectPointsEuc(obj.point_cloud);
-                *obj.point_cloud = point_cloud_cluster[0];
-    //            if(point_cloud_cluster.size()==1){
-    //                *obj.point_cloud = point_cloud_cluster[0];
-    //            }
-    //            else if (point_cloud_cluster.size()>1){
-    //                *obj.point_cloud = point_cloud_cluster[0];
-    //                for(int i=1;i<point_cloud_cluster.size();i++){
-    //                    pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
-    //                    *temp_cloud = point_cloud_cluster[i];
-    //                    double height = calculateMeanHight(temp_cloud);
-    //                    addNewObject(obj.name,computeConvexHullPcl(temp_cloud),height,temp_cloud);
-    //                }
-    //            }
+        //            obj.point_cloud = removeOutliers(obj.point_cloud);
+                    obj.times_merged = 0;
+                    point_cloud_cluster = getObjectPointsEuc(obj.point_cloud);
+                    *obj.point_cloud = point_cloud_cluster[0];
+        //            if(point_cloud_cluster.size()==1){
+        //                *obj.point_cloud = point_cloud_cluster[0];
+        //            }
+        //            else if (point_cloud_cluster.size()>1){
+        //                *obj.point_cloud = point_cloud_cluster[0];
+        //                for(int i=1;i<point_cloud_cluster.size();i++){
+        //                    pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+        //                    *temp_cloud = point_cloud_cluster[i];
+        //                    double height = calculateMeanHight(temp_cloud);
+        //                    addNewObject(obj.name,computeConvexHullPcl(temp_cloud),height,temp_cloud);
+        //                }
+        //            }
             }
         }
-    //multi_point obj_cloud;
-    double biggest_area_size = 0;
-    double angle;
-    obj.isCombined = true;
-    obj.shape_union = computeConvexHullPcl(obj.point_cloud);
-    obj.oriented_box = create_oriented_box(obj.shape_union, angle);
-    obj.rotation_angle = angle;
-    obj.obb = polygonFromBox(obj.oriented_box, obj.rotation_angle);
-    bg::centroid(obj.obb, obj.oriented_box_cen);
-    bg::centroid( obj.shape_union, obj.shape_union_cen);
+        //multi_point obj_cloud;
+        double biggest_area_size = 0;
+        double angle;
+        obj.isCombined = true;
+        obj.shape_union = computeConvexHullPcl(obj.point_cloud);
+        obj.oriented_box = create_oriented_box(obj.shape_union, angle);
+        obj.rotation_angle = angle;
+        obj.obb = polygonFromBox(obj.oriented_box, obj.rotation_angle);
+        bg::centroid(obj.obb, obj.oriented_box_cen);
+        bg::centroid( obj.shape_union, obj.shape_union_cen);
 
-    objectRtree.remove(std::make_pair(obj.bounding_box, id));
-    obj.bounding_box = bg::return_envelope<box>(obj.shape_union);
-    objectRtree.insert(std::make_pair(obj.bounding_box, id));
-}
+        objectRtree.remove(std::make_pair(obj.bounding_box, id));
+        obj.bounding_box = bg::return_envelope<box>(obj.shape_union);
+        objectRtree.insert(std::make_pair(obj.bounding_box, id));
+    }
 
     size_t SemanticMap::combineObjects(std::set<size_t> objects)
     {
@@ -301,12 +301,14 @@ namespace semmapping
                     ROS_INFO_STREAM("Object " << tableObj.name << " removed beacause it was in table points");
                     removeObject(id);
                 }
-                else{
+                else
+                {
                     double angel;
                     tableObj.shape_union = computeConvexHullPcl(tableObj.point_cloud);
                     tableObj.oriented_box = create_oriented_box(tableObj.shape_union, angel);
                     tableObj.rotation_angle = angel;
-                    tableObj.obb = polygonFromBox(tableObj.oriented_box, tableObj.rotation_angle);}
+                    tableObj.obb = polygonFromBox(tableObj.oriented_box, tableObj.rotation_angle);
+                }
             }
         }
     }
@@ -544,6 +546,7 @@ namespace semmapping
         std::vector<int> remove_ids;
 
         mapping_msgs::SemanticMap::Ptr map(new mapping_msgs::SemanticMap);
+
         for (auto &val : objectList)
         {
             viewer_index += 1;
@@ -591,34 +594,49 @@ namespace semmapping
             }
         }
 
-    // for likelihood evaluation only
-    // if(loaded == false) {
-    //     if (isChair == true) {
+        // for likelihood evaluation only
+        // if(loaded == false) {
+        //     if (isChair == true) {
 
-    //         likelihood_value_chair.push_back(objectList.at(chairID).exist_certainty);
-    //         time_value_chair.push_back(current_time);
-    //     }
-    //     if (isChair == false) {
-    //         likelihood_value_chair.push_back(0.0);
-    //         time_value_chair.push_back(current_time);
-    //     }
-    //     if (isTable == true) {
-    //         likelihood_value_table.push_back(objectList.at(tableID).exist_certainty);
-    //         time_value_table.push_back(current_time);
-    //     }
-    //     if (isTable == false) {
-    //         likelihood_value_table.push_back(0.0);
-    //         time_value_table.push_back(current_time);
-    //     }
-    // }
+        //         likelihood_value_chair.push_back(objectList.at(chairID).exist_certainty);
+        //         time_value_chair.push_back(current_time);
+        //     }
+        //     if (isChair == false) {
+        //         likelihood_value_chair.push_back(0.0);
+        //         time_value_chair.push_back(current_time);
+        //     }
+        //     if (isTable == true) {
+        //         likelihood_value_table.push_back(objectList.at(tableID).exist_certainty);
+        //         time_value_table.push_back(current_time);
+        //     }
+        //     if (isTable == false) {
+        //         likelihood_value_table.push_back(0.0);
+        //         time_value_table.push_back(current_time);
+        //     }
+        // }
     
-    for(int i= 0; i<remove_ids.size(); i++){
-        removeObject(remove_ids[i]);
+        for(int i= 0; i<remove_ids.size(); i++){
+            removeObject(remove_ids[i]);
+        }
+        map->header.frame_id = "map";
+        map->header.stamp = ros::Time::now();
+        return map;
     }
-    map->header.frame_id = "map";
-    map->header.stamp = ros::Time::now();
-    return map;
-}
+
+    mapping_msgs::ObbMap::Ptr SemanticMap::createObbMapMessage()
+    {
+        mapping_msgs::ObbMap::Ptr obb_map(new mapping_msgs::ObbMap);
+
+        for (auto &val : objectList)
+            {
+                SemanticObject &obj = val.second;
+                geometry_msgs::Polygon obb_msg;
+                obb_msg = boostToPolygonMsg(obj.obb);
+                obb_map->objects_obb.push_back(std::move(obb_msg));
+            }
+    
+        return obb_map;
+    }
 
     bool SemanticMap::writeLikelihoodData(std::ostream &output)
     {

@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -152,7 +152,7 @@ struct BMSData_
    typedef int32_t _temperature_type;
   _temperature_type temperature;
 
-   typedef std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  _cell_voltage_type;
+   typedef std::vector<uint32_t, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<uint32_t>> _cell_voltage_type;
   _cell_voltage_type cell_voltage;
 
    typedef uint32_t _bmz_flag_type;

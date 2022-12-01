@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -42,10 +42,10 @@ struct SoundEvent_
    typedef ros::Time _time_stamp_type;
   _time_stamp_type time_stamp;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _sound_guid_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _sound_guid_type;
   _sound_guid_type sound_guid;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _message_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _message_type;
   _message_type message;
 
    typedef uint8_t _event_type;
@@ -281,9 +281,9 @@ struct Printer< ::mir_msgs::SoundEvent_<ContainerAllocator> >
     s << indent << "time_stamp: ";
     Printer<ros::Time>::stream(s, indent + "  ", v.time_stamp);
     s << indent << "sound_guid: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.sound_guid);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.sound_guid);
     s << indent << "message: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.message);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.message);
     s << indent << "event: ";
     Printer<uint8_t>::stream(s, indent + "  ", v.event);
   }

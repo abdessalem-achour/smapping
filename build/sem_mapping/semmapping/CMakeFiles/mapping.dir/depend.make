@@ -5,6 +5,7 @@ sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o: /home/abdessale
 sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o: /home/abdessalem/smapping/devel/include/mapping_msgs/BoundingBoxes.h
 sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o: /home/abdessalem/smapping/devel/include/mapping_msgs/BoxesAndClouds.h
 sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o: /home/abdessalem/smapping/devel/include/mapping_msgs/FindObjects.h
+sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o: /home/abdessalem/smapping/devel/include/mapping_msgs/ObbMap.h
 sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o: /home/abdessalem/smapping/devel/include/mapping_msgs/ObjectPositions.h
 sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o: /home/abdessalem/smapping/devel/include/mapping_msgs/SemanticMap.h
 sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o: /home/abdessalem/smapping/devel/include/mapping_msgs/SemanticObject.h
@@ -942,6 +943,7 @@ sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o: /usr/include/vt
 sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o: /usr/include/vtk-7.1/vtkkwiml/int.h
 
 sem_mapping/semmapping/CMakeFiles/mapping.dir/src/semanticmap.cpp.o: /home/abdessalem/smapping/devel/include/mapping_msgs/FindObjects.h
+sem_mapping/semmapping/CMakeFiles/mapping.dir/src/semanticmap.cpp.o: /home/abdessalem/smapping/devel/include/mapping_msgs/ObbMap.h
 sem_mapping/semmapping/CMakeFiles/mapping.dir/src/semanticmap.cpp.o: /home/abdessalem/smapping/devel/include/mapping_msgs/ObjectPositions.h
 sem_mapping/semmapping/CMakeFiles/mapping.dir/src/semanticmap.cpp.o: /home/abdessalem/smapping/devel/include/mapping_msgs/SemanticMap.h
 sem_mapping/semmapping/CMakeFiles/mapping.dir/src/semanticmap.cpp.o: /home/abdessalem/smapping/devel/include/mapping_msgs/SemanticObject.h

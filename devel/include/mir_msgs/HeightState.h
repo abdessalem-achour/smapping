@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -37,7 +37,7 @@ struct HeightState_
 
 
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _state_string_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _state_string_type;
   _state_string_type state_string;
 
    typedef uint8_t _state_type;
@@ -201,7 +201,7 @@ struct Printer< ::mir_msgs::HeightState_<ContainerAllocator> >
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::mir_msgs::HeightState_<ContainerAllocator>& v)
   {
     s << indent << "state_string: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.state_string);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.state_string);
     s << indent << "state: ";
     Printer<uint8_t>::stream(s, indent + "  ", v.state);
     s << indent << "height: ";

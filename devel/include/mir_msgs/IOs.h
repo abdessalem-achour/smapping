@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -49,7 +49,7 @@ struct IOs_
 
 
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _module_guid_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _module_guid_type;
   _module_guid_type module_guid;
 
    typedef uint8_t _connected_type;
@@ -61,19 +61,19 @@ struct IOs_
    typedef int8_t _num_inputs_type;
   _num_inputs_type num_inputs;
 
-   typedef std::vector<uint8_t, typename ContainerAllocator::template rebind<uint8_t>::other >  _input_state_type;
+   typedef std::vector<uint8_t, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<uint8_t>> _input_state_type;
   _input_state_type input_state;
 
    typedef int8_t _num_outputs_type;
   _num_outputs_type num_outputs;
 
-   typedef std::vector<uint8_t, typename ContainerAllocator::template rebind<uint8_t>::other >  _output_state_type;
+   typedef std::vector<uint8_t, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<uint8_t>> _output_state_type;
   _output_state_type output_state;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _ip_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _ip_type;
   _ip_type ip;
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _error_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _error_type;
   _error_type error;
 
 
@@ -274,7 +274,7 @@ struct Printer< ::mir_msgs::IOs_<ContainerAllocator> >
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::mir_msgs::IOs_<ContainerAllocator>& v)
   {
     s << indent << "module_guid: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.module_guid);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.module_guid);
     s << indent << "connected: ";
     Printer<uint8_t>::stream(s, indent + "  ", v.connected);
     s << indent << "status: ";
@@ -296,9 +296,9 @@ struct Printer< ::mir_msgs::IOs_<ContainerAllocator> >
       Printer<uint8_t>::stream(s, indent + "  ", v.output_state[i]);
     }
     s << indent << "ip: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.ip);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.ip);
     s << indent << "error: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.error);
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.error);
   }
 };
 

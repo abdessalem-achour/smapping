@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <memory>
 
 #include <ros/types.h>
 #include <ros/serialization.h>
@@ -40,10 +40,10 @@ struct WebPath_
    typedef int32_t _seq_type;
   _seq_type seq;
 
-   typedef std::vector<float, typename ContainerAllocator::template rebind<float>::other >  _x_type;
+   typedef std::vector<float, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<float>> _x_type;
   _x_type x;
 
-   typedef std::vector<float, typename ContainerAllocator::template rebind<float>::other >  _y_type;
+   typedef std::vector<float, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<float>> _y_type;
   _y_type y;
 
 
