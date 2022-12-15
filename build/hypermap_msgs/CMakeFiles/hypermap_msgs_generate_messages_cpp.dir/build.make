@@ -85,8 +85,8 @@ hypermap_msgs/CMakeFiles/hypermap_msgs_generate_messages_cpp: /home/abdessalem/s
 
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticObject.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticObject.h: /home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticObject.h: /opt/ros/noetic/share/geometry_msgs/msg/Polygon.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticObject.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticObject.h: /opt/ros/noetic/share/geometry_msgs/msg/Polygon.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticObject.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticObject.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating C++ code from hypermap_msgs/SemanticObject.msg"
@@ -96,17 +96,17 @@ hypermap_msgs/CMakeFiles/hypermap_msgs_generate_messages_cpp: /home/abdessalem/s
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMap.h: /home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticMap.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMap.h: /opt/ros/noetic/share/geometry_msgs/msg/Polygon.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMap.h: /home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMap.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMap.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMap.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMap.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMap.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Generating C++ code from hypermap_msgs/SemanticMap.msg"
 	cd /home/abdessalem/smapping/src/hypermap_msgs && /home/abdessalem/smapping/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticMap.msg -Ihypermap_msgs:/home/abdessalem/smapping/src/hypermap_msgs/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -p hypermap_msgs -o /home/abdessalem/smapping/devel/include/hypermap_msgs -e /opt/ros/noetic/share/gencpp/cmake/..
 
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMapUpdate.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMapUpdate.h: /home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticMapUpdate.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMapUpdate.h: /opt/ros/noetic/share/geometry_msgs/msg/Polygon.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMapUpdate.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMapUpdate.h: /opt/ros/noetic/share/geometry_msgs/msg/Polygon.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMapUpdate.h: /home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMapUpdate.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/SemanticMapUpdate.h: /opt/ros/noetic/share/gencpp/msg.h.template
@@ -115,9 +115,9 @@ hypermap_msgs/CMakeFiles/hypermap_msgs_generate_messages_cpp: /home/abdessalem/s
 
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntAtPoint.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntAtPoint.h: /home/abdessalem/smapping/src/hypermap_msgs/srv/GetIntAtPoint.srv
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntAtPoint.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntAtPoint.h: /opt/ros/noetic/share/geometry_msgs/msg/PointStamped.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntAtPoint.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntAtPoint.h: /opt/ros/noetic/share/geometry_msgs/msg/PointStamped.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntAtPoint.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntAtPoint.h: /opt/ros/noetic/share/gencpp/msg.h.template
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntAtPoint.h: /opt/ros/noetic/share/gencpp/srv.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Generating C++ code from hypermap_msgs/GetIntAtPoint.srv"
@@ -126,10 +126,10 @@ hypermap_msgs/CMakeFiles/hypermap_msgs_generate_messages_cpp: /home/abdessalem/s
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntsByArea.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntsByArea.h: /home/abdessalem/smapping/src/hypermap_msgs/srv/GetIntsByArea.srv
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntsByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/Polygon.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntsByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/PolygonStamped.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntsByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntsByArea.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntsByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntsByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/PolygonStamped.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntsByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntsByArea.h: /opt/ros/noetic/share/gencpp/msg.h.template
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetIntsByArea.h: /opt/ros/noetic/share/gencpp/srv.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Generating C++ code from hypermap_msgs/GetIntsByArea.srv"
@@ -138,10 +138,10 @@ hypermap_msgs/CMakeFiles/hypermap_msgs_generate_messages_cpp: /home/abdessalem/s
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByInt.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByInt.h: /home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByInt.srv
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByInt.h: /opt/ros/noetic/share/geometry_msgs/msg/Polygon.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByInt.h: /opt/ros/noetic/share/geometry_msgs/msg/PolygonStamped.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByInt.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByInt.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByInt.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByInt.h: /opt/ros/noetic/share/geometry_msgs/msg/PolygonStamped.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByInt.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByInt.h: /opt/ros/noetic/share/gencpp/msg.h.template
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByInt.h: /opt/ros/noetic/share/gencpp/srv.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Generating C++ code from hypermap_msgs/GetLocationsByInt.srv"
@@ -150,10 +150,10 @@ hypermap_msgs/CMakeFiles/hypermap_msgs_generate_messages_cpp: /home/abdessalem/s
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByString.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByString.h: /home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByString.srv
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByString.h: /opt/ros/noetic/share/geometry_msgs/msg/Polygon.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByString.h: /opt/ros/noetic/share/geometry_msgs/msg/PolygonStamped.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByString.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByString.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByString.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByString.h: /opt/ros/noetic/share/geometry_msgs/msg/PolygonStamped.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByString.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByString.h: /opt/ros/noetic/share/gencpp/msg.h.template
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetLocationsByString.h: /opt/ros/noetic/share/gencpp/srv.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Generating C++ code from hypermap_msgs/GetLocationsByString.srv"
@@ -162,11 +162,11 @@ hypermap_msgs/CMakeFiles/hypermap_msgs_generate_messages_cpp: /home/abdessalem/s
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByArea.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByArea.h: /home/abdessalem/smapping/src/hypermap_msgs/srv/GetSemanticByArea.srv
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/Polygon.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/PolygonStamped.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByArea.h: /home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByArea.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/PolygonStamped.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByArea.h: /opt/ros/noetic/share/gencpp/msg.h.template
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByArea.h: /opt/ros/noetic/share/gencpp/srv.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Generating C++ code from hypermap_msgs/GetSemanticByArea.srv"
@@ -174,8 +174,8 @@ hypermap_msgs/CMakeFiles/hypermap_msgs_generate_messages_cpp: /home/abdessalem/s
 
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByString.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByString.h: /home/abdessalem/smapping/src/hypermap_msgs/srv/GetSemanticByString.srv
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByString.h: /opt/ros/noetic/share/geometry_msgs/msg/Polygon.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByString.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByString.h: /opt/ros/noetic/share/geometry_msgs/msg/Polygon.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByString.h: /home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByString.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetSemanticByString.h: /opt/ros/noetic/share/gencpp/msg.h.template
@@ -185,9 +185,9 @@ hypermap_msgs/CMakeFiles/hypermap_msgs_generate_messages_cpp: /home/abdessalem/s
 
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringAtPoint.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringAtPoint.h: /home/abdessalem/smapping/src/hypermap_msgs/srv/GetStringAtPoint.srv
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringAtPoint.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringAtPoint.h: /opt/ros/noetic/share/geometry_msgs/msg/PointStamped.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringAtPoint.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringAtPoint.h: /opt/ros/noetic/share/geometry_msgs/msg/PointStamped.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringAtPoint.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringAtPoint.h: /opt/ros/noetic/share/gencpp/msg.h.template
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringAtPoint.h: /opt/ros/noetic/share/gencpp/srv.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Generating C++ code from hypermap_msgs/GetStringAtPoint.srv"
@@ -196,10 +196,10 @@ hypermap_msgs/CMakeFiles/hypermap_msgs_generate_messages_cpp: /home/abdessalem/s
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringsByArea.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringsByArea.h: /home/abdessalem/smapping/src/hypermap_msgs/srv/GetStringsByArea.srv
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringsByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/Polygon.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringsByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/PolygonStamped.msg
-/home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringsByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringsByArea.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringsByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringsByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/PolygonStamped.msg
+/home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringsByArea.h: /opt/ros/noetic/share/geometry_msgs/msg/Point32.msg
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringsByArea.h: /opt/ros/noetic/share/gencpp/msg.h.template
 /home/abdessalem/smapping/devel/include/hypermap_msgs/GetStringsByArea.h: /opt/ros/noetic/share/gencpp/srv.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Generating C++ code from hypermap_msgs/GetStringsByArea.srv"

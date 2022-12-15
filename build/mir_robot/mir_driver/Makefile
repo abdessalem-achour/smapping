@@ -80,38 +80,6 @@ install/local/fast: preinstall/fast
 	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
 .PHONY : install/local/fast
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
-# Special rule for the target test
-test:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
-	/usr/bin/ctest --force-new-ctest-process $(ARGS)
-.PHONY : test
-
-# Special rule for the target test
-test/fast: test
-
-.PHONY : test/fast
-
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
-
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-
-.PHONY : list_install_components/fast
-
 # Special rule for the target install
 install: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
@@ -124,6 +92,27 @@ install/fast: preinstall/fast
 	/usr/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
 
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -134,6 +123,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+
+.PHONY : test/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -168,94 +168,139 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/rule
+mir_robot/mir_driver/CMakeFiles/clean_test_results_mir_driver.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/clean_test_results_mir_driver.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/clean_test_results_mir_driver.dir/rule
 
 # Convenience name for target.
-rospy_message_converter_generate_messages_cpp: mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/rule
+clean_test_results_mir_driver: mir_robot/mir_driver/CMakeFiles/clean_test_results_mir_driver.dir/rule
 
-.PHONY : rospy_message_converter_generate_messages_cpp
+.PHONY : clean_test_results_mir_driver
 
 # fast build rule for target.
-rospy_message_converter_generate_messages_cpp/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/build
-.PHONY : rospy_message_converter_generate_messages_cpp/fast
+clean_test_results_mir_driver/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/clean_test_results_mir_driver.dir/build.make mir_robot/mir_driver/CMakeFiles/clean_test_results_mir_driver.dir/build
+.PHONY : clean_test_results_mir_driver/fast
 
 # Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_nodejs.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_nodejs.dir/rule
+mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/rule
 
 # Convenience name for target.
-move_base_msgs_generate_messages_nodejs: mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_nodejs.dir/rule
+_run_tests_mir_driver_roslaunch-check_launch: mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/rule
 
-.PHONY : move_base_msgs_generate_messages_nodejs
+.PHONY : _run_tests_mir_driver_roslaunch-check_launch
 
 # fast build rule for target.
-move_base_msgs_generate_messages_nodejs/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_nodejs.dir/build.make mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_nodejs.dir/build
-.PHONY : move_base_msgs_generate_messages_nodejs/fast
+_run_tests_mir_driver_roslaunch-check_launch/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/build.make mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/build
+.PHONY : _run_tests_mir_driver_roslaunch-check_launch/fast
 
 # Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_py.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_py.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_py.dir/rule
+mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/rule
 
 # Convenience name for target.
-move_base_msgs_generate_messages_py: mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_py.dir/rule
+_run_tests_mir_driver: mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/rule
 
-.PHONY : move_base_msgs_generate_messages_py
+.PHONY : _run_tests_mir_driver
 
 # fast build rule for target.
-move_base_msgs_generate_messages_py/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_py.dir/build.make mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_py.dir/build
-.PHONY : move_base_msgs_generate_messages_py/fast
+_run_tests_mir_driver/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/build.make mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/build
+.PHONY : _run_tests_mir_driver/fast
 
 # Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule
+mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/rule
 
 # Convenience name for target.
-visualization_msgs_generate_messages_cpp: mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule
+run_tests_mir_driver_roslaunch-check: mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/rule
 
-.PHONY : visualization_msgs_generate_messages_cpp
+.PHONY : run_tests_mir_driver_roslaunch-check
 
 # fast build rule for target.
-visualization_msgs_generate_messages_cpp/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/build
-.PHONY : visualization_msgs_generate_messages_cpp/fast
+run_tests_mir_driver_roslaunch-check/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/build.make mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/build
+.PHONY : run_tests_mir_driver_roslaunch-check/fast
 
 # Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_eus.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_eus.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_eus.dir/rule
+mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/rule
 
 # Convenience name for target.
-move_base_msgs_generate_messages_eus: mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_eus.dir/rule
+run_tests_mir_driver: mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/rule
 
-.PHONY : move_base_msgs_generate_messages_eus
+.PHONY : run_tests_mir_driver
 
 # fast build rule for target.
-move_base_msgs_generate_messages_eus/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_eus.dir/build.make mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_eus.dir/build
-.PHONY : move_base_msgs_generate_messages_eus/fast
+run_tests_mir_driver/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/build.make mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/build
+.PHONY : run_tests_mir_driver/fast
 
 # Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_cpp.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_cpp.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_cpp.dir/rule
+mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/rule
 
 # Convenience name for target.
-move_base_msgs_generate_messages_cpp: mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_cpp.dir/rule
+run_tests_mir_driver_roslaunch-check_launch: mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/rule
 
-.PHONY : move_base_msgs_generate_messages_cpp
+.PHONY : run_tests_mir_driver_roslaunch-check_launch
 
 # fast build rule for target.
-move_base_msgs_generate_messages_cpp/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_cpp.dir/build.make mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_cpp.dir/build
-.PHONY : move_base_msgs_generate_messages_cpp/fast
+run_tests_mir_driver_roslaunch-check_launch/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/build.make mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/build
+.PHONY : run_tests_mir_driver_roslaunch-check_launch/fast
+
+# Convenience name for target.
+mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule
+
+# Convenience name for target.
+visualization_msgs_generate_messages_py: mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule
+
+.PHONY : visualization_msgs_generate_messages_py
+
+# fast build rule for target.
+visualization_msgs_generate_messages_py/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/build
+.PHONY : visualization_msgs_generate_messages_py/fast
+
+# Convenience name for target.
+mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/rule
+
+# Convenience name for target.
+visualization_msgs_generate_messages_nodejs: mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/rule
+
+.PHONY : visualization_msgs_generate_messages_nodejs
+
+# fast build rule for target.
+visualization_msgs_generate_messages_nodejs/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/build
+.PHONY : visualization_msgs_generate_messages_nodejs/fast
+
+# Convenience name for target.
+mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/rule
+
+# Convenience name for target.
+diagnostic_msgs_generate_messages_eus: mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/rule
+
+.PHONY : diagnostic_msgs_generate_messages_eus
+
+# fast build rule for target.
+diagnostic_msgs_generate_messages_eus/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/build.make mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/build
+.PHONY : diagnostic_msgs_generate_messages_eus/fast
 
 # Convenience name for target.
 mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_nodejs.dir/rule:
@@ -273,64 +318,19 @@ diagnostic_msgs_generate_messages_nodejs/fast:
 .PHONY : diagnostic_msgs_generate_messages_nodejs/fast
 
 # Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/rule
+mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/rule
 
 # Convenience name for target.
-rospy_message_converter_generate_messages_lisp: mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/rule
+visualization_msgs_generate_messages_eus: mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/rule
 
-.PHONY : rospy_message_converter_generate_messages_lisp
+.PHONY : visualization_msgs_generate_messages_eus
 
 # fast build rule for target.
-rospy_message_converter_generate_messages_lisp/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/build
-.PHONY : rospy_message_converter_generate_messages_lisp/fast
-
-# Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-rospy_message_converter_generate_messages_eus: mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/rule
-
-.PHONY : rospy_message_converter_generate_messages_eus
-
-# fast build rule for target.
-rospy_message_converter_generate_messages_eus/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/build
-.PHONY : rospy_message_converter_generate_messages_eus/fast
-
-# Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/clean_test_results_mir_driver.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/clean_test_results_mir_driver.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/clean_test_results_mir_driver.dir/rule
-
-# Convenience name for target.
-clean_test_results_mir_driver: mir_robot/mir_driver/CMakeFiles/clean_test_results_mir_driver.dir/rule
-
-.PHONY : clean_test_results_mir_driver
-
-# fast build rule for target.
-clean_test_results_mir_driver/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/clean_test_results_mir_driver.dir/build.make mir_robot/mir_driver/CMakeFiles/clean_test_results_mir_driver.dir/build
-.PHONY : clean_test_results_mir_driver/fast
-
-# Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-diagnostic_msgs_generate_messages_py: mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/rule
-
-.PHONY : diagnostic_msgs_generate_messages_py
-
-# fast build rule for target.
-diagnostic_msgs_generate_messages_py/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/build.make mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/build
-.PHONY : diagnostic_msgs_generate_messages_py/fast
+visualization_msgs_generate_messages_eus/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/build
+.PHONY : visualization_msgs_generate_messages_eus/fast
 
 # Convenience name for target.
 mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_lisp.dir/rule:
@@ -348,19 +348,109 @@ diagnostic_msgs_generate_messages_lisp/fast:
 .PHONY : diagnostic_msgs_generate_messages_lisp/fast
 
 # Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_lisp.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_lisp.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_lisp.dir/rule
+mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/rule
 
 # Convenience name for target.
-move_base_msgs_generate_messages_lisp: mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_lisp.dir/rule
+diagnostic_msgs_generate_messages_py: mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/rule
 
-.PHONY : move_base_msgs_generate_messages_lisp
+.PHONY : diagnostic_msgs_generate_messages_py
 
 # fast build rule for target.
-move_base_msgs_generate_messages_lisp/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_lisp.dir/build.make mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_lisp.dir/build
-.PHONY : move_base_msgs_generate_messages_lisp/fast
+diagnostic_msgs_generate_messages_py/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/build.make mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/build
+.PHONY : diagnostic_msgs_generate_messages_py/fast
+
+# Convenience name for target.
+mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/rule
+
+# Convenience name for target.
+rospy_message_converter_generate_messages_eus: mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/rule
+
+.PHONY : rospy_message_converter_generate_messages_eus
+
+# fast build rule for target.
+rospy_message_converter_generate_messages_eus/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/build
+.PHONY : rospy_message_converter_generate_messages_eus/fast
+
+# Convenience name for target.
+mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+rospy_message_converter_generate_messages_lisp: mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/rule
+
+.PHONY : rospy_message_converter_generate_messages_lisp
+
+# fast build rule for target.
+rospy_message_converter_generate_messages_lisp/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/build
+.PHONY : rospy_message_converter_generate_messages_lisp/fast
+
+# Convenience name for target.
+mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+rospy_message_converter_generate_messages_cpp: mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/rule
+
+.PHONY : rospy_message_converter_generate_messages_cpp
+
+# fast build rule for target.
+rospy_message_converter_generate_messages_cpp/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/build
+.PHONY : rospy_message_converter_generate_messages_cpp/fast
+
+# Convenience name for target.
+mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/rule
+
+# Convenience name for target.
+rospy_message_converter_generate_messages_py: mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/rule
+
+.PHONY : rospy_message_converter_generate_messages_py
+
+# fast build rule for target.
+rospy_message_converter_generate_messages_py/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/build
+.PHONY : rospy_message_converter_generate_messages_py/fast
+
+# Convenience name for target.
+mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/rule
+
+# Convenience name for target.
+_run_tests_mir_driver_roslaunch-check: mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/rule
+
+.PHONY : _run_tests_mir_driver_roslaunch-check
+
+# fast build rule for target.
+_run_tests_mir_driver_roslaunch-check/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/build.make mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/build
+.PHONY : _run_tests_mir_driver_roslaunch-check/fast
+
+# Convenience name for target.
+mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule
+.PHONY : mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+visualization_msgs_generate_messages_cpp: mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule
+
+.PHONY : visualization_msgs_generate_messages_cpp
+
+# fast build rule for target.
+visualization_msgs_generate_messages_cpp/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/build
+.PHONY : visualization_msgs_generate_messages_cpp/fast
 
 # Convenience name for target.
 mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_cpp.dir/rule:
@@ -393,21 +483,6 @@ visualization_msgs_generate_messages_lisp/fast:
 .PHONY : visualization_msgs_generate_messages_lisp/fast
 
 # Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-diagnostic_msgs_generate_messages_eus: mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/rule
-
-.PHONY : diagnostic_msgs_generate_messages_eus
-
-# fast build rule for target.
-diagnostic_msgs_generate_messages_eus/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/build.make mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/build
-.PHONY : diagnostic_msgs_generate_messages_eus/fast
-
-# Convenience name for target.
 mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_nodejs.dir/rule:
 	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_nodejs.dir/rule
 .PHONY : mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_nodejs.dir/rule
@@ -422,156 +497,6 @@ rospy_message_converter_generate_messages_nodejs/fast:
 	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_nodejs.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_nodejs.dir/build
 .PHONY : rospy_message_converter_generate_messages_nodejs/fast
 
-# Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/rule
-
-# Convenience name for target.
-rospy_message_converter_generate_messages_py: mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/rule
-
-.PHONY : rospy_message_converter_generate_messages_py
-
-# fast build rule for target.
-rospy_message_converter_generate_messages_py/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/build
-.PHONY : rospy_message_converter_generate_messages_py/fast
-
-# Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-visualization_msgs_generate_messages_eus: mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/rule
-
-.PHONY : visualization_msgs_generate_messages_eus
-
-# fast build rule for target.
-visualization_msgs_generate_messages_eus/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/build
-.PHONY : visualization_msgs_generate_messages_eus/fast
-
-# Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-visualization_msgs_generate_messages_nodejs: mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/rule
-
-.PHONY : visualization_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-visualization_msgs_generate_messages_nodejs/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/build
-.PHONY : visualization_msgs_generate_messages_nodejs/fast
-
-# Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-visualization_msgs_generate_messages_py: mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule
-
-.PHONY : visualization_msgs_generate_messages_py
-
-# fast build rule for target.
-visualization_msgs_generate_messages_py/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/build
-.PHONY : visualization_msgs_generate_messages_py/fast
-
-# Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/rule
-
-# Convenience name for target.
-run_tests_mir_driver: mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/rule
-
-.PHONY : run_tests_mir_driver
-
-# fast build rule for target.
-run_tests_mir_driver/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/build.make mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/build
-.PHONY : run_tests_mir_driver/fast
-
-# Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/rule
-
-# Convenience name for target.
-run_tests_mir_driver_roslaunch-check: mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/rule
-
-.PHONY : run_tests_mir_driver_roslaunch-check
-
-# fast build rule for target.
-run_tests_mir_driver_roslaunch-check/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/build.make mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/build
-.PHONY : run_tests_mir_driver_roslaunch-check/fast
-
-# Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/rule
-
-# Convenience name for target.
-_run_tests_mir_driver_roslaunch-check: mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/rule
-
-.PHONY : _run_tests_mir_driver_roslaunch-check
-
-# fast build rule for target.
-_run_tests_mir_driver_roslaunch-check/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/build.make mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/build
-.PHONY : _run_tests_mir_driver_roslaunch-check/fast
-
-# Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/rule
-
-# Convenience name for target.
-_run_tests_mir_driver_roslaunch-check_launch: mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/rule
-
-.PHONY : _run_tests_mir_driver_roslaunch-check_launch
-
-# fast build rule for target.
-_run_tests_mir_driver_roslaunch-check_launch/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/build.make mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/build
-.PHONY : _run_tests_mir_driver_roslaunch-check_launch/fast
-
-# Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/rule
-
-# Convenience name for target.
-run_tests_mir_driver_roslaunch-check_launch: mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/rule
-
-.PHONY : run_tests_mir_driver_roslaunch-check_launch
-
-# fast build rule for target.
-run_tests_mir_driver_roslaunch-check_launch/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/build.make mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/build
-.PHONY : run_tests_mir_driver_roslaunch-check_launch/fast
-
-# Convenience name for target.
-mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/rule:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/rule
-.PHONY : mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/rule
-
-# Convenience name for target.
-_run_tests_mir_driver: mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/rule
-
-.PHONY : _run_tests_mir_driver
-
-# fast build rule for target.
-_run_tests_mir_driver/fast:
-	cd /home/abdessalem/smapping/build && $(MAKE) -f mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/build.make mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/build
-.PHONY : _run_tests_mir_driver/fast
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -580,38 +505,33 @@ help:
 	@echo "... depend"
 	@echo "... install/strip"
 	@echo "... install/local"
+	@echo "... install"
+	@echo "... list_install_components"
 	@echo "... rebuild_cache"
-	@echo "... rospy_message_converter_generate_messages_cpp"
-	@echo "... move_base_msgs_generate_messages_nodejs"
-	@echo "... move_base_msgs_generate_messages_py"
-	@echo "... visualization_msgs_generate_messages_cpp"
-	@echo "... move_base_msgs_generate_messages_eus"
-	@echo "... move_base_msgs_generate_messages_cpp"
-	@echo "... diagnostic_msgs_generate_messages_nodejs"
-	@echo "... rospy_message_converter_generate_messages_lisp"
-	@echo "... rospy_message_converter_generate_messages_eus"
-	@echo "... clean_test_results_mir_driver"
-	@echo "... diagnostic_msgs_generate_messages_py"
-	@echo "... diagnostic_msgs_generate_messages_lisp"
-	@echo "... move_base_msgs_generate_messages_lisp"
+	@echo "... edit_cache"
 	@echo "... test"
+	@echo "... clean_test_results_mir_driver"
+	@echo "... _run_tests_mir_driver_roslaunch-check_launch"
+	@echo "... _run_tests_mir_driver"
+	@echo "... run_tests_mir_driver_roslaunch-check"
+	@echo "... run_tests_mir_driver"
+	@echo "... run_tests_mir_driver_roslaunch-check_launch"
+	@echo "... visualization_msgs_generate_messages_py"
+	@echo "... visualization_msgs_generate_messages_nodejs"
+	@echo "... diagnostic_msgs_generate_messages_eus"
+	@echo "... diagnostic_msgs_generate_messages_nodejs"
+	@echo "... visualization_msgs_generate_messages_eus"
+	@echo "... diagnostic_msgs_generate_messages_lisp"
+	@echo "... diagnostic_msgs_generate_messages_py"
+	@echo "... rospy_message_converter_generate_messages_eus"
+	@echo "... rospy_message_converter_generate_messages_lisp"
+	@echo "... rospy_message_converter_generate_messages_cpp"
+	@echo "... rospy_message_converter_generate_messages_py"
+	@echo "... _run_tests_mir_driver_roslaunch-check"
+	@echo "... visualization_msgs_generate_messages_cpp"
 	@echo "... diagnostic_msgs_generate_messages_cpp"
 	@echo "... visualization_msgs_generate_messages_lisp"
-	@echo "... diagnostic_msgs_generate_messages_eus"
 	@echo "... rospy_message_converter_generate_messages_nodejs"
-	@echo "... rospy_message_converter_generate_messages_py"
-	@echo "... visualization_msgs_generate_messages_eus"
-	@echo "... list_install_components"
-	@echo "... visualization_msgs_generate_messages_nodejs"
-	@echo "... install"
-	@echo "... visualization_msgs_generate_messages_py"
-	@echo "... run_tests_mir_driver"
-	@echo "... run_tests_mir_driver_roslaunch-check"
-	@echo "... _run_tests_mir_driver_roslaunch-check"
-	@echo "... _run_tests_mir_driver_roslaunch-check_launch"
-	@echo "... run_tests_mir_driver_roslaunch-check_launch"
-	@echo "... _run_tests_mir_driver"
-	@echo "... edit_cache"
 .PHONY : help
 
 

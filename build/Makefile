@@ -3977,30 +3977,17 @@ openni_nodelet/fast:
 .PHONY : openni_nodelet/fast
 
 #=============================================================================
-# Target rules for targets named rospy_message_converter_generate_messages_cpp
+# Target rules for targets named simple_navigation_goals
 
 # Build rule for target.
-rospy_message_converter_generate_messages_cpp: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 rospy_message_converter_generate_messages_cpp
-.PHONY : rospy_message_converter_generate_messages_cpp
+simple_navigation_goals: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 simple_navigation_goals
+.PHONY : simple_navigation_goals
 
 # fast build rule for target.
-rospy_message_converter_generate_messages_cpp/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/build
-.PHONY : rospy_message_converter_generate_messages_cpp/fast
-
-#=============================================================================
-# Target rules for targets named move_base_msgs_generate_messages_nodejs
-
-# Build rule for target.
-move_base_msgs_generate_messages_nodejs: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 move_base_msgs_generate_messages_nodejs
-.PHONY : move_base_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-move_base_msgs_generate_messages_nodejs/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_nodejs.dir/build.make mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_nodejs.dir/build
-.PHONY : move_base_msgs_generate_messages_nodejs/fast
+simple_navigation_goals/fast:
+	$(MAKE) -f simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/build.make simple_navigation_goals/CMakeFiles/simple_navigation_goals.dir/build
+.PHONY : simple_navigation_goals/fast
 
 #=============================================================================
 # Target rules for targets named move_base_msgs_generate_messages_py
@@ -4012,21 +3999,34 @@ move_base_msgs_generate_messages_py: cmake_check_build_system
 
 # fast build rule for target.
 move_base_msgs_generate_messages_py/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_py.dir/build.make mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_py.dir/build
+	$(MAKE) -f simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_py.dir/build.make simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_py.dir/build
 .PHONY : move_base_msgs_generate_messages_py/fast
 
 #=============================================================================
-# Target rules for targets named visualization_msgs_generate_messages_cpp
+# Target rules for targets named move_base_msgs_generate_messages_nodejs
 
 # Build rule for target.
-visualization_msgs_generate_messages_cpp: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 visualization_msgs_generate_messages_cpp
-.PHONY : visualization_msgs_generate_messages_cpp
+move_base_msgs_generate_messages_nodejs: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 move_base_msgs_generate_messages_nodejs
+.PHONY : move_base_msgs_generate_messages_nodejs
 
 # fast build rule for target.
-visualization_msgs_generate_messages_cpp/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/build
-.PHONY : visualization_msgs_generate_messages_cpp/fast
+move_base_msgs_generate_messages_nodejs/fast:
+	$(MAKE) -f simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_nodejs.dir/build.make simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_nodejs.dir/build
+.PHONY : move_base_msgs_generate_messages_nodejs/fast
+
+#=============================================================================
+# Target rules for targets named move_base_msgs_generate_messages_lisp
+
+# Build rule for target.
+move_base_msgs_generate_messages_lisp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 move_base_msgs_generate_messages_lisp
+.PHONY : move_base_msgs_generate_messages_lisp
+
+# fast build rule for target.
+move_base_msgs_generate_messages_lisp/fast:
+	$(MAKE) -f simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_lisp.dir/build.make simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_lisp.dir/build
+.PHONY : move_base_msgs_generate_messages_lisp/fast
 
 #=============================================================================
 # Target rules for targets named move_base_msgs_generate_messages_eus
@@ -4038,7 +4038,7 @@ move_base_msgs_generate_messages_eus: cmake_check_build_system
 
 # fast build rule for target.
 move_base_msgs_generate_messages_eus/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_eus.dir/build.make mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_eus.dir/build
+	$(MAKE) -f simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_eus.dir/build.make simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_eus.dir/build
 .PHONY : move_base_msgs_generate_messages_eus/fast
 
 #=============================================================================
@@ -4051,47 +4051,8 @@ move_base_msgs_generate_messages_cpp: cmake_check_build_system
 
 # fast build rule for target.
 move_base_msgs_generate_messages_cpp/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_cpp.dir/build.make mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_cpp.dir/build
+	$(MAKE) -f simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_cpp.dir/build.make simple_navigation_goals/CMakeFiles/move_base_msgs_generate_messages_cpp.dir/build
 .PHONY : move_base_msgs_generate_messages_cpp/fast
-
-#=============================================================================
-# Target rules for targets named diagnostic_msgs_generate_messages_nodejs
-
-# Build rule for target.
-diagnostic_msgs_generate_messages_nodejs: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 diagnostic_msgs_generate_messages_nodejs
-.PHONY : diagnostic_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-diagnostic_msgs_generate_messages_nodejs/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_nodejs.dir/build.make mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_nodejs.dir/build
-.PHONY : diagnostic_msgs_generate_messages_nodejs/fast
-
-#=============================================================================
-# Target rules for targets named rospy_message_converter_generate_messages_lisp
-
-# Build rule for target.
-rospy_message_converter_generate_messages_lisp: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 rospy_message_converter_generate_messages_lisp
-.PHONY : rospy_message_converter_generate_messages_lisp
-
-# fast build rule for target.
-rospy_message_converter_generate_messages_lisp/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/build
-.PHONY : rospy_message_converter_generate_messages_lisp/fast
-
-#=============================================================================
-# Target rules for targets named rospy_message_converter_generate_messages_eus
-
-# Build rule for target.
-rospy_message_converter_generate_messages_eus: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 rospy_message_converter_generate_messages_eus
-.PHONY : rospy_message_converter_generate_messages_eus
-
-# fast build rule for target.
-rospy_message_converter_generate_messages_eus/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/build
-.PHONY : rospy_message_converter_generate_messages_eus/fast
 
 #=============================================================================
 # Target rules for targets named clean_test_results_mir_driver
@@ -4107,17 +4068,134 @@ clean_test_results_mir_driver/fast:
 .PHONY : clean_test_results_mir_driver/fast
 
 #=============================================================================
-# Target rules for targets named diagnostic_msgs_generate_messages_py
+# Target rules for targets named _run_tests_mir_driver_roslaunch-check_launch
 
 # Build rule for target.
-diagnostic_msgs_generate_messages_py: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 diagnostic_msgs_generate_messages_py
-.PHONY : diagnostic_msgs_generate_messages_py
+_run_tests_mir_driver_roslaunch-check_launch: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_mir_driver_roslaunch-check_launch
+.PHONY : _run_tests_mir_driver_roslaunch-check_launch
 
 # fast build rule for target.
-diagnostic_msgs_generate_messages_py/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/build.make mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/build
-.PHONY : diagnostic_msgs_generate_messages_py/fast
+_run_tests_mir_driver_roslaunch-check_launch/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/build.make mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/build
+.PHONY : _run_tests_mir_driver_roslaunch-check_launch/fast
+
+#=============================================================================
+# Target rules for targets named _run_tests_mir_driver
+
+# Build rule for target.
+_run_tests_mir_driver: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_mir_driver
+.PHONY : _run_tests_mir_driver
+
+# fast build rule for target.
+_run_tests_mir_driver/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/build.make mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/build
+.PHONY : _run_tests_mir_driver/fast
+
+#=============================================================================
+# Target rules for targets named run_tests_mir_driver_roslaunch-check
+
+# Build rule for target.
+run_tests_mir_driver_roslaunch-check: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 run_tests_mir_driver_roslaunch-check
+.PHONY : run_tests_mir_driver_roslaunch-check
+
+# fast build rule for target.
+run_tests_mir_driver_roslaunch-check/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/build.make mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/build
+.PHONY : run_tests_mir_driver_roslaunch-check/fast
+
+#=============================================================================
+# Target rules for targets named run_tests_mir_driver
+
+# Build rule for target.
+run_tests_mir_driver: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 run_tests_mir_driver
+.PHONY : run_tests_mir_driver
+
+# fast build rule for target.
+run_tests_mir_driver/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/build.make mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/build
+.PHONY : run_tests_mir_driver/fast
+
+#=============================================================================
+# Target rules for targets named run_tests_mir_driver_roslaunch-check_launch
+
+# Build rule for target.
+run_tests_mir_driver_roslaunch-check_launch: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 run_tests_mir_driver_roslaunch-check_launch
+.PHONY : run_tests_mir_driver_roslaunch-check_launch
+
+# fast build rule for target.
+run_tests_mir_driver_roslaunch-check_launch/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/build.make mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/build
+.PHONY : run_tests_mir_driver_roslaunch-check_launch/fast
+
+#=============================================================================
+# Target rules for targets named visualization_msgs_generate_messages_py
+
+# Build rule for target.
+visualization_msgs_generate_messages_py: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 visualization_msgs_generate_messages_py
+.PHONY : visualization_msgs_generate_messages_py
+
+# fast build rule for target.
+visualization_msgs_generate_messages_py/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/build
+.PHONY : visualization_msgs_generate_messages_py/fast
+
+#=============================================================================
+# Target rules for targets named visualization_msgs_generate_messages_nodejs
+
+# Build rule for target.
+visualization_msgs_generate_messages_nodejs: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 visualization_msgs_generate_messages_nodejs
+.PHONY : visualization_msgs_generate_messages_nodejs
+
+# fast build rule for target.
+visualization_msgs_generate_messages_nodejs/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/build
+.PHONY : visualization_msgs_generate_messages_nodejs/fast
+
+#=============================================================================
+# Target rules for targets named diagnostic_msgs_generate_messages_eus
+
+# Build rule for target.
+diagnostic_msgs_generate_messages_eus: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 diagnostic_msgs_generate_messages_eus
+.PHONY : diagnostic_msgs_generate_messages_eus
+
+# fast build rule for target.
+diagnostic_msgs_generate_messages_eus/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/build.make mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/build
+.PHONY : diagnostic_msgs_generate_messages_eus/fast
+
+#=============================================================================
+# Target rules for targets named diagnostic_msgs_generate_messages_nodejs
+
+# Build rule for target.
+diagnostic_msgs_generate_messages_nodejs: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 diagnostic_msgs_generate_messages_nodejs
+.PHONY : diagnostic_msgs_generate_messages_nodejs
+
+# fast build rule for target.
+diagnostic_msgs_generate_messages_nodejs/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_nodejs.dir/build.make mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_nodejs.dir/build
+.PHONY : diagnostic_msgs_generate_messages_nodejs/fast
+
+#=============================================================================
+# Target rules for targets named visualization_msgs_generate_messages_eus
+
+# Build rule for target.
+visualization_msgs_generate_messages_eus: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 visualization_msgs_generate_messages_eus
+.PHONY : visualization_msgs_generate_messages_eus
+
+# fast build rule for target.
+visualization_msgs_generate_messages_eus/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/build
+.PHONY : visualization_msgs_generate_messages_eus/fast
 
 #=============================================================================
 # Target rules for targets named diagnostic_msgs_generate_messages_lisp
@@ -4133,17 +4211,95 @@ diagnostic_msgs_generate_messages_lisp/fast:
 .PHONY : diagnostic_msgs_generate_messages_lisp/fast
 
 #=============================================================================
-# Target rules for targets named move_base_msgs_generate_messages_lisp
+# Target rules for targets named diagnostic_msgs_generate_messages_py
 
 # Build rule for target.
-move_base_msgs_generate_messages_lisp: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 move_base_msgs_generate_messages_lisp
-.PHONY : move_base_msgs_generate_messages_lisp
+diagnostic_msgs_generate_messages_py: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 diagnostic_msgs_generate_messages_py
+.PHONY : diagnostic_msgs_generate_messages_py
 
 # fast build rule for target.
-move_base_msgs_generate_messages_lisp/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_lisp.dir/build.make mir_robot/mir_driver/CMakeFiles/move_base_msgs_generate_messages_lisp.dir/build
-.PHONY : move_base_msgs_generate_messages_lisp/fast
+diagnostic_msgs_generate_messages_py/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/build.make mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/build
+.PHONY : diagnostic_msgs_generate_messages_py/fast
+
+#=============================================================================
+# Target rules for targets named rospy_message_converter_generate_messages_eus
+
+# Build rule for target.
+rospy_message_converter_generate_messages_eus: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 rospy_message_converter_generate_messages_eus
+.PHONY : rospy_message_converter_generate_messages_eus
+
+# fast build rule for target.
+rospy_message_converter_generate_messages_eus/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_eus.dir/build
+.PHONY : rospy_message_converter_generate_messages_eus/fast
+
+#=============================================================================
+# Target rules for targets named rospy_message_converter_generate_messages_lisp
+
+# Build rule for target.
+rospy_message_converter_generate_messages_lisp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 rospy_message_converter_generate_messages_lisp
+.PHONY : rospy_message_converter_generate_messages_lisp
+
+# fast build rule for target.
+rospy_message_converter_generate_messages_lisp/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_lisp.dir/build
+.PHONY : rospy_message_converter_generate_messages_lisp/fast
+
+#=============================================================================
+# Target rules for targets named rospy_message_converter_generate_messages_cpp
+
+# Build rule for target.
+rospy_message_converter_generate_messages_cpp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 rospy_message_converter_generate_messages_cpp
+.PHONY : rospy_message_converter_generate_messages_cpp
+
+# fast build rule for target.
+rospy_message_converter_generate_messages_cpp/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_cpp.dir/build
+.PHONY : rospy_message_converter_generate_messages_cpp/fast
+
+#=============================================================================
+# Target rules for targets named rospy_message_converter_generate_messages_py
+
+# Build rule for target.
+rospy_message_converter_generate_messages_py: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 rospy_message_converter_generate_messages_py
+.PHONY : rospy_message_converter_generate_messages_py
+
+# fast build rule for target.
+rospy_message_converter_generate_messages_py/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/build
+.PHONY : rospy_message_converter_generate_messages_py/fast
+
+#=============================================================================
+# Target rules for targets named _run_tests_mir_driver_roslaunch-check
+
+# Build rule for target.
+_run_tests_mir_driver_roslaunch-check: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_mir_driver_roslaunch-check
+.PHONY : _run_tests_mir_driver_roslaunch-check
+
+# fast build rule for target.
+_run_tests_mir_driver_roslaunch-check/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/build.make mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/build
+.PHONY : _run_tests_mir_driver_roslaunch-check/fast
+
+#=============================================================================
+# Target rules for targets named visualization_msgs_generate_messages_cpp
+
+# Build rule for target.
+visualization_msgs_generate_messages_cpp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 visualization_msgs_generate_messages_cpp
+.PHONY : visualization_msgs_generate_messages_cpp
+
+# fast build rule for target.
+visualization_msgs_generate_messages_cpp/fast:
+	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/build
+.PHONY : visualization_msgs_generate_messages_cpp/fast
 
 #=============================================================================
 # Target rules for targets named diagnostic_msgs_generate_messages_cpp
@@ -4172,19 +4328,6 @@ visualization_msgs_generate_messages_lisp/fast:
 .PHONY : visualization_msgs_generate_messages_lisp/fast
 
 #=============================================================================
-# Target rules for targets named diagnostic_msgs_generate_messages_eus
-
-# Build rule for target.
-diagnostic_msgs_generate_messages_eus: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 diagnostic_msgs_generate_messages_eus
-.PHONY : diagnostic_msgs_generate_messages_eus
-
-# fast build rule for target.
-diagnostic_msgs_generate_messages_eus/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/build.make mir_robot/mir_driver/CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/build
-.PHONY : diagnostic_msgs_generate_messages_eus/fast
-
-#=============================================================================
 # Target rules for targets named rospy_message_converter_generate_messages_nodejs
 
 # Build rule for target.
@@ -4196,136 +4339,6 @@ rospy_message_converter_generate_messages_nodejs: cmake_check_build_system
 rospy_message_converter_generate_messages_nodejs/fast:
 	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_nodejs.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_nodejs.dir/build
 .PHONY : rospy_message_converter_generate_messages_nodejs/fast
-
-#=============================================================================
-# Target rules for targets named rospy_message_converter_generate_messages_py
-
-# Build rule for target.
-rospy_message_converter_generate_messages_py: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 rospy_message_converter_generate_messages_py
-.PHONY : rospy_message_converter_generate_messages_py
-
-# fast build rule for target.
-rospy_message_converter_generate_messages_py/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/build.make mir_robot/mir_driver/CMakeFiles/rospy_message_converter_generate_messages_py.dir/build
-.PHONY : rospy_message_converter_generate_messages_py/fast
-
-#=============================================================================
-# Target rules for targets named visualization_msgs_generate_messages_eus
-
-# Build rule for target.
-visualization_msgs_generate_messages_eus: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 visualization_msgs_generate_messages_eus
-.PHONY : visualization_msgs_generate_messages_eus
-
-# fast build rule for target.
-visualization_msgs_generate_messages_eus/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_eus.dir/build
-.PHONY : visualization_msgs_generate_messages_eus/fast
-
-#=============================================================================
-# Target rules for targets named visualization_msgs_generate_messages_nodejs
-
-# Build rule for target.
-visualization_msgs_generate_messages_nodejs: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 visualization_msgs_generate_messages_nodejs
-.PHONY : visualization_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-visualization_msgs_generate_messages_nodejs/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/build
-.PHONY : visualization_msgs_generate_messages_nodejs/fast
-
-#=============================================================================
-# Target rules for targets named visualization_msgs_generate_messages_py
-
-# Build rule for target.
-visualization_msgs_generate_messages_py: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 visualization_msgs_generate_messages_py
-.PHONY : visualization_msgs_generate_messages_py
-
-# fast build rule for target.
-visualization_msgs_generate_messages_py/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/build.make mir_robot/mir_driver/CMakeFiles/visualization_msgs_generate_messages_py.dir/build
-.PHONY : visualization_msgs_generate_messages_py/fast
-
-#=============================================================================
-# Target rules for targets named run_tests_mir_driver
-
-# Build rule for target.
-run_tests_mir_driver: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 run_tests_mir_driver
-.PHONY : run_tests_mir_driver
-
-# fast build rule for target.
-run_tests_mir_driver/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/build.make mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver.dir/build
-.PHONY : run_tests_mir_driver/fast
-
-#=============================================================================
-# Target rules for targets named run_tests_mir_driver_roslaunch-check
-
-# Build rule for target.
-run_tests_mir_driver_roslaunch-check: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 run_tests_mir_driver_roslaunch-check
-.PHONY : run_tests_mir_driver_roslaunch-check
-
-# fast build rule for target.
-run_tests_mir_driver_roslaunch-check/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/build.make mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check.dir/build
-.PHONY : run_tests_mir_driver_roslaunch-check/fast
-
-#=============================================================================
-# Target rules for targets named _run_tests_mir_driver_roslaunch-check
-
-# Build rule for target.
-_run_tests_mir_driver_roslaunch-check: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_mir_driver_roslaunch-check
-.PHONY : _run_tests_mir_driver_roslaunch-check
-
-# fast build rule for target.
-_run_tests_mir_driver_roslaunch-check/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/build.make mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check.dir/build
-.PHONY : _run_tests_mir_driver_roslaunch-check/fast
-
-#=============================================================================
-# Target rules for targets named _run_tests_mir_driver_roslaunch-check_launch
-
-# Build rule for target.
-_run_tests_mir_driver_roslaunch-check_launch: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_mir_driver_roslaunch-check_launch
-.PHONY : _run_tests_mir_driver_roslaunch-check_launch
-
-# fast build rule for target.
-_run_tests_mir_driver_roslaunch-check_launch/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/build.make mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver_roslaunch-check_launch.dir/build
-.PHONY : _run_tests_mir_driver_roslaunch-check_launch/fast
-
-#=============================================================================
-# Target rules for targets named run_tests_mir_driver_roslaunch-check_launch
-
-# Build rule for target.
-run_tests_mir_driver_roslaunch-check_launch: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 run_tests_mir_driver_roslaunch-check_launch
-.PHONY : run_tests_mir_driver_roslaunch-check_launch
-
-# fast build rule for target.
-run_tests_mir_driver_roslaunch-check_launch/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/build.make mir_robot/mir_driver/CMakeFiles/run_tests_mir_driver_roslaunch-check_launch.dir/build
-.PHONY : run_tests_mir_driver_roslaunch-check_launch/fast
-
-#=============================================================================
-# Target rules for targets named _run_tests_mir_driver
-
-# Build rule for target.
-_run_tests_mir_driver: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_mir_driver
-.PHONY : _run_tests_mir_driver
-
-# fast build rule for target.
-_run_tests_mir_driver/fast:
-	$(MAKE) -f mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/build.make mir_robot/mir_driver/CMakeFiles/_run_tests_mir_driver.dir/build
-.PHONY : _run_tests_mir_driver/fast
 
 #=============================================================================
 # Target rules for targets named nav_2d_msgs_generate_messages_cpp
@@ -5374,33 +5387,34 @@ help:
 	@echo "... bond_generate_messages_lisp"
 	@echo "... openni_camera_gencfg"
 	@echo "... openni_nodelet"
-	@echo "... rospy_message_converter_generate_messages_cpp"
-	@echo "... move_base_msgs_generate_messages_nodejs"
+	@echo "... simple_navigation_goals"
 	@echo "... move_base_msgs_generate_messages_py"
-	@echo "... visualization_msgs_generate_messages_cpp"
+	@echo "... move_base_msgs_generate_messages_nodejs"
+	@echo "... move_base_msgs_generate_messages_lisp"
 	@echo "... move_base_msgs_generate_messages_eus"
 	@echo "... move_base_msgs_generate_messages_cpp"
-	@echo "... diagnostic_msgs_generate_messages_nodejs"
-	@echo "... rospy_message_converter_generate_messages_lisp"
-	@echo "... rospy_message_converter_generate_messages_eus"
 	@echo "... clean_test_results_mir_driver"
-	@echo "... diagnostic_msgs_generate_messages_py"
+	@echo "... _run_tests_mir_driver_roslaunch-check_launch"
+	@echo "... _run_tests_mir_driver"
+	@echo "... run_tests_mir_driver_roslaunch-check"
+	@echo "... run_tests_mir_driver"
+	@echo "... run_tests_mir_driver_roslaunch-check_launch"
+	@echo "... visualization_msgs_generate_messages_py"
+	@echo "... visualization_msgs_generate_messages_nodejs"
+	@echo "... diagnostic_msgs_generate_messages_eus"
+	@echo "... diagnostic_msgs_generate_messages_nodejs"
+	@echo "... visualization_msgs_generate_messages_eus"
 	@echo "... diagnostic_msgs_generate_messages_lisp"
-	@echo "... move_base_msgs_generate_messages_lisp"
+	@echo "... diagnostic_msgs_generate_messages_py"
+	@echo "... rospy_message_converter_generate_messages_eus"
+	@echo "... rospy_message_converter_generate_messages_lisp"
+	@echo "... rospy_message_converter_generate_messages_cpp"
+	@echo "... rospy_message_converter_generate_messages_py"
+	@echo "... _run_tests_mir_driver_roslaunch-check"
+	@echo "... visualization_msgs_generate_messages_cpp"
 	@echo "... diagnostic_msgs_generate_messages_cpp"
 	@echo "... visualization_msgs_generate_messages_lisp"
-	@echo "... diagnostic_msgs_generate_messages_eus"
 	@echo "... rospy_message_converter_generate_messages_nodejs"
-	@echo "... rospy_message_converter_generate_messages_py"
-	@echo "... visualization_msgs_generate_messages_eus"
-	@echo "... visualization_msgs_generate_messages_nodejs"
-	@echo "... visualization_msgs_generate_messages_py"
-	@echo "... run_tests_mir_driver"
-	@echo "... run_tests_mir_driver_roslaunch-check"
-	@echo "... _run_tests_mir_driver_roslaunch-check"
-	@echo "... _run_tests_mir_driver_roslaunch-check_launch"
-	@echo "... run_tests_mir_driver_roslaunch-check_launch"
-	@echo "... _run_tests_mir_driver"
 	@echo "... nav_2d_msgs_generate_messages_cpp"
 	@echo "... nav_2d_msgs_generate_messages_eus"
 	@echo "... nav_2d_msgs_generate_messages_nodejs"

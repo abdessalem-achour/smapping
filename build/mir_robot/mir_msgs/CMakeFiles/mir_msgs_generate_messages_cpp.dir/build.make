@@ -167,34 +167,34 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_cpp: /home/abdessalem/s
 
 /home/abdessalem/smapping/devel/include/mir_msgs/Events.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/mir_msgs/Events.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Events.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/Events.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Event.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/Events.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/Events.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/Events.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Event.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/Events.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Generating C++ code from mir_msgs/Events.msg"
 	cd /home/abdessalem/smapping/src/mir_robot/mir_msgs && /home/abdessalem/smapping/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Events.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/include/mir_msgs -e /opt/ros/noetic/share/gencpp/cmake/..
 
 /home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobot.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobot.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobot.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobot.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobot.h: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobot.h: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobot.h: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobot.h: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobot.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobot.h: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobot.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobot.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Generating C++ code from mir_msgs/ExternalRobot.msg"
 	cd /home/abdessalem/smapping/src/mir_robot/mir_msgs && /home/abdessalem/smapping/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobot.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/include/mir_msgs -e /opt/ros/noetic/share/gencpp/cmake/..
 
 /home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobots.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobots.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobots.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobots.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobots.h: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobots.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobot.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobots.h: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobots.h: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobots.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobot.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobots.h: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobots.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobots.h: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobots.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/ExternalRobots.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Generating C++ code from mir_msgs/ExternalRobots.msg"
 	cd /home/abdessalem/smapping/src/mir_robot/mir_msgs && /home/abdessalem/smapping/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobots.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/include/mir_msgs -e /opt/ros/noetic/share/gencpp/cmake/..
@@ -219,8 +219,8 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_cpp: /home/abdessalem/s
 
 /home/abdessalem/smapping/devel/include/mir_msgs/HookExtendedStatus.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/mir_msgs/HookExtendedStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/HookExtendedStatus.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/HookExtendedStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/GripperState.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/HookExtendedStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/BrakeState.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/HookExtendedStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/GripperState.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/HookExtendedStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/HeightState.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/HookExtendedStatus.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Generating C++ code from mir_msgs/HookExtendedStatus.msg"
@@ -241,8 +241,8 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_cpp: /home/abdessalem/s
 
 /home/abdessalem/smapping/devel/include/mir_msgs/JoystickVel.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/mir_msgs/JoystickVel.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/JoystickVel.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/JoystickVel.h: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/JoystickVel.h: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/JoystickVel.h: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/JoystickVel.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Generating C++ code from mir_msgs/JoystickVel.msg"
 	cd /home/abdessalem/smapping/src/mir_robot/mir_msgs && /home/abdessalem/smapping/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/JoystickVel.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/include/mir_msgs -e /opt/ros/noetic/share/gencpp/cmake/..
@@ -294,23 +294,23 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_cpp: /home/abdessalem/s
 
 /home/abdessalem/smapping/devel/include/mir_msgs/PlanSegment.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/mir_msgs/PlanSegment.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/PlanSegment.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/PlanSegment.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/PlanSegment.h: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/PlanSegment.h: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/PlanSegment.h: /opt/ros/noetic/share/geometry_msgs/msg/PoseStamped.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/PlanSegment.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/PlanSegment.h: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/PlanSegment.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/PlanSegment.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Generating C++ code from mir_msgs/PlanSegment.msg"
 	cd /home/abdessalem/smapping/src/mir_robot/mir_msgs && /home/abdessalem/smapping/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/PlanSegment.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/include/mir_msgs -e /opt/ros/noetic/share/gencpp/cmake/..
 
 /home/abdessalem/smapping/devel/include/mir_msgs/PlanSegments.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/mir_msgs/PlanSegments.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/PlanSegments.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/PlanSegments.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/PlanSegments.h: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/PlanSegments.h: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/PlanSegments.h: /opt/ros/noetic/share/geometry_msgs/msg/PoseStamped.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/PlanSegments.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/PlanSegment.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/PlanSegments.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/PlanSegments.h: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/PlanSegments.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/PlanSegment.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/PlanSegments.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/PlanSegments.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Generating C++ code from mir_msgs/PlanSegments.msg"
 	cd /home/abdessalem/smapping/src/mir_robot/mir_msgs && /home/abdessalem/smapping/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/PlanSegments.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/include/mir_msgs -e /opt/ros/noetic/share/gencpp/cmake/..
@@ -342,9 +342,9 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_cpp: /home/abdessalem/s
 
 /home/abdessalem/smapping/devel/include/mir_msgs/ResourcesState.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/mir_msgs/ResourcesState.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourcesState.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/ResourcesState.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourceState.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/ResourcesState.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/ResourcesState.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/ResourcesState.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourceState.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/ResourcesState.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Generating C++ code from mir_msgs/ResourcesState.msg"
 	cd /home/abdessalem/smapping/src/mir_robot/mir_msgs && /home/abdessalem/smapping/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourcesState.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/include/mir_msgs -e /opt/ros/noetic/share/gencpp/cmake/..
@@ -370,12 +370,12 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_cpp: /home/abdessalem/s
 
 /home/abdessalem/smapping/devel/include/mir_msgs/RobotStatus.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/mir_msgs/RobotStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/RobotStatus.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/RobotStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Error.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/RobotStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Trolley.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/RobotStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Twist2D.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/RobotStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Pose2D.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/RobotStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/HookStatus.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/RobotStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Error.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/RobotStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/UserPrompt.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/RobotStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Pose2D.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/RobotStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/Trolley.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/RobotStatus.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/HookStatus.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/RobotStatus.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Generating C++ code from mir_msgs/RobotStatus.msg"
 	cd /home/abdessalem/smapping/src/mir_robot/mir_msgs && /home/abdessalem/smapping/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/RobotStatus.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/include/mir_msgs -e /opt/ros/noetic/share/gencpp/cmake/..
@@ -433,33 +433,33 @@ mir_robot/mir_msgs/CMakeFiles/mir_msgs_generate_messages_cpp: /home/abdessalem/s
 
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/WorldMap.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobot.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobots.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourceState.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourcesState.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobot.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourcesState.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourceState.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobots.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldMap.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Generating C++ code from mir_msgs/WorldMap.msg"
 	cd /home/abdessalem/smapping/src/mir_robot/mir_msgs && /home/abdessalem/smapping/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/WorldMap.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/include/mir_msgs -e /opt/ros/noetic/share/gencpp/cmake/..
 
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/WorldModel.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobot.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobots.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourceState.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourcesState.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/WorldMap.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
-/home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobot.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourcesState.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ResourceState.msg
+/home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/ExternalRobots.msg
 /home/abdessalem/smapping/devel/include/mir_msgs/WorldModel.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/abdessalem/smapping/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Generating C++ code from mir_msgs/WorldModel.msg"
 	cd /home/abdessalem/smapping/src/mir_robot/mir_msgs && /home/abdessalem/smapping/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/abdessalem/smapping/src/mir_robot/mir_msgs/msg/WorldModel.msg -Imir_msgs:/home/abdessalem/smapping/src/mir_robot/mir_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p mir_msgs -o /home/abdessalem/smapping/devel/include/mir_msgs -e /opt/ros/noetic/share/gencpp/cmake/..

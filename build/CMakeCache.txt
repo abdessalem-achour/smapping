@@ -1151,6 +1151,12 @@ semmapping_SOURCE_DIR:STATIC=/home/abdessalem/smapping/src/sem_mapping/semmappin
 //The directory containing a CMake configuration file for sensor_msgs.
 sensor_msgs_DIR:PATH=/opt/ros/noetic/share/sensor_msgs/cmake
 
+//Value Computed by CMake
+simple_navigation_goals_BINARY_DIR:STATIC=/home/abdessalem/smapping/build/simple_navigation_goals
+
+//Value Computed by CMake
+simple_navigation_goals_SOURCE_DIR:STATIC=/home/abdessalem/smapping/src/simple_navigation_goals
+
 //The directory containing a CMake configuration file for smclib.
 smclib_DIR:PATH=/opt/ros/noetic/share/smclib/cmake
 
@@ -1390,7 +1396,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=25
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=26
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
