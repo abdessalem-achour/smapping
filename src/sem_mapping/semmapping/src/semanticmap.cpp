@@ -65,6 +65,148 @@ namespace semmapping
         return best_box;
     }
 
+    std::pair<double, double> SemanticMap::get_real_object_length_width(const std::string &name)
+    {
+        std::pair<double, double> dimensions;
+
+        if(name=="Chair") {dimensions.first= 0.5; dimensions.second= 0.5;}
+        else if (name== "Table") {dimensions.first= 1.8; dimensions.second= 0.8;}
+        else if (name=="Shelf") {dimensions.first= 0.9; dimensions.second= 0.4;}
+        else {dimensions.first= 0.0; dimensions.second= 0.0;}
+
+        return dimensions;
+    }
+
+    polygon SemanticMap::create_shifted_bounding_box(std::string direction, point reference, double dx, double dy, double lamda, double length, double width)
+    {
+        point p1, p2, p3, p4;
+        polygon pg;
+
+        if (direction=="left")
+        {
+            p1.x (reference.x() + lamda * dx); p1.y (reference.y() + lamda * dy); 
+            p2.x (p1.x() + length * dx); p2.y (p1.y() + length * dy);
+            p3.x (p1.x() + length * dx + width * dy); p3.y (p1.y() + length * dy - width * dx);
+            p4.x (p1.x() + width * dy); p4.y (p1.y() - width * dx);
+        } 
+        else
+        {
+            p2.x (reference.x() + lamda * dx); p2.y (reference.y() + lamda * dy); 
+            p1.x (p2.x() - length * dx); p1.y (p2.y() - length * dy); 
+            p3.x (p1.x() + length * dx + width * dy); p3.y (p1.y() + length * dy - width * dx);
+            p4.x (p1.x() + width * dy); p4.y (p1.y() - width * dx);
+        }
+
+        bg::append(pg.outer(), p1);
+        bg::append(pg.outer(), p2);
+        bg::append(pg.outer(), p3);
+        bg::append(pg.outer(), p4);
+
+        return pg;
+    }
+
+    void SemanticMap::associate_real_object_dimensions_to_polygon(polygon poly, double length, double width, std::vector<double> &similarity_factor, 
+    std::vector<polygon> &obb_list)
+    {   
+        double l= length;
+        double h= width;
+        // Repeat the process on all the edges of the polygon
+        for(int i=0; i< poly.outer().size()-1; i++)
+        {
+            point first_edge_point = poly.outer()[i];
+            point second_edge_point = poly.outer()[i+1];
+            printf("\n new object");
+
+            double edge_distance = sqrt((second_edge_point.x() - first_edge_point.x())*(second_edge_point.x() - first_edge_point.x()) 
+                                + (second_edge_point.y() - first_edge_point.y())*(second_edge_point.y() - first_edge_point.y()));
+            double dx= (second_edge_point.x() - first_edge_point.x())/ edge_distance;
+            double dy= (second_edge_point.y() - first_edge_point.y())/ edge_distance;
+            double v_directeur [2]= {dx, dy}; 
+            double v_normale [2]= {dy, -dx};
+
+            // Determine the polygon points at the left and right extremities of the current edge
+            double lamda [poly.outer().size()];
+            double beta [poly.outer().size()];
+
+            double lamda_left_point, beta_left_point, lamda_right_point, beta_right_point, lamda_bottom_point, beta_bottom_point;
+            lamda_left_point= 0; beta_left_point= 0; lamda_right_point= 0; beta_right_point= 0; lamda_bottom_point= 0; beta_bottom_point= 0;
+
+            for(int j=0; j< poly.outer().size();j++)
+            {
+                lamda [j] = dx * (poly.outer()[j].x() - first_edge_point.x()) + dy * (poly.outer()[j].y() - first_edge_point.y());
+                beta [j] = dy * (poly.outer()[j].x() - first_edge_point.x()) - dx * (poly.outer()[j].y() - first_edge_point.y());
+
+                if (lamda [j] < lamda_left_point)
+                {
+                    lamda_left_point = lamda [j];
+                    beta_left_point = beta [j];
+                }
+                if (lamda [j] > lamda_right_point)
+                {
+                    lamda_right_point = lamda [j];
+                    beta_right_point = beta [j];
+                }
+                if (beta [j] > beta_bottom_point)
+                {
+                    lamda_bottom_point = lamda [j];
+                    beta_bottom_point = beta [j];
+                }
+            }
+
+            // Computing OBBs similarity factors compared to the knowledge base boxes
+            double left_obb_factor= 0.5*(fabs(lamda_left_point)/(l-edge_distance)) + 0.5*(fabs(h- beta_left_point)/h);
+            double right_obb_factor= 0.5*(fabs(edge_distance-lamda_right_point)/edge_distance) + 0.5*(fabs(h- beta_right_point)/h);
+
+            polygon left_box;
+            polygon right_box;
+                
+            left_box= create_shifted_bounding_box("left", first_edge_point, dx, dy, lamda_left_point, l, h);
+            right_box= create_shifted_bounding_box("right", first_edge_point, dx, dy, lamda_right_point, l, h);
+
+            if (left_obb_factor < right_obb_factor)
+                {
+                    similarity_factor.push_back(left_obb_factor);
+                    obb_list.push_back(left_box);
+                } 
+            else
+                {
+                    similarity_factor.push_back(right_obb_factor);
+                    obb_list.push_back(right_box);
+                }
+        }
+
+    }
+
+    polygon SemanticMap::create_object_box_using_knowledge_base(polygon poly, const std::string &name)
+    {
+        // Getting real object dimensions from knowledge base
+        double l; double w; 
+        std::pair<double, double> dimensions;
+        dimensions = get_real_object_length_width(name);
+        l= dimensions.first;
+        w= dimensions.second;
+
+        // Geometric association and generation of possible OBBs  
+        std::vector<double> similarity_factor;
+        std::vector<polygon> obb_list;
+        associate_real_object_dimensions_to_polygon(poly, l, w, similarity_factor, obb_list);
+        associate_real_object_dimensions_to_polygon(poly, w, l, similarity_factor, obb_list);
+
+        // Selecting the best_polygon using lamda and beta values 
+        polygon best_polygon= obb_list[0];
+        double best_factor= similarity_factor[0];
+        for(int i=0; i < similarity_factor.size(); i++)
+        {
+		    if ((similarity_factor[i]< best_factor)) // union_fit(obb_list[i], poly) < FIT_THRESH
+            {
+                best_factor= similarity_factor[i]; best_polygon= obb_list[i];
+            }
+	    }
+
+        bg::correct(best_polygon);
+        return best_polygon;
+    }
+
     pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloudFromInd(pcl::PointIndices::Ptr input_indices,  pcl::PointCloud<pcl::PointXYZ>::ConstPtr input_cloud)
     {
         pcl::ExtractIndices<pcl::PointXYZ> extract;
@@ -201,9 +343,10 @@ namespace semmapping
         double angle;
         obj.isCombined = true;
         obj.shape_union = computeConvexHullPcl(obj.point_cloud);
-        obj.oriented_box = create_oriented_box(obj.shape_union, angle);
-        obj.rotation_angle = angle;
-        obj.obb = polygonFromBox(obj.oriented_box, obj.rotation_angle);
+        //obj.oriented_box = create_oriented_box(obj.shape_union, angle);
+        //obj.rotation_angle = angle;
+        //obj.obb = polygonFromBox(obj.oriented_box, obj.rotation_angle);
+        obj.obb = create_object_box_using_knowledge_base(obj.shape_union, obj.name);
         bg::centroid(obj.obb, obj.oriented_box_cen);
         bg::centroid( obj.shape_union, obj.shape_union_cen);
 
@@ -303,11 +446,12 @@ namespace semmapping
                 }
                 else
                 {
-                    double angel;
+                    double angle;
                     tableObj.shape_union = computeConvexHullPcl(tableObj.point_cloud);
-                    tableObj.oriented_box = create_oriented_box(tableObj.shape_union, angel);
-                    tableObj.rotation_angle = angel;
-                    tableObj.obb = polygonFromBox(tableObj.oriented_box, tableObj.rotation_angle);
+                    //tableObj.oriented_box = create_oriented_box(tableObj.shape_union, angel);
+                    //tableObj.rotation_angle = angel;
+                    //tableObj.obb = polygonFromBox(tableObj.oriented_box, tableObj.rotation_angle);
+                    tableObj.obb = create_object_box_using_knowledge_base(tableObj.shape_union, tableObj.name);
                 }
             }
         }
@@ -374,9 +518,10 @@ namespace semmapping
         bg::centroid(obj.shape_union, obj.shape_union_cen);
 
         double angle;
-        obj.oriented_box = create_oriented_box(obj.shape_union, angle);
-        obj.rotation_angle = angle;
-        obj.obb = polygonFromBox(obj.oriented_box, obj.rotation_angle);
+        //obj.oriented_box = create_oriented_box(obj.shape_union, angle);
+        //obj.rotation_angle = angle;
+        //obj.obb = polygonFromBox(obj.oriented_box, obj.rotation_angle);
+        obj.obb = create_object_box_using_knowledge_base(obj.shape_union, obj.name);
         bg::centroid(obj.obb, obj.oriented_box_cen);
         //std::cout << "obj obb 2 size: " << obj.obb.outer().size() << std::endl;
 

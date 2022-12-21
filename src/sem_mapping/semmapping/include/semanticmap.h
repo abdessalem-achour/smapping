@@ -233,6 +233,10 @@ namespace semmapping
             std::set<size_t> getObjectsByNameInRange(const std::string &name, const polygon &pg);
             std::set<size_t> getObjectsByNameInRange(const std::string &name, const box &bx);
             box create_oriented_box(polygon poly, double &best_angle);
+            std::pair<double, double> get_real_object_length_width(const std::string &name);
+            polygon create_shifted_bounding_box(std::string direction, point reference, double dx, double dy, double lamda, double length, double width);
+            void associate_real_object_dimensions_to_polygon(polygon poly, double length, double width, std::vector<double> &similarity_factor, std::vector<polygon> &obb_list);
+            polygon create_object_box_using_knowledge_base(polygon poly, const std::string &name);
             polygon polygonFromBox(const box &bbox, const double &angle);
             std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsEuc(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
             std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsReg(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
