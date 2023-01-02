@@ -79,16 +79,16 @@ namespace semmapping
             return bg::area(sect) / bg::area(refpg);
         }
 
-        /*inline static double union_fit(const polygon &a, const polygon &b)
+        inline static double iou(const polygon &a, const polygon &b)
         {
             multi_polygon un;
             bg::union_(a, b, un);
             multi_polygon sect;
             bg::intersection(a, b, sect);
-            std::cout << "intersect: " << bg::area(sect) << " unioin: " <<bg::area(un) << std::endl;
+            //std::cout << "intersect: " << bg::area(sect) << " unioin: " <<bg::area(un) << std::endl;
             //intersection over union
             return bg::area(sect) / bg::area(un);
-        }*/
+        }
 
         inline static double union_fit(const polygon &a, const polygon &b)
         {
@@ -234,7 +234,7 @@ namespace semmapping
             std::set<size_t> getObjectsByNameInRange(const std::string &name, const box &bx);
             box create_oriented_box(polygon poly, double &best_angle);
             std::pair<double, double> get_real_object_length_width(const std::string &name);
-            polygon create_shifted_bounding_box(std::string direction, point reference, double dx, double dy, double lamda, double length, double width);
+            polygon create_shifted_bounding_box_with_real_dimensions(int direction, point reference, double v_directeur[2], double shift_distance, double length, double width);
             void associate_real_object_dimensions_to_polygon(polygon poly, double length, double width, std::vector<double> &similarity_factor, std::vector<polygon> &obb_list);
             polygon create_object_box_using_knowledge_base(polygon poly, const std::string &name);
             polygon polygonFromBox(const box &bbox, const double &angle);
