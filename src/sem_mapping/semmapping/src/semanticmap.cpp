@@ -105,23 +105,19 @@ namespace semmapping
     {   
         double l= length; double w= width;
         // Repeat the process on all the edges of the polygon
-        for(int i=0; i< poly.outer().size()-1; i++)
-        {
+        for(int i=0; i< poly.outer().size()-1; i++){
             //printf("\n%d edge", i);
             point first_point = poly.outer()[i];
             point second_point = poly.outer()[i+1];
-
             double edge_distance = sqrt((second_point.x() - first_point.x())*(second_point.x() - first_point.x()) 
                                 + (second_point.y() - first_point.y())*(second_point.y() - first_point.y()));
             double dx= (second_point.x() - first_point.x())/ edge_distance;
             double dy= (second_point.y() - first_point.y())/ edge_distance;
             double v_directeur [2]= {dx, dy}; 
             double v_normale [2]= {dy, -dx};
-
             // Determine the polygon points at the left and right extremities of the current edge
             double lamda [poly.outer().size()];
             double beta [poly.outer().size()];
-
             // Computing <lamda, beta> of left, right and lower extreme points
             std::pair<double, double> left_extremum(0,0);
             std::pair<double, double> right_extremum(0,0);
@@ -144,64 +140,33 @@ namespace semmapping
             }
             // Saving respectively the <lamda, beta> pair of the left, right and lower extremities coefficient_of_extreme_points
             std::pair<double, double> coefficient_of_extreme_points[3]={left_extremum, right_extremum,lower_extremum};
+            /* cout<< "("<< coefficient_of_extreme_points[0].first<<", "<<coefficient_of_extreme_points[0].second<<") "<< 
+                "("<< coefficient_of_extreme_points[1].first<<", "<<coefficient_of_extreme_points[1].second<<") "<<
+                "("<< coefficient_of_extreme_points[2].first<<", "<<coefficient_of_extreme_points[2].second<<")"<< endl; */
 
             // Computing OBBs similarity factors compared to the knowledge base boxes
-            double min_factor= 0; double max_factor= l+w+1;
+            double min_factor= 0; double max_factor= l+w+1; double error_range=0.0;
             for (int i=0; i<2; i++){
                 polygon box;
-                double box_area_coverage_factor, obb_similarity_factor, normalized_similarity_factor;
-                
-                box= create_shifted_bounding_box_with_real_dimensions(i, first_point, v_directeur, left_extremum.first, l, w);
-                box_area_coverage_factor = fabs(1-iou(poly, box));
-                if (fabs(coefficient_of_extreme_points[i].first) <= l && coefficient_of_extreme_points[i].second <= w && box_area_coverage_factor<=1)
-                    obb_similarity_factor= fabs(i*edge_distance - coefficient_of_extreme_points[i].first) + (w- coefficient_of_extreme_points[i].second) + box_area_coverage_factor; 
-
-                normalized_similarity_factor= (obb_similarity_factor-min_factor)/(max_factor-min_factor);
-                printf("\nobb_similarity_factor= %lf", normalized_similarity_factor);
-                if (normalized_similarity_factor < 0.3)
-                {
+                double box_area_coverage_factor, obb_similarity_factor, normalized_similarity_factor=1;
+                box= create_shifted_bounding_box_with_real_dimensions(i, first_point, v_directeur, coefficient_of_extreme_points[i].first, l, w);
+                //box_area_coverage_factor= 1-iou(poly, box);
+                box_area_coverage_factor= 1-((((1-i)*edge_distance+coefficient_of_extreme_points[i].first)*coefficient_of_extreme_points[i].second)/(l*w));
+                if (fabs(coefficient_of_extreme_points[i].first) <= (l+error_range) && coefficient_of_extreme_points[i].second <= (w+error_range)
+                && box_area_coverage_factor<=(1+error_range)){ 
+                    obb_similarity_factor= fabs(i*edge_distance - coefficient_of_extreme_points[i].first) + fabs(w- coefficient_of_extreme_points[i].second) + box_area_coverage_factor; 
+                    normalized_similarity_factor= (obb_similarity_factor-min_factor)/(max_factor-min_factor);
+                    printf("obb_similarity_factor_direction_%d= %lf\n", i, normalized_similarity_factor);
+                    if (std::isinf(normalized_similarity_factor)){
+                        printf("first term= %lf, second_term= %lf, third_term= %lf\n", fabs(i*edge_distance - coefficient_of_extreme_points[i].first), fabs(w- coefficient_of_extreme_points[i].second), box_area_coverage_factor);
+                    }
+                }
+                    
+                if (normalized_similarity_factor < 0.35){
                     similarity_factor.push_back(normalized_similarity_factor);
                     obb_list.push_back(box);
                 } 
-            }
-
-            // Computing OBBs similarity factors compared to the knowledge base boxes
-            /*polygon left_box, right_box;
-            double left_obb_factor, right_obb_factor;
-            double normalized_similarity_factor;
-
-            left_box= create_shifted_bounding_box_with_real_dimensions("left", first_point, v_directeur, left_extremum.first, l, w);
-            right_box= create_shifted_bounding_box_with_real_dimensions("right", first_point, v_directeur, right_extremum.first, l, w);
-
-            double left_box_covered_area_factor = 1/iou(poly, left_box);
-            double right_box_covered_area_factor = 1/iou(poly, right_box);
-            printf("\narea_factor= %lf", right_box_covered_area_factor);
-            double min_factor= 0; double max_factor= l+w+1;
-                
-            if (abs(left_extremum.first) <= l && left_extremum.second <= w && left_box_covered_area_factor<=1)
-            {
-                left_obb_factor= fabs(left_extremum.first) + (w- left_extremum.second) + left_box_covered_area_factor;
-                normalized_similarity_factor= (left_obb_factor-min_factor)/(max_factor-min_factor);
-                printf("\nleft_obb_factor= %lf", normalized_similarity_factor);
-                if (normalized_similarity_factor < 0.3)
-                {
-                    similarity_factor.push_back(normalized_similarity_factor);
-                    obb_list.push_back(left_box);
-                } 
-            }
-                
-            if (abs(right_extremum.first) <= l && right_extremum.second <= w && right_box_covered_area_factor<=1)
-            {
-                right_obb_factor= fabs(edge_distance-right_extremum.first) + (w- right_extremum.second) + right_box_covered_area_factor;
-                normalized_similarity_factor= (right_obb_factor-min_factor)/(max_factor-min_factor);
-                printf("\nright_obb_factor= %lf", normalized_similarity_factor);
-                if (normalized_similarity_factor < 0.3)
-                {
-                    similarity_factor.push_back(normalized_similarity_factor);
-                    obb_list.push_back(right_box);
-                }
-            }
-            */
+            }        
         }
     }
 
@@ -211,7 +176,7 @@ namespace semmapping
         std::pair<double, double> dimensions= get_real_object_length_width(name);
         cout<< "New detection of a "<< name << endl ;
         if (dimensions.first==0 && dimensions.second==0){
-            printf("object dont exist in the knowledge base, rotating calippers was used!\n");
+            printf("Object dont exist in the knowledge base, rotating calippers was used!\n");
             double angle;
             box object_box = create_oriented_box(poly, angle);
             return polygonFromBox(object_box, angle);
@@ -232,12 +197,12 @@ namespace semmapping
                     best_factor= similarity_factor[i]; best_polygon= obb_list[i];
                 }
             }
-            printf("new association solution was used, best_factor= %lf\n", best_factor);
+            printf("New association solution was used, best_factor= %lf\n", best_factor);
             bg::correct(best_polygon);
             return best_polygon;
         } 
         else{
-            printf("\nno good candidates, rotating calippers was used!\n");
+            printf("No good candidates, rotating calippers was used!\n");
             double angle;
             box object_box = create_oriented_box(poly, angle);
             return polygonFromBox(object_box, angle);
