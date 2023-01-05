@@ -101,8 +101,7 @@ namespace semmapping
         return pg;
     }
 
-    void SemanticMap::associate_real_box_to_partial_polygon(polygon poly, double length, double width, std::vector<double> &similarity_factor, 
-    std::vector<polygon> &obb_list)
+    void SemanticMap::associate_real_box_to_partial_polygon(polygon poly, double length, double width, std::vector<std::pair<polygon, double>> &selected_obb_list)
     {   
         double l= length; double w= width;
         // Repeat the process on all the edges of the polygon
@@ -144,13 +143,7 @@ namespace semmapping
             // Computing OBBs similarity factors compared to the knowledge base boxes
             double range_error=0.0; double min_factor= 0; double max_factor= l+w+1+3*range_error; 
             for (int i=0; i<2; i++){
-                polygon box= create_shifted_bounding_box_with_real_dimensions(i, first_point, v_directeur, coefficient_of_extreme_points[i].first, l, w);
                 double box_area_coverage_factor, obb_similarity_factor, normalized_similarity_factor=1;
-                //box_area_coverage_factor= 1-iou(poly, box); // if used, must verify why some time gives -inf !!!
-                //box_area_coverage_factor= 1-((((1-i)*edge_distance + fabs(coefficient_of_extreme_points[i].first)) * coefficient_of_extreme_points[i].second) / (l*w));
-                //box_area_coverage_factor= 1-(((fabs(coefficient_of_extreme_points[0].first) + fabs(coefficient_of_extreme_points[1].first)) * coefficient_of_extreme_points[2].second) / (l*w));
-                //if (fabs(coefficient_of_extreme_points[i].first) <= l+range_error && coefficient_of_extreme_points[i].second <= w+range_error
-                //&& box_area_coverage_factor< 1+range_error && !std::isinf(box_area_coverage_factor)){ 
                 if (fabs(coefficient_of_extreme_points[i].first) <= l+range_error && coefficient_of_extreme_points[i].second <= w+range_error){ 
                     box_area_coverage_factor= 1- ((l+range_error)-fabs(coefficient_of_extreme_points[i].first)) * ((w+range_error)-fabs(coefficient_of_extreme_points[i].second))/((l+range_error)*(w+range_error)); 
                     obb_similarity_factor= 0.7*(fabs(i*edge_distance - coefficient_of_extreme_points[i].first) + fabs(w- coefficient_of_extreme_points[i].second)) + 0.3*box_area_coverage_factor; 
@@ -159,8 +152,11 @@ namespace semmapping
                 }
                     
                 if (normalized_similarity_factor < 0.35){
-                    similarity_factor.push_back(normalized_similarity_factor);
-                    obb_list.push_back(box);
+                    polygon box= create_shifted_bounding_box_with_real_dimensions(i, first_point, v_directeur, coefficient_of_extreme_points[i].first, l, w);
+                    std::pair<polygon, double> new_candidat;
+                    new_candidat.first=box;
+                    new_candidat.second= normalized_similarity_factor;
+                    selected_obb_list.push_back(new_candidat);
                 } 
             }        
         }
@@ -179,23 +175,22 @@ namespace semmapping
         }
 
         // Geometric association and generation of possible OBBs  
-        std::vector<double> similarity_factor;
-        std::vector<polygon> obb_list;
-        associate_real_box_to_partial_polygon(poly, dimensions.first, dimensions.second, similarity_factor, obb_list);
-        associate_real_box_to_partial_polygon(poly, dimensions.second, dimensions.first, similarity_factor, obb_list);
-        // Selecting the best_polygon using lamda and beta values 
-        if (similarity_factor.size()){
-            polygon best_polygon= obb_list[0];
-            double best_factor= similarity_factor[0];
-            for(int i=0; i < similarity_factor.size(); i++)
+        std::vector<std::pair<polygon, double>> selected_obb_list;
+        associate_real_box_to_partial_polygon(poly, dimensions.first, dimensions.second, selected_obb_list);
+        associate_real_box_to_partial_polygon(poly, dimensions.second, dimensions.first, selected_obb_list);
+        // Selecting the best_obb using lamda and beta values 
+        if (selected_obb_list.size()){
+            polygon best_obb= selected_obb_list[0].first;
+            double best_factor= selected_obb_list[0].second;
+            for(int i=0; i < selected_obb_list.size(); i++)
             {
-                if ((similarity_factor[i]< best_factor)){   // union_fit(obb_list[i], poly) < FIT_THRESH
-                    best_factor= similarity_factor[i]; best_polygon= obb_list[i];
+                if ((selected_obb_list[i].second < best_factor)){   // union_fit(obb_list[i], poly) < FIT_THRESH
+                    best_obb= selected_obb_list[i].first; best_factor= selected_obb_list[i].second; 
                 }
             }
             printf("New association solution was used, best_factor= %lf\n", best_factor);
-            bg::correct(best_polygon);
-            return best_polygon;
+            bg::correct(best_obb);
+            return best_obb;
         } 
         else{
             printf("No good candidates, rotating calippers was used!\n");
