@@ -22,12 +22,11 @@ int main(int argc, char** argv)
     move_base_msgs::MoveBaseGoal goal_4;
     move_base_msgs::MoveBaseGoal goal_5;
 
-
-    goal_1.target_pose.header.frame_id = "map"; goal_1.target_pose.pose.position.x=-1.0; goal_1.target_pose.pose.position.y= -3.0; goal_1.target_pose.pose.orientation.w= 1.0;
-    goal_2.target_pose.header.frame_id = "map"; goal_2.target_pose.pose.position.x= 2.5; goal_2.target_pose.pose.position.y= -3.0; goal_2.target_pose.pose.orientation.w=  1.0;
-    goal_3.target_pose.header.frame_id = "map"; goal_3.target_pose.pose.position.x= 2.5; goal_3.target_pose.pose.position.y=  3.0; goal_3.target_pose.pose.orientation.w=  1.0;
-    goal_4.target_pose.header.frame_id = "map"; goal_4.target_pose.pose.position.x=-1.0; goal_4.target_pose.pose.position.y=  3.0; goal_4.target_pose.pose.orientation.w=  1.0;
-    goal_5.target_pose.header.frame_id = "map"; goal_5.target_pose.pose.position.x=-1.0; goal_5.target_pose.pose.position.y= -3.0; goal_5.target_pose.pose.orientation.w= 1.0;
+    goal_1.target_pose.header.frame_id = "map"; goal_1.target_pose.pose.position.x=-1.0; goal_1.target_pose.pose.position.y= -2.5; goal_1.target_pose.pose.orientation.w= 1.0;
+    goal_2.target_pose.header.frame_id = "map"; goal_2.target_pose.pose.position.x= 1.5; goal_2.target_pose.pose.position.y= -2.5; goal_2.target_pose.pose.orientation.w=  1.0;
+    goal_3.target_pose.header.frame_id = "map"; goal_3.target_pose.pose.position.x= 2.0; goal_3.target_pose.pose.position.y=  2.0; goal_3.target_pose.pose.orientation.w=  1.0;
+    goal_4.target_pose.header.frame_id = "map"; goal_4.target_pose.pose.position.x=-1.0; goal_4.target_pose.pose.position.y=  2.5; goal_4.target_pose.pose.orientation.w=  1.0;
+    goal_5.target_pose.header.frame_id = "map"; goal_5.target_pose.pose.position.x=-1.0; goal_5.target_pose.pose.position.y= -2.5; goal_5.target_pose.pose.orientation.w= 1.0;
 
 
     move_base_msgs::MoveBaseGoal goal_list [5] = {goal_1, goal_2, goal_3, goal_4, goal_5};

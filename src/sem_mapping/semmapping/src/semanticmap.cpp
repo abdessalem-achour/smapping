@@ -72,6 +72,7 @@ namespace semmapping
         if(name=="Chair") {dimensions.first= 0.5; dimensions.second= 0.5;}
         else if (name== "Table") {dimensions.first= 1.8; dimensions.second= 0.8;}
         else if (name=="Shelf" || name=="Bookcase") {dimensions.first= 0.9; dimensions.second= 0.4;}
+        else if (name=="Furniture") {dimensions.first= 0.8; dimensions.second= 0.6;}
         else {dimensions.first= 0.0; dimensions.second= 0.0;}
 
         return dimensions;
@@ -100,7 +101,7 @@ namespace semmapping
         return pg;
     }
 
-    void SemanticMap::associate_real_object_dimensions_to_polygon(polygon poly, double length, double width, std::vector<double> &similarity_factor, 
+    void SemanticMap::associate_real_box_to_partial_polygon(polygon poly, double length, double width, std::vector<double> &similarity_factor, 
     std::vector<polygon> &obb_list)
     {   
         double l= length; double w= width;
@@ -140,26 +141,21 @@ namespace semmapping
             }
             // Saving respectively the <lamda, beta> pair of the left, right and lower extremities coefficient_of_extreme_points
             std::pair<double, double> coefficient_of_extreme_points[3]={left_extremum, right_extremum,lower_extremum};
-            /* cout<< "("<< coefficient_of_extreme_points[0].first<<", "<<coefficient_of_extreme_points[0].second<<") "<< 
-                "("<< coefficient_of_extreme_points[1].first<<", "<<coefficient_of_extreme_points[1].second<<") "<<
-                "("<< coefficient_of_extreme_points[2].first<<", "<<coefficient_of_extreme_points[2].second<<")"<< endl; */
-
             // Computing OBBs similarity factors compared to the knowledge base boxes
-            double min_factor= 0; double max_factor= l+w+1; double error_range=0.0;
+            double range_error=0.0; double min_factor= 0; double max_factor= l+w+1+3*range_error; 
             for (int i=0; i<2; i++){
-                polygon box;
+                polygon box= create_shifted_bounding_box_with_real_dimensions(i, first_point, v_directeur, coefficient_of_extreme_points[i].first, l, w);
                 double box_area_coverage_factor, obb_similarity_factor, normalized_similarity_factor=1;
-                box= create_shifted_bounding_box_with_real_dimensions(i, first_point, v_directeur, coefficient_of_extreme_points[i].first, l, w);
-                //box_area_coverage_factor= 1-iou(poly, box);
-                box_area_coverage_factor= 1-((((1-i)*edge_distance+coefficient_of_extreme_points[i].first)*coefficient_of_extreme_points[i].second)/(l*w));
-                if (fabs(coefficient_of_extreme_points[i].first) <= (l+error_range) && coefficient_of_extreme_points[i].second <= (w+error_range)
-                && box_area_coverage_factor<=(1+error_range)){ 
-                    obb_similarity_factor= fabs(i*edge_distance - coefficient_of_extreme_points[i].first) + fabs(w- coefficient_of_extreme_points[i].second) + box_area_coverage_factor; 
+                //box_area_coverage_factor= 1-iou(poly, box); // if used, must verify why some time gives -inf !!!
+                //box_area_coverage_factor= 1-((((1-i)*edge_distance + fabs(coefficient_of_extreme_points[i].first)) * coefficient_of_extreme_points[i].second) / (l*w));
+                //box_area_coverage_factor= 1-(((fabs(coefficient_of_extreme_points[0].first) + fabs(coefficient_of_extreme_points[1].first)) * coefficient_of_extreme_points[2].second) / (l*w));
+                //if (fabs(coefficient_of_extreme_points[i].first) <= l+range_error && coefficient_of_extreme_points[i].second <= w+range_error
+                //&& box_area_coverage_factor< 1+range_error && !std::isinf(box_area_coverage_factor)){ 
+                if (fabs(coefficient_of_extreme_points[i].first) <= l+range_error && coefficient_of_extreme_points[i].second <= w+range_error){ 
+                    box_area_coverage_factor= 1- ((l+range_error)-fabs(coefficient_of_extreme_points[i].first)) * ((w+range_error)-fabs(coefficient_of_extreme_points[i].second))/((l+range_error)*(w+range_error)); 
+                    obb_similarity_factor= 0.7*(fabs(i*edge_distance - coefficient_of_extreme_points[i].first) + fabs(w- coefficient_of_extreme_points[i].second)) + 0.3*box_area_coverage_factor; 
                     normalized_similarity_factor= (obb_similarity_factor-min_factor)/(max_factor-min_factor);
                     printf("obb_similarity_factor_direction_%d= %lf\n", i, normalized_similarity_factor);
-                    if (std::isinf(normalized_similarity_factor)){
-                        printf("first term= %lf, second_term= %lf, third_term= %lf\n", fabs(i*edge_distance - coefficient_of_extreme_points[i].first), fabs(w- coefficient_of_extreme_points[i].second), box_area_coverage_factor);
-                    }
                 }
                     
                 if (normalized_similarity_factor < 0.35){
@@ -170,7 +166,7 @@ namespace semmapping
         }
     }
 
-    polygon SemanticMap::create_object_box_using_knowledge_base(polygon poly, const std::string &name)
+    polygon SemanticMap::create_object_box_using_prior_knowledge(polygon poly, const std::string &name)
     {
         // Getting real object dimensions from knowledge base, return <0,0> if object dont exist
         std::pair<double, double> dimensions= get_real_object_length_width(name);
@@ -185,8 +181,8 @@ namespace semmapping
         // Geometric association and generation of possible OBBs  
         std::vector<double> similarity_factor;
         std::vector<polygon> obb_list;
-        associate_real_object_dimensions_to_polygon(poly, dimensions.first, dimensions.second, similarity_factor, obb_list);
-        associate_real_object_dimensions_to_polygon(poly, dimensions.second, dimensions.first, similarity_factor, obb_list);
+        associate_real_box_to_partial_polygon(poly, dimensions.first, dimensions.second, similarity_factor, obb_list);
+        associate_real_box_to_partial_polygon(poly, dimensions.second, dimensions.first, similarity_factor, obb_list);
         // Selecting the best_polygon using lamda and beta values 
         if (similarity_factor.size()){
             polygon best_polygon= obb_list[0];
@@ -348,7 +344,7 @@ namespace semmapping
         //obj.oriented_box = create_oriented_box(obj.shape_union, angle);
         //obj.rotation_angle = angle;
         //obj.obb = polygonFromBox(obj.oriented_box, obj.rotation_angle);
-        obj.obb = create_object_box_using_knowledge_base(obj.shape_union, obj.name);
+        obj.obb = create_object_box_using_prior_knowledge(obj.shape_union, obj.name);
         bg::centroid(obj.obb, obj.oriented_box_cen);
         bg::centroid( obj.shape_union, obj.shape_union_cen);
 
@@ -453,7 +449,7 @@ namespace semmapping
                     //tableObj.oriented_box = create_oriented_box(tableObj.shape_union, angel);
                     //tableObj.rotation_angle = angel;
                     //tableObj.obb = polygonFromBox(tableObj.oriented_box, tableObj.rotation_angle);
-                    tableObj.obb = create_object_box_using_knowledge_base(tableObj.shape_union, tableObj.name);
+                    tableObj.obb = create_object_box_using_prior_knowledge(tableObj.shape_union, tableObj.name);
                 }
             }
         }
@@ -523,7 +519,7 @@ namespace semmapping
         //obj.oriented_box = create_oriented_box(obj.shape_union, angle);
         //obj.rotation_angle = angle;
         //obj.obb = polygonFromBox(obj.oriented_box, obj.rotation_angle);
-        obj.obb = create_object_box_using_knowledge_base(obj.shape_union, obj.name);
+        obj.obb = create_object_box_using_prior_knowledge(obj.shape_union, obj.name);
         bg::centroid(obj.obb, obj.oriented_box_cen);
         //std::cout << "obj obb 2 size: " << obj.obb.outer().size() << std::endl;
 
