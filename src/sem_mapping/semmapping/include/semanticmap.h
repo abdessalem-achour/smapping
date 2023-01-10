@@ -71,6 +71,10 @@ namespace semmapping
         std::map<size_t, SemanticObject> objectList;
         std::set<size_t> tableList;
 
+        // Ground truth map parameters
+        bgi::rtree< rtree_entry, bgi::rstar<16> > groundTruthObjectRtree;
+        std::map<size_t, SemanticObject> groundTruthObjectList;
+        size_t groundTruthNext_index = 0;
 
         inline static double ref_fit(const polygon &newpg, const polygon &refpg)
         {
@@ -241,11 +245,13 @@ namespace semmapping
             std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsEuc(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
             std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsReg(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
             mapping_msgs::SemanticMap::Ptr createMapMessage(const point &robot,double loaded);
-            mapping_msgs::ObbMap::Ptr createObbMapMessage();
             mapping_msgs::ObjectPositions::Ptr findObjectPosition(const mapping_msgs::FindObjects &request);
             bool writeMapData(std::ostream &output);
             bool writeLikelihoodData(std::ostream &output);
-            bool readMapData(std::istream &input, bool is_ground_tuth_map);
+            bool readMapData(std::istream &input);
+            
+            mapping_msgs::SemanticMap::Ptr createGroundTruthMapMessage();
+            bool loadGroundTruthMap(std::istream &input);
 
             int viewer_index = 0;
             semmapping::ParamsConfig &param_config;

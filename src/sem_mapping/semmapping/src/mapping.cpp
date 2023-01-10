@@ -109,6 +109,7 @@ ros::Publisher laserPgPub;
 ros::Publisher observationPgPub;
 ros::Publisher completeAreaPgPub;
 ros::Publisher semanticMapPub;
+ros::Publisher gtSemanticMapPub;
 ros::Publisher debugCloudPub;
 ros::Publisher debug2CloudPub;
 ros::Publisher position_pub;
@@ -405,8 +406,6 @@ void mapUpdateAndPublish(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclCloud, semm
     }
     mapping_msgs::SemanticMap::Ptr map_msg = map.createMapMessage(robot_position, false);
     semanticMapPub.publish(map_msg);
-    //mapping_msgs::ObbMap::Ptr obb_map_msg = map.createObbMapMessage();
-    //ObbMapPub.publish(obb_map_msg);
     return;
 }
 
@@ -637,6 +636,7 @@ int main(int argc, char **argv) {
     observationPgPub = nh.advertise<geometry_msgs::PolygonStamped>("observation_pg", 1, true);
     completeAreaPgPub = nh.advertise<geometry_msgs::PolygonStamped>("complete_area_pg", 1, true);
     semanticMapPub = nh.advertise<mapping_msgs::SemanticMap>("/semantic_map", 1, true);
+    gtSemanticMapPub = nh.advertise<mapping_msgs::SemanticMap>("/ground_truth_semantic_map", 1, true);
     debugCloudPub = nh.advertise<sensor_msgs::PointCloud2>("debug_cloud", 1, true);
     debug2CloudPub = nh.advertise<sensor_msgs::PointCloud2>("debug2_cloud", 1, true);
     position_pub = nh.advertise<mapping_msgs::ObjectPositions>("found_objects", 1, true);
@@ -660,7 +660,7 @@ int main(int argc, char **argv) {
         if (!file) {
             ROS_ERROR("File could not be opened");
         } else {
-            if (map.readMapData(file, false)) {
+            if (map.readMapData(file)) {
                 semmapping::point robot;
                 ROS_INFO("Map loaded successfully yeay");
                 mapping_msgs::SemanticMap::Ptr map_msg = map.createMapMessage(robot, true);
@@ -692,7 +692,7 @@ int main(int argc, char **argv) {
                 std::cout << "File could not be opened" << std::endl;
                 continue;
             }
-            if (map.readMapData(file, false)) {
+            if (map.readMapData(file)) {
                 semmapping::point robot;
                 mapping_msgs::SemanticMap::Ptr map_msg= map.createMapMessage(robot, true);
                 semanticMapPub.publish(map_msg);
@@ -710,36 +710,15 @@ int main(int argc, char **argv) {
                 std::cout << "Ground truth map could not be opened" << std::endl;
                 continue;
             }
-            if (map.readMapData(file, true)) {
-                semmapping::point robot;
-                mapping_msgs::SemanticMap::Ptr map_msg= map.createMapMessage(robot, true);
-                semanticMapPub.publish(map_msg);
+            if (map.loadGroundTruthMap(file)) {
+                mapping_msgs::SemanticMap::Ptr map_msg= map.createGroundTruthMapMessage();
+                gtSemanticMapPub.publish(map_msg);
                 std::cout << "Ground truth Map loaded successfully" << std::endl;
             } else {
                 std::cout << "Failed loading map" << std::endl;
             }
             file.close();
         } 
-        else if (command == "Evaluate"){
-            std::string fname = "src/sem_mapping/semmapping/maps/truth_map.yaml";
-            std::cout << "Loading ground truth map file: " << fname << std::endl;
-            std::ifstream file(fname);
-            if (!file) {
-                std::cout << "Ground truth map could not be opened" << std::endl;
-                continue;
-            }
-
-
-            if (map.readMapData(file, true)) {
-                semmapping::point robot;
-                mapping_msgs::SemanticMap::Ptr map_msg= map.createMapMessage(robot, true);
-                semanticMapPub.publish(map_msg);
-                std::cout << "Ground truth Map loaded successfully" << std::endl;
-            } else {
-                std::cout << "Failed loading map" << std::endl;
-            }
-            file.close();
-        }
         else if (command == "save_likelihood") {
             std::string fname = readNext(in, it);
             std::cout << "Saving map file: " << fname << std::endl;

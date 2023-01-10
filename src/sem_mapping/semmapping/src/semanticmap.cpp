@@ -766,19 +766,31 @@ namespace semmapping
         return map;
     }
 
-    mapping_msgs::ObbMap::Ptr SemanticMap::createObbMapMessage()
-    {
-        mapping_msgs::ObbMap::Ptr obb_map(new mapping_msgs::ObbMap);
+    mapping_msgs::SemanticMap::Ptr SemanticMap::createGroundTruthMapMessage(){
+        ROS_WARN("Ground Truth map msg ");
+        mapping_msgs::SemanticMap::Ptr map(new mapping_msgs::SemanticMap);
+        for (auto &val : groundTruthObjectList)
+        {
+            viewer_index += 1;
+            SemanticObject &obj = val.second;
+            mapping_msgs::SemanticObject obj_msg;
+            obj_msg.id = val.first;
+            obj_msg.name = obj.name;
+            obj_msg.exist_certainty = 1;
+            obj_msg.obb = boostToPolygonMsg(obj.obb);
+            obj_msg.shape = boostToPolygonMsg(obj.shape_union);
+            point centroid;
+            bg::centroid(obj.shape_union, centroid);
+            obj.shape_union_cen = centroid;
+            obj_msg.position = boostToPointMsg(centroid);
+            sensor_msgs::PointCloud2 msg_cloud;
 
-        for (auto &val : objectList)
-            {
-                SemanticObject &obj = val.second;
-                geometry_msgs::Polygon obb_msg;
-                obb_msg = boostToPolygonMsg(obj.obb);
-                obb_map->objects_obb.push_back(std::move(obb_msg));
-            }
-    
-        return obb_map;
+            map->objects.push_back(std::move(obj_msg));
+        }
+
+        map->header.frame_id = "ground_truth_map";
+        map->header.stamp = ros::Time::now();
+        return map;
     }
 
     bool SemanticMap::writeLikelihoodData(std::ostream &output)
@@ -834,7 +846,7 @@ namespace semmapping
         return true;
     }
 
-    bool SemanticMap::readMapData(std::istream &input, bool is_ground_truth_map)
+    bool SemanticMap::readMapData(std::istream &input)
     {
         clearAll();
         YAML::Node map = YAML::Load(input);
@@ -842,6 +854,7 @@ namespace semmapping
         {
             SemanticObject obj;
             obj.name = entry["name"].as<std::string>();
+            obj.exist_certainty = entry["exist_certainty"].as<double>();
             try
             {
                 bg::read_wkt(entry["shape_union"].as<std::string>(), obj.shape_union);
@@ -851,33 +864,26 @@ namespace semmapping
                 ROS_ERROR_STREAM("Error reading object shape: " << e.what());
                 return false;
             }
-
-            if(!is_ground_truth_map){
-                obj.exist_certainty = entry["exist_certainty"].as<double>();
-                try
-                {
-                    bg::read_wkt(entry["oriented_box"].as<std::string>(), obj.obb);
-                }
-                catch (const bg::read_wkt_exception &e)
-                {
-                    ROS_ERROR_STREAM("Error reading obb: " << e.what());
-                    return false;
-                }
+            try
+            {
+                bg::read_wkt(entry["oriented_box"].as<std::string>(), obj.obb);
             }
-            else{
-                obj.exist_certainty = 1;
-                obj.obb= obj.shape_union;
+            catch (const bg::read_wkt_exception &e)
+            {
+                ROS_ERROR_STREAM("Error reading obb: " << e.what());
+                return false;
             }
-            
             obj.bounding_box = bg::return_envelope<box>(obj.shape_union);
             addObject(obj);
         }
         return true;
     }
 
-    /*bool SemanticMap::parseMap(std::istream &input)
+    bool SemanticMap::loadGroundTruthMap(std::istream &input)
     {
-        clearAll();
+        groundTruthObjectList.clear();
+        groundTruthObjectRtree.clear();
+        groundTruthNext_index = 0;
         YAML::Node map = YAML::Load(input);
         for (const YAML::Node &entry : map)
         {
@@ -893,14 +899,17 @@ namespace semmapping
                 ROS_ERROR_STREAM("Error reading object shape: " << e.what());
                 return false;
             }
-
             obj.obb= obj.shape_union;
-            obj.bounding_box = bg::return_envelope<box>(obj.obb);
-            addObject(obj);
+            obj.bounding_box = bg::return_envelope<box>(obj.shape_union);
+            groundTruthObjectList[groundTruthNext_index] = obj;
+            rtree_entry ent = {obj.bounding_box, groundTruthNext_index};
+            groundTruthObjectRtree.insert(ent);
+            ROS_INFO_STREAM("Succesfully added to GTMap, size: " << groundTruthObjectRtree.size());
+            groundTruthNext_index++;
         }
         return true;
-    }*/
-
+    }
+   
     mapping_msgs::ObjectPositions::Ptr SemanticMap::findObjectPosition(const mapping_msgs::FindObjects &request)
     {
         point robot = getRobotPosition();
