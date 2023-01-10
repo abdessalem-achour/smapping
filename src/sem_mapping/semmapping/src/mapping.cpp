@@ -660,7 +660,7 @@ int main(int argc, char **argv) {
         if (!file) {
             ROS_ERROR("File could not be opened");
         } else {
-            if (map.readMapData(file)) {
+            if (map.readMapData(file, false)) {
                 semmapping::point robot;
                 ROS_INFO("Map loaded successfully yeay");
                 mapping_msgs::SemanticMap::Ptr map_msg = map.createMapMessage(robot, true);
@@ -683,7 +683,8 @@ int main(int argc, char **argv) {
         std::string command = readNext(in, it);
         if (command == "help") {
             std::cout << "Available commands:" << std::endl; // TODO
-        } else if (command == "load") {
+        } 
+        else if (command == "load") {
             std::string fname = readNext(in, it);
             std::cout << "Loading map file: " << fname << std::endl;
             std::ifstream file(fname);
@@ -691,16 +692,55 @@ int main(int argc, char **argv) {
                 std::cout << "File could not be opened" << std::endl;
                 continue;
             }
-            if (map.readMapData(file)) {
-                std::cout << "Map loaded successfully" << std::endl;
+            if (map.readMapData(file, false)) {
                 semmapping::point robot;
-                mapping_msgs::SemanticMap::Ptr map_msg;// = map.createMapMessage(robot);
+                mapping_msgs::SemanticMap::Ptr map_msg= map.createMapMessage(robot, true);
                 semanticMapPub.publish(map_msg);
+                std::cout << "Map loaded successfully" << std::endl;
             } else {
                 std::cout << "Failed loading map" << std::endl;
             }
             file.close();
-        } else if (command == "save_likelihood") {
+        } 
+        else if (command == "load_ground_truth_map") {
+            std::string fname = "src/sem_mapping/semmapping/maps/truth_map.yaml";
+            std::cout << "Loading ground truth map file: " << fname << std::endl;
+            std::ifstream file(fname);
+            if (!file) {
+                std::cout << "Ground truth map could not be opened" << std::endl;
+                continue;
+            }
+            if (map.readMapData(file, true)) {
+                semmapping::point robot;
+                mapping_msgs::SemanticMap::Ptr map_msg= map.createMapMessage(robot, true);
+                semanticMapPub.publish(map_msg);
+                std::cout << "Ground truth Map loaded successfully" << std::endl;
+            } else {
+                std::cout << "Failed loading map" << std::endl;
+            }
+            file.close();
+        } 
+        else if (command == "Evaluate"){
+            std::string fname = "src/sem_mapping/semmapping/maps/truth_map.yaml";
+            std::cout << "Loading ground truth map file: " << fname << std::endl;
+            std::ifstream file(fname);
+            if (!file) {
+                std::cout << "Ground truth map could not be opened" << std::endl;
+                continue;
+            }
+
+
+            if (map.readMapData(file, true)) {
+                semmapping::point robot;
+                mapping_msgs::SemanticMap::Ptr map_msg= map.createMapMessage(robot, true);
+                semanticMapPub.publish(map_msg);
+                std::cout << "Ground truth Map loaded successfully" << std::endl;
+            } else {
+                std::cout << "Failed loading map" << std::endl;
+            }
+            file.close();
+        }
+        else if (command == "save_likelihood") {
             std::string fname = readNext(in, it);
             std::cout << "Saving map file: " << fname << std::endl;
             std::ofstream file(fname);
@@ -714,7 +754,8 @@ int main(int argc, char **argv) {
                 std::cout << "Failed saving map" << std::endl;
             }
             file.close();
-        } else if (command == "save") {
+        } 
+        else if (command == "save") {
             std::string fname = readNext(in, it);
             std::cout << "Saving map file: " << fname << std::endl;
             std::ofstream file(fname);
@@ -728,12 +769,15 @@ int main(int argc, char **argv) {
                 std::cout << "Failed saving map" << std::endl;
             }
             file.close();
-        } else if (command == "exit") {
+        } 
+        else if (command == "exit") {
             std::cout << "Shutting down" << std::endl;
             break;
-        } else if (command == "clear") {
+        } 
+        else if (command == "clear") {
             // TODO
-        } else {
+        } 
+        else {
             std::cout << "Command \"" << command << "\" not recognized" << std::endl;
         }
     }

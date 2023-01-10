@@ -148,7 +148,7 @@ namespace semmapping
                     box_area_coverage_factor= 1- ((l+range_error)-fabs(coefficient_of_extreme_points[i].first)) * ((w+range_error)-fabs(coefficient_of_extreme_points[i].second))/((l+range_error)*(w+range_error)); 
                     obb_similarity_factor= 0.7*(fabs(i*edge_distance - coefficient_of_extreme_points[i].first) + fabs(w- coefficient_of_extreme_points[i].second)) + 0.3*box_area_coverage_factor; 
                     normalized_similarity_factor= (obb_similarity_factor-min_factor)/(max_factor-min_factor);
-                    printf("obb_similarity_factor_direction_%d= %lf\n", i, normalized_similarity_factor);
+                    //printf("obb_similarity_factor_direction_%d= %lf\n", i, normalized_similarity_factor);
                 }
                     
                 if (normalized_similarity_factor < 0.35){
@@ -166,9 +166,9 @@ namespace semmapping
     {
         // Getting real object dimensions from knowledge base, return <0,0> if object dont exist
         std::pair<double, double> dimensions= get_real_object_length_width(name);
-        cout<< "New detection of a "<< name << endl ;
+        //cout<< "New detection of a "<< name << endl ;
         if (dimensions.first==0 && dimensions.second==0){
-            printf("Object dont exist in the knowledge base, rotating calippers was used!\n");
+            //printf("Object dont exist in the knowledge base, rotating calippers was used!\n");
             double angle;
             box object_box = create_oriented_box(poly, angle);
             return polygonFromBox(object_box, angle);
@@ -188,12 +188,12 @@ namespace semmapping
                     best_obb= selected_obb_list[i].first; best_factor= selected_obb_list[i].second; 
                 }
             }
-            printf("New association solution was used, best_factor= %lf\n", best_factor);
+            //printf("New association solution was used, best_factor= %lf\n", best_factor);
             bg::correct(best_obb);
             return best_obb;
         } 
         else{
-            printf("No good candidates, rotating calippers was used!\n");
+            //printf("No good candidates, rotating calippers was used!\n");
             double angle;
             box object_box = create_oriented_box(poly, angle);
             return polygonFromBox(object_box, angle);
@@ -483,7 +483,7 @@ namespace semmapping
                 obj.exist_certainty = calculateCertainty(obj.counting_queue);
             }
             obj.isCombined = false;
-            if((dist_to_obj >=  0.2 && dist_to_obj <=  1.8) && obj.counting_queue.size() >= param_config.queue_thresh && obj.exist_certainty < 0.15) {
+            if((dist_to_obj >=  0.2 && dist_to_obj <=  1.8) && obj.counting_queue.size() >= param_config.queue_thresh && obj.exist_certainty < 0.25) {
                 //if (obj.exist_certainty < 0.1){//} param_config.certainty_thresh) {
                 removeObject(id);
                 ROS_INFO_STREAM("Object " << obj.name << " removed");
@@ -525,15 +525,19 @@ namespace semmapping
         objectList[next_index] = obj;
         rtree_entry ent = {obj.bounding_box, next_index};
         objectRtree.insert(ent);
+        ROS_INFO_STREAM("Succesfully added, size: " << objectRtree.size());
         next_index++;
     }
 
     void SemanticMap::addObject(const SemanticObject &obj)
     {
+        if (obj.name == "Table"){
+            tableList.insert(next_index);
+        }
         objectList[next_index] = obj;
         rtree_entry ent = {obj.bounding_box, next_index};
         objectRtree.insert(ent);
-        //ROS_INFO_STREAM("Succesfully added, size: " << objectRtree.size());
+        ROS_INFO_STREAM("Succesfully added, size: " << objectRtree.size());
         next_index++;
     }
 
@@ -551,6 +555,7 @@ namespace semmapping
     {
         objectList.clear();
         objectRtree.clear();
+        tableList.clear();
         next_index = 0;
     }
 
@@ -705,7 +710,7 @@ namespace semmapping
                     continue;
                 }
             }
-            if (obj.exist_certainty > 0.15)// param_config.certainty_thresh)
+            if (obj.exist_certainty > 0.25)// param_config.certainty_thresh)
             {
                 mapping_msgs::SemanticObject obj_msg;
                 obj_msg.id = val.first;
@@ -829,7 +834,7 @@ namespace semmapping
         return true;
     }
 
-    bool SemanticMap::readMapData(std::istream &input)
+    bool SemanticMap::readMapData(std::istream &input, bool is_ground_truth_map)
     {
         clearAll();
         YAML::Node map = YAML::Load(input);
@@ -837,7 +842,6 @@ namespace semmapping
         {
             SemanticObject obj;
             obj.name = entry["name"].as<std::string>();
-            obj.exist_certainty = entry["exist_certainty"].as<double>();
             try
             {
                 bg::read_wkt(entry["shape_union"].as<std::string>(), obj.shape_union);
@@ -847,19 +851,55 @@ namespace semmapping
                 ROS_ERROR_STREAM("Error reading object shape: " << e.what());
                 return false;
             }
-            try
-            {
-                bg::read_wkt(entry["oriented_box"].as<std::string>(), obj.obb);
+
+            if(!is_ground_truth_map){
+                obj.exist_certainty = entry["exist_certainty"].as<double>();
+                try
+                {
+                    bg::read_wkt(entry["oriented_box"].as<std::string>(), obj.obb);
+                }
+                catch (const bg::read_wkt_exception &e)
+                {
+                    ROS_ERROR_STREAM("Error reading obb: " << e.what());
+                    return false;
+                }
             }
-            catch (const bg::read_wkt_exception &e)
-            {
-                ROS_ERROR_STREAM("Error reading obb: " << e.what());
-                return false;
+            else{
+                obj.exist_certainty = 1;
+                obj.obb= obj.shape_union;
             }
+            
+            obj.bounding_box = bg::return_envelope<box>(obj.shape_union);
             addObject(obj);
         }
         return true;
     }
+
+    /*bool SemanticMap::parseMap(std::istream &input)
+    {
+        clearAll();
+        YAML::Node map = YAML::Load(input);
+        for (const YAML::Node &entry : map)
+        {
+            SemanticObject obj;
+            obj.name = entry["name"].as<std::string>();
+            obj.exist_certainty = 1;
+            try
+            {
+                bg::read_wkt(entry["shape_union"].as<std::string>(), obj.shape_union);
+            }
+            catch (const bg::read_wkt_exception &e)
+            {
+                ROS_ERROR_STREAM("Error reading object shape: " << e.what());
+                return false;
+            }
+
+            obj.obb= obj.shape_union;
+            obj.bounding_box = bg::return_envelope<box>(obj.obb);
+            addObject(obj);
+        }
+        return true;
+    }*/
 
     mapping_msgs::ObjectPositions::Ptr SemanticMap::findObjectPosition(const mapping_msgs::FindObjects &request)
     {

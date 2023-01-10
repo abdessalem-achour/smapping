@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="gui" default="true" />
+  <arg name="gui" default="false" />
   <arg name="mir_type" default="mir_100" doc="The MiR variant. Can be 'mir_100' or 'mir_250' for now." />
   <arg name="tf_prefix" default="" doc="tf_prefix to be used by gazebo plugins and in the robot's urdf etc." />
 
@@ -33,7 +33,8 @@
   <!-- Launch the navigation nodes-->
   <include file="$(find mir_navigation)/launch/start_planner.launch">
     <arg name="local_planner" value="dwa"/>
-    <arg name="map_file" value="$(find mir_gazebo)/maps/map_office_small/occupancy.yaml" />
+    <!--<arg name="map_file" value="$(find mir_gazebo)/maps/map_office_small/occupancy.yaml" />-->
+    <arg name="map_file" value="$(find mir_gazebo)/maps/map_office_small_less_elements/less_element_occupancy.yaml" />
     <arg name="prefix" value="$(arg tf_prefix)" />
   </include>
 
@@ -48,8 +49,8 @@
 	</node>
 
 
-  <node pkg="image_view" type="image_view" name="image_view">
+  <!--<node pkg="image_view" type="image_view" name="image_view">
     <remap from="image" to="debug_image"/>
-  </node>
+  </node>-->
 
 </launch>

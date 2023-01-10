@@ -1,8 +1,8 @@
 base_local_planner: dwa_local_planner/DWAPlannerROS
 DWAPlannerROS:
   # Robot configuration
-  max_vel_x:  0.5
-  min_vel_x: -0.2
+  max_vel_x:  1.0
+  min_vel_x:  -0.2
 
   max_vel_y: 0.0  # diff drive robot
   min_vel_y: 0.0  # diff drive robot
@@ -25,12 +25,12 @@ DWAPlannerROS:
   acc_lim_theta: 2.0
 
   # Goal tolerance
-  yaw_goal_tolerance: 0.06  # yaw_goal_tolerance > (sim_time * min_rot_vel) / 2 (from Navigation Tuning Guide)
-  xy_goal_tolerance: 0.1   # xy_goal_tolerance  > (sim_time * min_vel_x)   / 2
+  yaw_goal_tolerance: 0.1  # yaw_goal_tolerance > (sim_time * min_rot_vel) / 2 (from Navigation Tuning Guide)
+  xy_goal_tolerance: 0.2   # xy_goal_tolerance  > (sim_time * min_vel_x)   / 2
   latch_xy_goal_tolerance: true
 
   # Forward simulation
-  sim_time: 1.2
+  sim_time: 1.7
   vx_samples: 15
   vy_samples: 1       # diff drive robot, there is only one sample
   vtheta_samples: 20

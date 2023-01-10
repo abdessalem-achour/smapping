@@ -245,7 +245,7 @@ namespace semmapping
             mapping_msgs::ObjectPositions::Ptr findObjectPosition(const mapping_msgs::FindObjects &request);
             bool writeMapData(std::ostream &output);
             bool writeLikelihoodData(std::ostream &output);
-            bool readMapData(std::istream &input);
+            bool readMapData(std::istream &input, bool is_ground_tuth_map);
 
             int viewer_index = 0;
             semmapping::ParamsConfig &param_config;
