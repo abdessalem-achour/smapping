@@ -3,7 +3,6 @@ file(REMOVE_RECURSE
   "/home/abdessalem/smapping/devel/include/mapping_msgs/BoundingBoxes.h"
   "/home/abdessalem/smapping/devel/include/mapping_msgs/BoxesAndClouds.h"
   "/home/abdessalem/smapping/devel/include/mapping_msgs/FindObjects.h"
-  "/home/abdessalem/smapping/devel/include/mapping_msgs/ObbMap.h"
   "/home/abdessalem/smapping/devel/include/mapping_msgs/ObjectCount.h"
   "/home/abdessalem/smapping/devel/include/mapping_msgs/ObjectPositions.h"
   "/home/abdessalem/smapping/devel/include/mapping_msgs/SemanticMap.h"

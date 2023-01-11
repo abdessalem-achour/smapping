@@ -3,7 +3,6 @@ file(REMOVE_RECURSE
   "/home/abdessalem/smapping/devel/share/gennodejs/ros/mapping_msgs/msg/BoundingBoxes.js"
   "/home/abdessalem/smapping/devel/share/gennodejs/ros/mapping_msgs/msg/BoxesAndClouds.js"
   "/home/abdessalem/smapping/devel/share/gennodejs/ros/mapping_msgs/msg/FindObjects.js"
-  "/home/abdessalem/smapping/devel/share/gennodejs/ros/mapping_msgs/msg/ObbMap.js"
   "/home/abdessalem/smapping/devel/share/gennodejs/ros/mapping_msgs/msg/ObjectCount.js"
   "/home/abdessalem/smapping/devel/share/gennodejs/ros/mapping_msgs/msg/ObjectPositions.js"
   "/home/abdessalem/smapping/devel/share/gennodejs/ros/mapping_msgs/msg/SemanticMap.js"

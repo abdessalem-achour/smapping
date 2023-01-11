@@ -252,6 +252,7 @@ namespace semmapping
             
             mapping_msgs::SemanticMap::Ptr createGroundTruthMapMessage();
             bool loadGroundTruthMap(std::istream &input);
+            void mapRating();
 
             int viewer_index = 0;
             semmapping::ParamsConfig &param_config;

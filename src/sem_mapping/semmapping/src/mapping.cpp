@@ -734,6 +734,15 @@ int main(int argc, char **argv) {
             }
             file.close();
         } 
+        else if(command == "map_score"){
+            std::ifstream file("src/sem_mapping/semmapping/maps/truth_map.yaml");
+            map.loadGroundTruthMap(file);
+            mapping_msgs::SemanticMap::Ptr gt_map_msg= map.createGroundTruthMapMessage();
+            gtSemanticMapPub.publish(gt_map_msg);
+            std::ifstream file2("src/sem_mapping/semmapping/maps/test1.yaml");
+            map.readMapData(file2);
+            map.mapRating();
+        }
         else if (command == "save") {
             std::string fname = readNext(in, it);
             std::cout << "Saving map file: " << fname << std::endl;

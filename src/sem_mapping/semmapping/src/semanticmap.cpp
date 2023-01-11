@@ -69,10 +69,9 @@ namespace semmapping
     {
         std::pair<double, double> dimensions;
 
-        if(name=="Chair") {dimensions.first= 0.5; dimensions.second= 0.5;}
+        if(name=="Chair") {dimensions.first= 0.55; dimensions.second= 0.5;}
         else if (name== "Table") {dimensions.first= 1.8; dimensions.second= 0.8;}
         else if (name=="Shelf" || name=="Bookcase") {dimensions.first= 0.9; dimensions.second= 0.4;}
-        else if (name=="Furniture") {dimensions.first= 0.8; dimensions.second= 0.6;}
         else {dimensions.first= 0.0; dimensions.second= 0.0;}
 
         return dimensions;
@@ -1003,4 +1002,55 @@ namespace semmapping
         return position_msg;
     }
 
+    void SemanticMap::mapRating(){
+        if(!objectList.empty()){
+            double class_chair_factor=0, class_table_factor=0;
+            double class_chair_mean_factor=0, class_table_mean_factor=0;
+            double class_chair_factor_dengler=0, class_table_factor_dengler=0;
+            double class_chair_mean_factor_dengler=0, class_table_mean_factor_dengler=0;
+            int n_chair=0, n_table=0;
+
+            for (auto &val : objectList)
+            {
+                SemanticObject &obj = val.second;
+                bool object_not_found= true;
+                for(auto &val2 : groundTruthObjectList){
+                    SemanticObject &gtObj = val2.second;
+                    double mapping_factor=0;
+                    double mapping_factor_dengler=0;
+                    if(obj.exist_certainty >0.25 && obj.name == gtObj.name){
+                        mapping_factor= iou(obj.obb, gtObj.obb);
+                        mapping_factor_dengler= iou(obj.shape_union, gtObj.obb);
+                        if(mapping_factor!=0)
+                        {
+                            cout<<obj.name<<val.first<<" represents object "<<gtObj.name<<val2.first<<" with iou factor= "<<mapping_factor<<endl;
+                            object_not_found= false;
+                            if(obj.name=="Chair")
+                            {
+                                n_chair++;
+                                class_chair_factor+= mapping_factor; class_chair_mean_factor= class_chair_factor/ n_chair;  
+                                class_chair_factor_dengler+= mapping_factor_dengler; class_chair_mean_factor_dengler= class_chair_factor_dengler/ n_chair;
+                            }    
+                            if(obj.name=="Table")
+                            {
+                                n_table++;
+                                class_table_factor+= mapping_factor; class_table_mean_factor= class_table_factor/ n_table;
+                                class_table_factor_dengler+= mapping_factor_dengler; class_table_mean_factor_dengler= class_table_factor_dengler/ n_table;
+                            }
+                        }
+                    }
+                }
+                if(object_not_found)
+                    cout<<obj.name<<val.first<<" dont exist in the truth map!"<<endl;
+            }
+            cout<<"Our solution: " <<endl;
+            cout<<"The mean similaity factor for class Chair is "<< class_chair_mean_factor<<" for "<< n_chair<< " mapped Chairs" <<endl;
+            cout<<"The mean similaity factor for class Table is "<< class_table_mean_factor<<" for "<< n_table<< " mapped Tables" <<endl;
+            cout<<"Dengler solution: " <<endl;
+            cout<<"The mean similaity factor for class Chair is "<< class_chair_mean_factor_dengler<<" for "<< n_chair<< " mapped Chairs" <<endl;
+            cout<<"The mean similaity factor for class Table is "<< class_table_mean_factor_dengler<<" for "<< n_table<< " mapped Tables" <<endl;
+        }
+        else
+            ROS_INFO_STREAM("The Map is empty, so it can't be rated!");
+    }
 }

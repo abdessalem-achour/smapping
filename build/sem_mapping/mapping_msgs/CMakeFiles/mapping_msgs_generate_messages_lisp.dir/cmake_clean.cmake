@@ -3,7 +3,6 @@ file(REMOVE_RECURSE
   "/home/abdessalem/smapping/devel/share/common-lisp/ros/mapping_msgs/msg/BoundingBoxes.lisp"
   "/home/abdessalem/smapping/devel/share/common-lisp/ros/mapping_msgs/msg/BoxesAndClouds.lisp"
   "/home/abdessalem/smapping/devel/share/common-lisp/ros/mapping_msgs/msg/FindObjects.lisp"
-  "/home/abdessalem/smapping/devel/share/common-lisp/ros/mapping_msgs/msg/ObbMap.lisp"
   "/home/abdessalem/smapping/devel/share/common-lisp/ros/mapping_msgs/msg/ObjectCount.lisp"
   "/home/abdessalem/smapping/devel/share/common-lisp/ros/mapping_msgs/msg/ObjectPositions.lisp"
   "/home/abdessalem/smapping/devel/share/common-lisp/ros/mapping_msgs/msg/SemanticMap.lisp"

@@ -1,6 +1,6 @@
 # generated from genmsg/cmake/pkg-genmsg.context.in
 
-messages_str = "/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/BoundingBox.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/BoundingBoxes.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/ObjectCount.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/BoxesAndClouds.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/ObjectPositions.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/FindObjects.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/SemanticMap.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/SemanticObject.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/ObbMap.msg"
+messages_str = "/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/BoundingBox.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/BoundingBoxes.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/ObjectCount.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/BoxesAndClouds.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/ObjectPositions.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/FindObjects.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/SemanticMap.msg;/home/abdessalem/smapping/src/sem_mapping/mapping_msgs/msg/SemanticObject.msg"
 services_str = ""
 pkg_name = "mapping_msgs"
 dependencies_str = "geometry_msgs;sensor_msgs;std_msgs;rosgraph_msgs"
