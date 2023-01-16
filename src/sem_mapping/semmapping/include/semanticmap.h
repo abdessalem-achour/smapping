@@ -241,6 +241,7 @@ namespace semmapping
             polygon create_shifted_bounding_box_with_real_dimensions(int direction, point reference, double v_directeur[2], double shift_distance, double length, double width);
             void associate_real_box_to_partial_polygon(polygon poly, double length, double width, std::vector<std::pair<polygon, double>> &selected_obb_list);
             polygon create_object_box_using_prior_knowledge(polygon poly, const std::string &name);
+            std::list<std::pair<point, point>> get_polygon_first_plan_edges(polygon poly, point reference);
             polygon polygonFromBox(const box &bbox, const double &angle);
             std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsEuc(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
             std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsReg(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);

@@ -306,7 +306,7 @@
     <xacro:p3d_base_controller prefix="${prefix}" />
 
     <!-- 3d_camera-->
-    <xacro:sensor_kinect parent="${prefix}base_link" cam_px="0.2" cam_py="0.0" cam_pz="1.0" cam_or="0" cam_op="0" cam_oy="0" />
+    <xacro:sensor_kinect parent="${prefix}base_link" cam_px="0.2" cam_py="0.0" cam_pz="1.0" cam_or="0" cam_op="0.08" cam_oy="0" />
     <xacro:sim_3dsensor_kinect />
 
 
