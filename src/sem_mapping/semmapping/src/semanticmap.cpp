@@ -71,7 +71,8 @@ namespace semmapping
 
         if(name=="Chair") {dimensions.first= 0.55; dimensions.second= 0.5;}
         else if (name== "Table") {dimensions.first= 1.8; dimensions.second= 0.8;}
-        else if (name=="Shelf" || name=="Bookcase") {dimensions.first= 0.9; dimensions.second= 0.4;}
+        else if (name=="Shelf" || name=="Bookcase") {dimensions.first= 0.9; dimensions.second= 0.41;}
+        else if (name=="Sofa bed"){dimensions.first= 0.97; dimensions.second= 2.009;}
         else {dimensions.first= 0.0; dimensions.second= 0.0;}
 
         return dimensions;
@@ -97,7 +98,28 @@ namespace semmapping
         bg::append(pg.outer(), p2);
         bg::append(pg.outer(), p3);
         bg::append(pg.outer(), p4);
+        bg::append(pg.outer(), p1);
         return pg;
+    }
+
+    double SemanticMap::distanceFromLine(point p, point start, point end) {
+        // function to calculate the distance of a point from a line
+        double numerator = abs((end.y() - start.y())*p.x() - (end.x() - start.x())*p.y() + end.x()*start.y() - end.y()*start.x());
+        double denominator = sqrt(pow(end.y() - start.y(), 2) + pow(end.x() - start.x(), 2));
+        return numerator / denominator;
+    }
+
+    polygon SemanticMap::improve_polygon(polygon poly, double tolerance){
+        polygon improved_polygon;
+        for(int i=0; i< poly.outer().size()-1; i++){
+            bg::append(improved_polygon.outer(), poly.outer()[i]);
+            double d= distanceFromLine(poly.outer()[i+1], poly.outer()[i+2], poly.outer()[i]);
+            if(d < tolerance){
+                i++;
+            } 
+        }
+        bg::append(improved_polygon.outer(), poly.outer()[poly.outer().size()-1]);
+        return improved_polygon;
     }
 
     std::list<std::pair<point, point>> SemanticMap::get_polygon_first_plan_edges(polygon poly, point reference){
@@ -105,6 +127,7 @@ namespace semmapping
         for(int i=0; i< poly.outer().size()-1; i++){
             double edge_distance = sqrt((poly.outer()[i+1].x() - poly.outer()[i].x())*(poly.outer()[i+1].x() - poly.outer()[i].x()) 
                                 + (poly.outer()[i+1].y() - poly.outer()[i].y())*(poly.outer()[i+1].y() - poly.outer()[i].y()));
+            //cout<<"("<<poly.outer()[i].x()<<","<<poly.outer()[i].y()<<") et ("<<poly.outer()[i+1].x()<<","<<poly.outer()[i+1].y()<<") edge_distance= "<<edge_distance<<endl;
             if(edge_distance>0.1){
                 polygon from_reference_to_edge_area;
                 bg::append(from_reference_to_edge_area.outer(), reference);
@@ -116,6 +139,7 @@ namespace semmapping
                     std::pair<point, point> edge;
                     edge.first= poly.outer()[i];
                     edge.second= poly.outer()[i+1];
+                    //cout<<"edge= ("<<edge.first.x()<<","<<edge.first.y()<<") - ("<<edge.second.x()<<","<<edge.second.y()<<") edge distance= "<<edge_distance<<endl;
                     first_plan_edges_list.push_back(edge);
                 } 
             }
@@ -123,14 +147,30 @@ namespace semmapping
         return first_plan_edges_list;
     }
     
-    void SemanticMap::associate_real_box_to_partial_polygon(polygon poly, double length, double width, std::vector<std::pair<polygon, double>> &selected_obb_list)
+    /*std::pair<double, double> SemanticMap::get_second_extremun(std::pair<double, double> point_coefficient, std::pair<double, double> coefficient_of_all_points[]){
+        for(int i=0; i< coefficient_of_all_points.size();i++){
+            if(coefficient_of_all_points[i].first==point_coefficient.first && coefficient_of_all_points[i].second==point_coefficient.second)
+            {
+                if(point_coefficient.first==0 && point_coefficient.second==0){
+                    if(i==0)
+                        return coefficient_of_all_points[coefficient_of_all_points.size()-1];
+                    else
+                        return coefficient_of_all_points[i-1];
+                }
+                else{
+                    if(i==coefficient_of_all_points.size()-1)
+                        return coefficient_of_all_points[0];
+                    else
+                        return coefficient_of_all_points[i+1];
+                }
+            }
+        }   
+    }*/
+    
+    void SemanticMap::associate_real_box_to_partial_polygon(polygon poly, std::list<std::pair<point,point>> first_plan_edges, double length, double width, std::vector<std::pair<polygon, double>> &selected_obb_list)
     {   
-        // Get the polygon edges of first plan in reference to the robot 
-        std::list<std::pair<point,point>> first_plan_edges_list;
-        point robot_position = getRobotPosition();
-        first_plan_edges_list= get_polygon_first_plan_edges(poly, robot_position);
         // Repeat the process on all first plan edges of the polygon
-        for(auto const& edge : first_plan_edges_list){
+        for(auto const& edge : first_plan_edges){
             point first_point = edge.first;
             point second_point = edge.second;
             double edge_distance = sqrt((second_point.x() - first_point.x())*(second_point.x() - first_point.x()) 
@@ -140,55 +180,71 @@ namespace semmapping
             double v_directeur [2]= {dx, dy}; 
             double v_normale [2]= {dy, -dx};
             // Determine the polygon points at the left and right extremities of the current edge
-            double lamda [poly.outer().size()];
-            double beta [poly.outer().size()];
-            // Computing <lamda, beta> of left, right and lower extreme points
+            // Computing <lamda, beta> of all points and identifying left, right and lower extreme points
+            std::pair<double, double> coefficient_of_all_points[poly.outer().size()-1];
             std::pair<double, double> left_extremum(0,0);
             std::pair<double, double> right_extremum(0,0);
             std::pair<double, double> lower_extremum(0,0);
-            std::pair<double, double> second_left_extremum(0,0);
-            std::pair<double, double> second_right_extremum(0,0);
-            for(int j=0; j< poly.outer().size();j++){
-                lamda [j] = v_directeur[0] * (poly.outer()[j].x() - first_point.x()) + v_directeur[1] * (poly.outer()[j].y() - first_point.y());
-                beta [j] = v_normale[0] * (poly.outer()[j].x() - first_point.x()) + v_normale[1] * (poly.outer()[j].y() - first_point.y());
-                if (lamda [j] <= left_extremum.first){
-                    second_left_extremum= left_extremum;
-                    left_extremum.first = lamda [j];
-                    left_extremum.second = beta [j];
+
+            for(int j=0; j< poly.outer().size()-1;j++){
+                // Saving the <lamda, beta> pair of all points in coefficient_of_all_points list
+                coefficient_of_all_points[j].first = v_directeur[0] * (poly.outer()[j].x() - first_point.x()) + v_directeur[1] * (poly.outer()[j].y() - first_point.y());
+                coefficient_of_all_points[j].second = v_normale[0] * (poly.outer()[j].x() - first_point.x()) + v_normale[1] * (poly.outer()[j].y() - first_point.y());
+                //cout<<"--> "<< coefficient_of_all_points[j].first<< " - "<< coefficient_of_all_points[j].second<< endl;
+                
+                if (coefficient_of_all_points[j].first <= left_extremum.first){
+                    if (coefficient_of_all_points[j].first < left_extremum.first){
+                        left_extremum = coefficient_of_all_points[j];
                     }
-                if (lamda [j] >= right_extremum.first){
-                    second_right_extremum= right_extremum;
-                    right_extremum.first = lamda [j];
-                    right_extremum.second = beta [j];
+                    else{
+                        if (coefficient_of_all_points[j].second > left_extremum.second)
+                            left_extremum = coefficient_of_all_points[j];
                     }
-                if (beta [j] >= lower_extremum.second){
-                    lower_extremum.first = lamda [j];
-                    lower_extremum.second = beta [j];
+                }
+                if (coefficient_of_all_points[j].first >= right_extremum.first){
+                    if (coefficient_of_all_points[j].first > right_extremum.first){
+                        right_extremum = coefficient_of_all_points[j];
                     }
+                    else{
+                        if (coefficient_of_all_points[j].second > right_extremum.second)
+                            right_extremum = coefficient_of_all_points[j];
+                    }
+                }
+                if (coefficient_of_all_points[j].second > lower_extremum.second){
+                    lower_extremum = coefficient_of_all_points[j];
+                }
             }
             // Saving respectively the <lamda, beta> pair of the left, right and lower extremities coefficient_of_extreme_points
             std::pair<double, double> coefficient_of_extreme_points[3]={left_extremum, right_extremum,lower_extremum};
-            std::pair<double, double> coefficient_of_second_extreme_points[2]={second_left_extremum, second_right_extremum};
             // Computing OBBs similarity factors compared to the knowledge base boxes
-            double range_error=0.05;
+            double range_error=0.1;
             double l= length+range_error; 
             double w= width+range_error;
 
             for (int i=0; i<2; i++){
                 bool c1= fabs(coefficient_of_extreme_points[i].first)+(1-i)*edge_distance <= l;
                 bool c2= coefficient_of_extreme_points[2].second <= w;
-                bool c3= edge_distance > 0.1 && edge_distance <=l;
+                bool c3= coefficient_of_extreme_points[i].second > 0;
                 if (c1 && c2 && c3){ 
-                    double variable1, variable2, variable3, angle_association_variable, edge_coefficient, coin_area, normalized_similarity_factor;
-                    variable1= (fabs(coefficient_of_extreme_points[i].first) - i*edge_distance)/(l- i*edge_distance);
-                    if(variable1!=0)
-                        coin_area= (coefficient_of_second_extreme_points[i].second * fabs(coefficient_of_extreme_points[i].first-coefficient_of_second_extreme_points[i].first))/(l*w);
+                    double angle_factor, width_factor, variable3, angle_association_variable, edge_factor, coin_area_factor, normalized_similarity_factor;
+                    angle_factor= (fabs(coefficient_of_extreme_points[i].first) - i*edge_distance) / l;
+
+                    /*if(angle_factor == 0 && coefficient_of_extreme_points[i].second == 0)
+                        //coin_area_factor= (fabs(coefficient_of_extreme_points[i].first - coefficient_of_second_extreme_points[i].first) * coefficient_of_second_extreme_points[i].second)/(l*w);
+                        coin_area_factor= 1.0;
                     else
-                        coin_area= (coefficient_of_extreme_points[i].second * fabs(coefficient_of_extreme_points[i].first-i*edge_distance))/(l*w);
-                    variable2= (w-coefficient_of_extreme_points[i].second)/w;
-                    edge_coefficient= (l-edge_distance)/(l-range_error);
-                    normalized_similarity_factor=0.3*variable1+0.3*coin_area+0.2*variable2+0.2*edge_coefficient;
-                    cout<<"Similarity factor= "<<normalized_similarity_factor<<" variable1= "<<variable1<<" coin_area= "<<coin_area<<" variable2= "<<variable2<<" edge_coefficient= "<<edge_coefficient<<endl;
+                        coin_area_factor= sqrt((fabs(coefficient_of_extreme_points[i].first)-i*edge_distance) * coefficient_of_extreme_points[i].second)/sqrt(l*w);*/
+                    
+                    edge_factor= (l-(fabs(coefficient_of_extreme_points[i].first)+(1-i)*edge_distance))/l;
+                    //width_factor= (w-coefficient_of_extreme_points[2].second)/w;
+                    //width_factor= (w-coefficient_of_extreme_points[i].second)/w;
+                    width_factor= (2*w-(coefficient_of_extreme_points[i].second+coefficient_of_extreme_points[2].second))/2*w;
+
+                    /*normalized_similarity_factor=0.25*angle_factor + 0.25*coin_area_factor + 0.25*edge_factor + 0.25*width_factor;
+                    cout<<"Similarity factor= "<<normalized_similarity_factor<<" angle_factor= "<<angle_factor<<" coin_area_factor= "<<coin_area_factor<<" edge_factor= "<<edge_factor<<" width_factor= "<<width_factor<<endl;*/
+                    normalized_similarity_factor=0.4*angle_factor + 0.4*edge_factor + 0.2*width_factor;
+                    cout<<"Similarity factor= "<<normalized_similarity_factor<<" angle_factor= "<<angle_factor<<" edge_factor= "<<edge_factor<<" width_factor= "<<width_factor<<endl;
+                    
 
                     if (normalized_similarity_factor < 0.4){
                         polygon box;
@@ -208,23 +264,36 @@ namespace semmapping
         // Getting real object dimensions from knowledge base, return <0,0> if object dont exist
         std::pair<double, double> dimensions= get_real_object_length_width(name);
         cout<< "New detection of a "<< name << endl ;
-
         if (dimensions.first==0 && dimensions.second==0){
-            //printf("Object dont exist in the knowledge base, rotating calippers was used!\n");
+            //cout<<"Object dont exist in the knowledge base, rotating calippers was used!"<<endl;
             double angle;
             box object_box = create_oriented_box(poly, angle);
             return polygonFromBox(object_box, angle);
         }
-
         // Geometric association and generation of possible OBBs  
         std::vector<std::pair<polygon, double>> selected_obb_list;
         double area_fit= bg::area(poly)/(dimensions.first*dimensions.second);
-        if(area_fit>0.1&&area_fit<1.1){
-            cout<< "area fit= "<<area_fit<< endl;
+        if(area_fit > 0.1 && area_fit < 1.5){
+            // Improving polygon
+            //cout<<"polygon initial vertices"<<poly.outer().size()<<endl;
+            poly= improve_polygon(poly, 0.01);
+            //cout<<"polygon final vertices"<<poly.outer().size()<<endl;
+
+            // Get the polygon first plan edges in reference to the robot 
+            std::list<std::pair<point,point>> first_plan_edges_list;
+            point robot_position = getRobotPosition();
+            first_plan_edges_list= get_polygon_first_plan_edges(poly, robot_position);
+            //cout<<"number of first plan edges: "<<first_plan_edges_list.size()<<endl;
             cout<< "boxes for LENGTH WIDTH "<< endl ;
-            associate_real_box_to_partial_polygon(poly, dimensions.first, dimensions.second, selected_obb_list);
+            associate_real_box_to_partial_polygon(poly, first_plan_edges_list, dimensions.first, dimensions.second, selected_obb_list);
             cout<< "boxes for WIDTH LENGTH"<< endl ;
-            associate_real_box_to_partial_polygon(poly, dimensions.second, dimensions.first, selected_obb_list);
+            associate_real_box_to_partial_polygon(poly, first_plan_edges_list, dimensions.second, dimensions.first, selected_obb_list);
+        }
+        else{
+            cout<<"Area fit condition is not valid, rotating calippers was used!"<<endl;
+            double angle;
+            box object_box = create_oriented_box(poly, angle);
+            return polygonFromBox(object_box, angle);
         }
     
         // Selecting the best_obb using lamda and beta values 
@@ -238,13 +307,13 @@ namespace semmapping
                 }
             }
             //printf("New association solution was used, best_factor= %lf\n", best_factor);
-            ROS_INFO_STREAM("New association solution was used, best_factor= " << best_factor);
+            cout<<"New association solution was used, best_factor= " << best_factor<<endl;
             bg::correct(best_obb);
             return best_obb;
         } 
         else{
             //printf("No good candidates, rotating calippers was used!\n");
-            ROS_INFO_STREAM("No good candidates, rotating calippers was used!");
+            cout<<"No good candidates, rotating calippers was used!"<<endl;
             double angle;
             box object_box = create_oriented_box(poly, angle);
             return polygonFromBox(object_box, angle);
@@ -1056,11 +1125,11 @@ namespace semmapping
 
     void SemanticMap::mapRating(){
         if(!objectList.empty()){
-            double class_chair_factor=0, class_table_factor=0;
-            double class_chair_mean_factor=0, class_table_mean_factor=0;
-            double class_chair_factor_dengler=0, class_table_factor_dengler=0;
-            double class_chair_mean_factor_dengler=0, class_table_mean_factor_dengler=0;
-            int n_chair=0, n_table=0;
+            double class_chair_factor=0, class_table_factor=0, class_shelf_factor=0;
+            double class_chair_mean_factor=0, class_table_mean_factor=0, class_shelf_mean_factor=0;
+            double class_chair_factor_dengler=0, class_table_factor_dengler=0, class_shelf_factor_dengler=0;
+            double class_chair_mean_factor_dengler=0, class_table_mean_factor_dengler=0, class_shelf_mean_factor_dengler=0;
+            int n_chair=0, n_table=0, n_shelf=0;
 
             for (auto &val : objectList)
             {
@@ -1070,7 +1139,7 @@ namespace semmapping
                     SemanticObject &gtObj = val2.second;
                     double mapping_factor=0;
                     double mapping_factor_dengler=0;
-                    if(obj.exist_certainty >0.25 && obj.name == gtObj.name){
+                    if(obj.exist_certainty > 0.25 && obj.name == gtObj.name){
                         mapping_factor= iou(obj.obb, gtObj.obb);
                         mapping_factor_dengler= iou(obj.shape_union, gtObj.obb);
                         if(mapping_factor!=0)
@@ -1089,6 +1158,12 @@ namespace semmapping
                                 class_table_factor+= mapping_factor; class_table_mean_factor= class_table_factor/ n_table;
                                 class_table_factor_dengler+= mapping_factor_dengler; class_table_mean_factor_dengler= class_table_factor_dengler/ n_table;
                             }
+                            if(obj.name=="Shelf")
+                            {
+                                n_shelf++;
+                                class_shelf_factor+= mapping_factor; class_shelf_mean_factor= class_shelf_factor/ n_shelf;
+                                class_shelf_factor_dengler+= mapping_factor_dengler; class_shelf_mean_factor_dengler= class_shelf_factor_dengler/ n_shelf;
+                            }
                         }
                     }
                 }
@@ -1098,11 +1173,23 @@ namespace semmapping
             cout<<"Our solution: " <<endl;
             cout<<"The mean similaity factor for class Chair is "<< class_chair_mean_factor<<" for "<< n_chair<< " mapped Chairs" <<endl;
             cout<<"The mean similaity factor for class Table is "<< class_table_mean_factor<<" for "<< n_table<< " mapped Tables" <<endl;
+            cout<<"The mean similaity factor for class Shelf is "<< class_shelf_mean_factor<<" for "<< n_shelf<< " mapped Shelfs" <<endl;
             cout<<"Dengler solution: " <<endl;
             cout<<"The mean similaity factor for class Chair is "<< class_chair_mean_factor_dengler<<" for "<< n_chair<< " mapped Chairs" <<endl;
             cout<<"The mean similaity factor for class Table is "<< class_table_mean_factor_dengler<<" for "<< n_table<< " mapped Tables" <<endl;
+            cout<<"The mean similaity factor for class Shelf is "<< class_shelf_mean_factor_dengler<<" for "<< n_shelf<< " mapped Shelfs" <<endl;
         }
         else
             ROS_INFO_STREAM("The Map is empty, so it can't be rated!");
+    }
+
+    // function to apply Z-score normalization
+    void SemanticMap::zScoreNormalization(double &f1, double &f2, double &f3, double &f4) {
+        double mean = (f1 + f2 + f3 + f4) / 4;
+        double std_dev = sqrt((f1 - mean)*(f1 - mean) + (f2 - mean)*(f2 - mean) + (f3 - mean)*(f3 - mean) + (f4 - mean)*(f4 - mean)) / sqrt(4);
+        f1 = (f1 - mean) / std_dev;
+        f2 = (f2 - mean) / std_dev;
+        f3 = (f3 - mean) / std_dev;
+        f4 = (f4 - mean) / std_dev;
     }
 }
