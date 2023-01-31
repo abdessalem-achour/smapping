@@ -76,6 +76,10 @@ namespace semmapping
         std::map<size_t, SemanticObject> groundTruthObjectList;
         size_t groundTruthNext_index = 0;
 
+        // Initialize the weights
+        std::vector<double> weights= {0.4, 0.4, 0.2};
+
+
         inline static double ref_fit(const polygon &newpg, const polygon &refpg)
         {
             multi_polygon sect;
@@ -258,6 +262,8 @@ namespace semmapping
             double distanceFromLine(point p, point start, point end);
             polygon improve_polygon(polygon poly, double tolerance);
             //std::pair<double, double> get_second_extremun(std::pair<double, double> point_coefficient, std::pair<double, double> coefficient_of_all_points[]);
+            void gradient_descent(std::vector<double> &weights, int n, double f1, double f2, double f3);
+            double association_score(std::vector<double> &weights, double f1, double f2, double f3);
 
             int viewer_index = 0;
             semmapping::ParamsConfig &param_config;

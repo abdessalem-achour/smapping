@@ -166,7 +166,7 @@ namespace semmapping
             }
         }   
     }*/
-    
+
     void SemanticMap::associate_real_box_to_partial_polygon(polygon poly, std::list<std::pair<point,point>> first_plan_edges, double length, double width, std::vector<std::pair<polygon, double>> &selected_obb_list)
     {   
         // Repeat the process on all first plan edges of the polygon
@@ -185,8 +185,10 @@ namespace semmapping
             std::pair<double, double> left_extremum(0,0);
             std::pair<double, double> right_extremum(0,0);
             std::pair<double, double> lower_extremum(0,0);
+            double d1 = edge_distance; 
+            double d2 =-1*edge_distance;
 
-            for(int j=0; j< poly.outer().size()-1;j++){
+            for(int j=0; j< poly.outer().size()-1; j++){
                 // Saving the <lamda, beta> pair of all points in coefficient_of_all_points list
                 coefficient_of_all_points[j].first = v_directeur[0] * (poly.outer()[j].x() - first_point.x()) + v_directeur[1] * (poly.outer()[j].y() - first_point.y());
                 coefficient_of_all_points[j].second = v_normale[0] * (poly.outer()[j].x() - first_point.x()) + v_normale[1] * (poly.outer()[j].y() - first_point.y());
@@ -213,14 +215,20 @@ namespace semmapping
                 if (coefficient_of_all_points[j].second > lower_extremum.second){
                     lower_extremum = coefficient_of_all_points[j];
                 }
+
+                if((coefficient_of_all_points[j].first!= 0 || coefficient_of_all_points[j].second!= 0) && coefficient_of_all_points[j].first < d1)
+                    d1= coefficient_of_all_points[j].first;
+                if((coefficient_of_all_points[j].first!= 0 || coefficient_of_all_points[j].second != edge_distance) && (coefficient_of_all_points[j].first-edge_distance) > d2)
+                    d2= coefficient_of_all_points[j].first - edge_distance;
             }
+            cout<<"d1= "<< d1<< "d2= "<<d2<<endl;
             // Saving respectively the <lamda, beta> pair of the left, right and lower extremities coefficient_of_extreme_points
             std::pair<double, double> coefficient_of_extreme_points[3]={left_extremum, right_extremum,lower_extremum};
             // Computing OBBs similarity factors compared to the knowledge base boxes
             double range_error=0.1;
             double l= length+range_error; 
             double w= width+range_error;
-
+            
             for (int i=0; i<2; i++){
                 bool c1= fabs(coefficient_of_extreme_points[i].first)+(1-i)*edge_distance <= l;
                 bool c2= coefficient_of_extreme_points[2].second <= w;
@@ -238,15 +246,20 @@ namespace semmapping
                     edge_factor= (l-(fabs(coefficient_of_extreme_points[i].first)+(1-i)*edge_distance))/l;
                     //width_factor= (w-coefficient_of_extreme_points[2].second)/w;
                     //width_factor= (w-coefficient_of_extreme_points[i].second)/w;
-                    width_factor= (2*w-(coefficient_of_extreme_points[i].second+coefficient_of_extreme_points[2].second))/2*w;
+                    //width_factor= (w-(coefficient_of_extreme_points[i].second+coefficient_of_extreme_points[2].second)/2)/w;
+                    width_factor= (w-sqrt(pow(fabs(coefficient_of_extreme_points[i].first) - i*edge_distance, 2)+pow(coefficient_of_extreme_points[i].second, 2)))/w;
 
                     /*normalized_similarity_factor=0.25*angle_factor + 0.25*coin_area_factor + 0.25*edge_factor + 0.25*width_factor;
                     cout<<"Similarity factor= "<<normalized_similarity_factor<<" angle_factor= "<<angle_factor<<" coin_area_factor= "<<coin_area_factor<<" edge_factor= "<<edge_factor<<" width_factor= "<<width_factor<<endl;*/
-                    normalized_similarity_factor=0.4*angle_factor + 0.4*edge_factor + 0.2*width_factor;
-                    cout<<"Similarity factor= "<<normalized_similarity_factor<<" angle_factor= "<<angle_factor<<" edge_factor= "<<edge_factor<<" width_factor= "<<width_factor<<endl;
-                    
+                    //gradient_descent(weights, 1, angle_factor, edge_factor, width_factor);
+                    //cout <<"Optimal weights: w1 = " << weights[0] << ", w2 = " << weights[1] << ", w3 = " << weights[2] << endl;
+                    weights[0] = 0.50;
+                    weights[1] = 0.30;
+                    weights[2] = 0.20;
+                    normalized_similarity_factor= association_score(weights, angle_factor, edge_factor, width_factor);
+                    cout << "Similarity factor= " << normalized_similarity_factor << " angle_factor= " << angle_factor << " edge_factor= "<<edge_factor<<" width_factor= "<<width_factor<<endl;
 
-                    if (normalized_similarity_factor < 0.4){
+                    if (normalized_similarity_factor < 0.3){
                         polygon box;
                         box= create_shifted_bounding_box_with_real_dimensions(i, first_point, v_directeur, coefficient_of_extreme_points[i].first, length, width);
                         std::pair<polygon, double> new_candidat;
@@ -270,6 +283,7 @@ namespace semmapping
             box object_box = create_oriented_box(poly, angle);
             return polygonFromBox(object_box, angle);
         }
+
         // Geometric association and generation of possible OBBs  
         std::vector<std::pair<polygon, double>> selected_obb_list;
         double area_fit= bg::area(poly)/(dimensions.first*dimensions.second);
@@ -280,44 +294,35 @@ namespace semmapping
             //cout<<"polygon final vertices"<<poly.outer().size()<<endl;
 
             // Get the polygon first plan edges in reference to the robot 
-            std::list<std::pair<point,point>> first_plan_edges_list;
             point robot_position = getRobotPosition();
-            first_plan_edges_list= get_polygon_first_plan_edges(poly, robot_position);
+            std::list<std::pair<point,point>> first_plan_edges_list= get_polygon_first_plan_edges(poly, robot_position);
             //cout<<"number of first plan edges: "<<first_plan_edges_list.size()<<endl;
-            cout<< "boxes for LENGTH WIDTH "<< endl ;
+            //cout<< "boxes for LENGTH WIDTH "<< endl ;
             associate_real_box_to_partial_polygon(poly, first_plan_edges_list, dimensions.first, dimensions.second, selected_obb_list);
-            cout<< "boxes for WIDTH LENGTH"<< endl ;
+            //cout<< "boxes for WIDTH LENGTH"<< endl ;
             associate_real_box_to_partial_polygon(poly, first_plan_edges_list, dimensions.second, dimensions.first, selected_obb_list);
-        }
-        else{
-            cout<<"Area fit condition is not valid, rotating calippers was used!"<<endl;
-            double angle;
-            box object_box = create_oriented_box(poly, angle);
-            return polygonFromBox(object_box, angle);
-        }
-    
-        // Selecting the best_obb using lamda and beta values 
-        if (selected_obb_list.size()){
-            polygon best_obb= selected_obb_list[0].first;
-            double best_factor= selected_obb_list[0].second;
-            for(int i=0; i < selected_obb_list.size(); i++)
-            {
-                if ((selected_obb_list[i].second < best_factor)){   // union_fit(obb_list[i], poly) < FIT_THRESH
-                    best_obb= selected_obb_list[i].first; best_factor= selected_obb_list[i].second; 
+            // Selecting the best_obb using lamda and beta values 
+            if (selected_obb_list.size()){
+                std::pair<polygon, double> best_obb= selected_obb_list[0];
+                for(int i=0; i < selected_obb_list.size(); i++)
+                {
+                    if ((selected_obb_list[i].second < best_obb.second))
+                        best_obb= selected_obb_list[i]; 
                 }
-            }
-            //printf("New association solution was used, best_factor= %lf\n", best_factor);
-            cout<<"New association solution was used, best_factor= " << best_factor<<endl;
-            bg::correct(best_obb);
-            return best_obb;
-        } 
-        else{
-            //printf("No good candidates, rotating calippers was used!\n");
-            cout<<"No good candidates, rotating calippers was used!"<<endl;
-            double angle;
-            box object_box = create_oriented_box(poly, angle);
-            return polygonFromBox(object_box, angle);
+                cout<<"New association solution was used, best_factor= " << best_obb.second<<endl;
+                bg::correct(best_obb.first);
+                return best_obb.first;
+            } 
+
+            cout<<"No good candidates, rotating calippers was used!"<<endl;  
         }
+        else
+            cout<<"Area fit condition is not valid, rotating calippers was used!"<<endl;
+
+        double angle;
+        box object_box = create_oriented_box(poly, angle);
+        return polygonFromBox(object_box, angle);
+    
     }
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloudFromInd(pcl::PointIndices::Ptr input_indices,  pcl::PointCloud<pcl::PointXYZ>::ConstPtr input_cloud)
@@ -1191,5 +1196,56 @@ namespace semmapping
         f2 = (f2 - mean) / std_dev;
         f3 = (f3 - mean) / std_dev;
         f4 = (f4 - mean) / std_dev;
+    }
+
+    double SemanticMap::association_score(std::vector<double> &weights, double f1, double f2, double f3) {
+    // Calculate the score using the weights and the input variables
+    return weights[0] * f1 + weights[1] * f2 + weights[2] * f3;
+    }
+    
+    void SemanticMap::gradient_descent(std::vector<double> &weights, int n, double f1, double f2, double f3) {
+        
+        double learning_rate = 0.005;
+        double tolerance = 0.00001;
+
+        double last_score = association_score(weights, f1, f2, f3);
+        cout<<"last_score= "<<last_score<<endl;
+
+        for (int i = 0; i < n; i++) {
+            // Calculate the gradient
+            double gradient[3];
+            gradient[0] = f1 *(1-last_score);
+            gradient[1] = f2 *(1-last_score);
+            gradient[2] = f3 *(1-last_score);
+            
+            /*
+            // Update the weights and ensure that weights are between 0 and 1
+            for (int j = 0; j < 3; j++) {
+                weights[j] = weights[j] - learning_rate * gradient[j];
+                //weights[j] = fmax(0, fmin(1, weights[j]));
+            }*/
+
+            weights[0] = weights[0] - gradient[0]*learning_rate;
+            weights[1] = weights[1] - gradient[1]*learning_rate;
+            weights[2] = weights[2] - gradient[2]*learning_rate;
+
+            // Ensure that w1 >= w2 >= w3
+            if (weights[0] < weights[1])
+                std::swap(weights[0], weights[1]);
+            if (weights[1] < weights[2])
+                std::swap(weights[1], weights[2]);
+            if (weights[0] < weights[1])
+                std::swap(weights[0], weights[1]);
+
+            // Normalize weights to sum to 1
+            double sum_weights = weights[0] + weights[1] + weights[2];
+            for (int j = 0; j < 3; j++) {
+                weights[j] /= sum_weights;
+            }
+
+            double current_score = association_score(weights, f1, f2, f3);
+            if (abs(current_score - last_score) < tolerance) break;
+            last_score = current_score;
+        }
     }
 }
