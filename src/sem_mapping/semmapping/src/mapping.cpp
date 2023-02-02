@@ -703,7 +703,7 @@ int main(int argc, char **argv) {
             file.close();
         } 
         else if (command == "load_ground_truth_map") {
-            std::string fname = "src/sem_mapping/semmapping/maps/truth_map.yaml";
+            std::string fname = "src/sem_mapping/semmapping/maps/truth_map_well_arranged_world.yaml";
             std::cout << "Loading ground truth map file: " << fname << std::endl;
             std::ifstream file(fname);
             if (!file) {
@@ -735,7 +735,7 @@ int main(int argc, char **argv) {
             file.close();
         } 
         else if(command == "map_score"){
-            std::ifstream file("src/sem_mapping/semmapping/maps/truth_map.yaml");
+            std::ifstream file("src/sem_mapping/semmapping/maps/truth_map_well_arranged_world.yaml");
             map.loadGroundTruthMap(file);
             mapping_msgs::SemanticMap::Ptr gt_map_msg= map.createGroundTruthMapMessage();
             gtSemanticMapPub.publish(gt_map_msg);

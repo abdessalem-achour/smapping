@@ -69,9 +69,9 @@ namespace semmapping
     {
         std::pair<double, double> dimensions;
 
-        if(name=="Chair") {dimensions.first= 0.55; dimensions.second= 0.5;}
-        else if (name== "Table") {dimensions.first= 1.8; dimensions.second= 0.8;}
-        else if (name=="Shelf" || name=="Bookcase") {dimensions.first= 0.9; dimensions.second= 0.41;}
+        if(name=="Chair") {dimensions.first= 0.6; dimensions.second= 0.57;}
+        else if (name== "Table") {dimensions.first= 1.782; dimensions.second= 0.8;}
+        else if (name=="Shelf" || name=="Bookcase") {dimensions.first= 0.88; dimensions.second= 0.39;}
         else if (name=="Sofa bed"){dimensions.first= 0.97; dimensions.second= 2.009;}
         else {dimensions.first= 0.0; dimensions.second= 0.0;}
 
@@ -185,8 +185,8 @@ namespace semmapping
             std::pair<double, double> left_extremum(0,0);
             std::pair<double, double> right_extremum(0,0);
             std::pair<double, double> lower_extremum(0,0);
-            double d1 = edge_distance; 
-            double d2 =-1*edge_distance;
+            double d_alpha[2] = {edge_distance, -1*edge_distance}; 
+            double d_beta[2];
 
             for(int j=0; j< poly.outer().size()-1; j++){
                 // Saving the <lamda, beta> pair of all points in coefficient_of_all_points list
@@ -216,12 +216,17 @@ namespace semmapping
                     lower_extremum = coefficient_of_all_points[j];
                 }
 
-                if((coefficient_of_all_points[j].first!= 0 || coefficient_of_all_points[j].second!= 0) && coefficient_of_all_points[j].first < d1)
-                    d1= coefficient_of_all_points[j].first;
-                if((coefficient_of_all_points[j].first!= 0 || coefficient_of_all_points[j].second != edge_distance) && (coefficient_of_all_points[j].first-edge_distance) > d2)
-                    d2= coefficient_of_all_points[j].first - edge_distance;
+                if((coefficient_of_all_points[j].first!= 0 || coefficient_of_all_points[j].second!= 0) && coefficient_of_all_points[j].first < d_alpha[0]){
+                    d_alpha[0]= coefficient_of_all_points[j].first;
+                    d_beta[0]= coefficient_of_all_points[j].second;
+                }
+                    
+                if((coefficient_of_all_points[j].first!= edge_distance || coefficient_of_all_points[j].second != 0) && (coefficient_of_all_points[j].first-edge_distance) > d_alpha[1]){
+                    d_alpha[1]= coefficient_of_all_points[j].first - edge_distance;
+                    d_beta[1]= coefficient_of_all_points[j].second;
+                }
             }
-            cout<<"d1= "<< d1<< "d2= "<<d2<<endl;
+
             // Saving respectively the <lamda, beta> pair of the left, right and lower extremities coefficient_of_extreme_points
             std::pair<double, double> coefficient_of_extreme_points[3]={left_extremum, right_extremum,lower_extremum};
             // Computing OBBs similarity factors compared to the knowledge base boxes
@@ -232,10 +237,13 @@ namespace semmapping
             for (int i=0; i<2; i++){
                 bool c1= fabs(coefficient_of_extreme_points[i].first)+(1-i)*edge_distance <= l;
                 bool c2= coefficient_of_extreme_points[2].second <= w;
-                bool c3= coefficient_of_extreme_points[i].second > 0;
-                if (c1 && c2 && c3){ 
+                //bool c3= coefficient_of_extreme_points[i].second > 0;
+                if (c1 && c2){ 
                     double angle_factor, width_factor, variable3, angle_association_variable, edge_factor, coin_area_factor, normalized_similarity_factor;
-                    angle_factor= (fabs(coefficient_of_extreme_points[i].first) - i*edge_distance) / l;
+                    
+                    //angle_factor= (fabs(coefficient_of_extreme_points[i].first) - i*edge_distance) / l;
+                    
+                    angle_factor= fabs(d_alpha[i])/l;
 
                     /*if(angle_factor == 0 && coefficient_of_extreme_points[i].second == 0)
                         //coin_area_factor= (fabs(coefficient_of_extreme_points[i].first - coefficient_of_second_extreme_points[i].first) * coefficient_of_second_extreme_points[i].second)/(l*w);
@@ -244,22 +252,24 @@ namespace semmapping
                         coin_area_factor= sqrt((fabs(coefficient_of_extreme_points[i].first)-i*edge_distance) * coefficient_of_extreme_points[i].second)/sqrt(l*w);*/
                     
                     edge_factor= (l-(fabs(coefficient_of_extreme_points[i].first)+(1-i)*edge_distance))/l;
-                    //width_factor= (w-coefficient_of_extreme_points[2].second)/w;
+                    width_factor= (w-coefficient_of_extreme_points[2].second)/w;
                     //width_factor= (w-coefficient_of_extreme_points[i].second)/w;
+                    //width_factor= (w-d_beta[i])/w;
                     //width_factor= (w-(coefficient_of_extreme_points[i].second+coefficient_of_extreme_points[2].second)/2)/w;
-                    width_factor= (w-sqrt(pow(fabs(coefficient_of_extreme_points[i].first) - i*edge_distance, 2)+pow(coefficient_of_extreme_points[i].second, 2)))/w;
+                    //width_factor= (w - sqrt(pow(fabs(d[i]),2) + pow(coefficient_of_extreme_points[i].second,2))) / w;
+                    //width_factor= (w-(d_beta[i]+coefficient_of_extreme_points[2].second)/2)/w;
 
                     /*normalized_similarity_factor=0.25*angle_factor + 0.25*coin_area_factor + 0.25*edge_factor + 0.25*width_factor;
                     cout<<"Similarity factor= "<<normalized_similarity_factor<<" angle_factor= "<<angle_factor<<" coin_area_factor= "<<coin_area_factor<<" edge_factor= "<<edge_factor<<" width_factor= "<<width_factor<<endl;*/
                     //gradient_descent(weights, 1, angle_factor, edge_factor, width_factor);
                     //cout <<"Optimal weights: w1 = " << weights[0] << ", w2 = " << weights[1] << ", w3 = " << weights[2] << endl;
-                    weights[0] = 0.50;
+                    weights[0] = 0.40;
                     weights[1] = 0.30;
-                    weights[2] = 0.20;
+                    weights[2] = 0.30;
                     normalized_similarity_factor= association_score(weights, angle_factor, edge_factor, width_factor);
                     cout << "Similarity factor= " << normalized_similarity_factor << " angle_factor= " << angle_factor << " edge_factor= "<<edge_factor<<" width_factor= "<<width_factor<<endl;
 
-                    if (normalized_similarity_factor < 0.3){
+                    if (normalized_similarity_factor < 0.4){
                         polygon box;
                         box= create_shifted_bounding_box_with_real_dimensions(i, first_point, v_directeur, coefficient_of_extreme_points[i].first, length, width);
                         std::pair<polygon, double> new_candidat;
@@ -277,51 +287,49 @@ namespace semmapping
         // Getting real object dimensions from knowledge base, return <0,0> if object dont exist
         std::pair<double, double> dimensions= get_real_object_length_width(name);
         cout<< "New detection of a "<< name << endl ;
-        if (dimensions.first==0 && dimensions.second==0){
-            //cout<<"Object dont exist in the knowledge base, rotating calippers was used!"<<endl;
-            double angle;
-            box object_box = create_oriented_box(poly, angle);
-            return polygonFromBox(object_box, angle);
-        }
+        if (dimensions.first!=0 && dimensions.second!=0){
+            // Geometric association and generation of possible OBBs  
+            std::vector<std::pair<polygon, double>> selected_obb_list;
+            double area_fit= bg::area(poly)/(dimensions.first*dimensions.second);
+            if(area_fit > 0.1 && area_fit < 1.5){
+                // Improving polygon
+                //cout<<"polygon initial vertices"<<poly.outer().size()<<endl;
+                poly= improve_polygon(poly, 0.02);
+                //cout<<"polygon final vertices"<<poly.outer().size()<<endl;
 
-        // Geometric association and generation of possible OBBs  
-        std::vector<std::pair<polygon, double>> selected_obb_list;
-        double area_fit= bg::area(poly)/(dimensions.first*dimensions.second);
-        if(area_fit > 0.1 && area_fit < 1.5){
-            // Improving polygon
-            //cout<<"polygon initial vertices"<<poly.outer().size()<<endl;
-            poly= improve_polygon(poly, 0.01);
-            //cout<<"polygon final vertices"<<poly.outer().size()<<endl;
+                // Get the polygon first plan edges in reference to the robot 
+                point robot_position = getRobotPosition();
+                std::list<std::pair<point,point>> first_plan_edges_list= get_polygon_first_plan_edges(poly, robot_position);
+                //cout<<"number of first plan edges: "<<first_plan_edges_list.size()<<endl;
+                //cout<< "boxes for LENGTH WIDTH "<< endl ;
+                associate_real_box_to_partial_polygon(poly, first_plan_edges_list, dimensions.first, dimensions.second, selected_obb_list);
+                //cout<< "boxes for WIDTH LENGTH"<< endl ;
+                associate_real_box_to_partial_polygon(poly, first_plan_edges_list, dimensions.second, dimensions.first, selected_obb_list);
+                // Selecting the best_obb using lamda and beta values 
+                if (selected_obb_list.size()){
+                    std::pair<polygon, double> best_obb= selected_obb_list[0];
+                    for(int i=0; i < selected_obb_list.size(); i++)
+                    {
+                        if ((selected_obb_list[i].second < best_obb.second))
+                            best_obb= selected_obb_list[i]; 
+                    }
+                    cout<<"New association solution was used, best_factor= " << best_obb.second<<endl;
+                    bg::correct(best_obb.first);
+                    return best_obb.first;
+                } 
 
-            // Get the polygon first plan edges in reference to the robot 
-            point robot_position = getRobotPosition();
-            std::list<std::pair<point,point>> first_plan_edges_list= get_polygon_first_plan_edges(poly, robot_position);
-            //cout<<"number of first plan edges: "<<first_plan_edges_list.size()<<endl;
-            //cout<< "boxes for LENGTH WIDTH "<< endl ;
-            associate_real_box_to_partial_polygon(poly, first_plan_edges_list, dimensions.first, dimensions.second, selected_obb_list);
-            //cout<< "boxes for WIDTH LENGTH"<< endl ;
-            associate_real_box_to_partial_polygon(poly, first_plan_edges_list, dimensions.second, dimensions.first, selected_obb_list);
-            // Selecting the best_obb using lamda and beta values 
-            if (selected_obb_list.size()){
-                std::pair<polygon, double> best_obb= selected_obb_list[0];
-                for(int i=0; i < selected_obb_list.size(); i++)
-                {
-                    if ((selected_obb_list[i].second < best_obb.second))
-                        best_obb= selected_obb_list[i]; 
-                }
-                cout<<"New association solution was used, best_factor= " << best_obb.second<<endl;
-                bg::correct(best_obb.first);
-                return best_obb.first;
-            } 
-
-            cout<<"No good candidates, rotating calippers was used!"<<endl;  
+                cout<<"No good candidates, convex hull was used!"<<endl;  
+            }
+            else
+                cout<<"Area fit condition is not valid, convex hull was used!"<<endl;
         }
         else
-            cout<<"Area fit condition is not valid, rotating calippers was used!"<<endl;
+            cout<<"Object dont exist in the knowledge base, convex hull was used!"<<endl;
 
-        double angle;
+        /*double angle;
         box object_box = create_oriented_box(poly, angle);
-        return polygonFromBox(object_box, angle);
+        return polygonFromBox(object_box, angle);*/
+        return poly;
     
     }
 
@@ -642,16 +650,7 @@ namespace semmapping
         obj.obb = create_object_box_using_prior_knowledge(obj.shape_union, obj.name);
         bg::centroid(obj.obb, obj.oriented_box_cen);
         //std::cout << "obj obb 2 size: " << obj.obb.outer().size() << std::endl;
-
-        if (obj.name == "Table"){
-            tableList.insert(next_index);
-        }
-        ROS_INFO_STREAM("Adding object" << obj.name << "to map");
-        objectList[next_index] = obj;
-        rtree_entry ent = {obj.bounding_box, next_index};
-        objectRtree.insert(ent);
-        ROS_INFO_STREAM("Succesfully added, size: " << objectRtree.size());
-        next_index++;
+        addObject(obj);
     }
 
     void SemanticMap::addObject(const SemanticObject &obj)
@@ -659,6 +658,7 @@ namespace semmapping
         if (obj.name == "Table"){
             tableList.insert(next_index);
         }
+        ROS_INFO_STREAM("Adding object" << obj.name << "to map");
         objectList[next_index] = obj;
         rtree_entry ent = {obj.bounding_box, next_index};
         objectRtree.insert(ent);
