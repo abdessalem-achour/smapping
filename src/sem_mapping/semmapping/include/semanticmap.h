@@ -93,9 +93,12 @@ namespace semmapping
             bg::union_(a, b, un);
             multi_polygon sect;
             bg::intersection(a, b, sect);
-            //std::cout << "intersect: " << bg::area(sect) << " unioin: " <<bg::area(un) << std::endl;
+            std::cout << "intersect: " << bg::area(sect) << " unioin: " <<bg::area(un) << std::endl;
             //intersection over union
-            return bg::area(sect) / bg::area(un);
+            if(bg::area(un)!=0)
+                return bg::area(sect) / bg::area(un);
+            else
+                return 0;
         }
 
         inline static double union_fit(const polygon &a, const polygon &b)
@@ -257,6 +260,7 @@ namespace semmapping
             
             mapping_msgs::SemanticMap::Ptr createGroundTruthMapMessage();
             bool loadGroundTruthMap(std::istream &input);
+            void classRating(double ev_list[4], double mapping_factor, double dengler_factor);
             void mapRating();
             void zScoreNormalization(double &f1, double &f2, double &f3, double &f4);
             double distanceFromLine(point p, point start, point end);

@@ -72,7 +72,8 @@ namespace semmapping
         if(name=="Chair") {dimensions.first= 0.6; dimensions.second= 0.57;}
         else if (name== "Table") {dimensions.first= 1.782; dimensions.second= 0.8;}
         else if (name=="Shelf" || name=="Bookcase") {dimensions.first= 0.88; dimensions.second= 0.39;}
-        else if (name=="Sofa bed"){dimensions.first= 0.97; dimensions.second= 2.009;}
+        else if (name=="Sofa bed" || name=="Couch"){dimensions.first= 0.97; dimensions.second= 2.009;}
+        else if (name=="Ball"){dimensions.first= 0.2; dimensions.second= 0.2;}
         else {dimensions.first= 0.0; dimensions.second= 0.0;}
 
         return dimensions;
@@ -111,12 +112,24 @@ namespace semmapping
 
     polygon SemanticMap::improve_polygon(polygon poly, double tolerance){
         polygon improved_polygon;
-        for(int i=0; i< poly.outer().size()-1; i++){
-            bg::append(improved_polygon.outer(), poly.outer()[i]);
-            double d= distanceFromLine(poly.outer()[i+1], poly.outer()[i+2], poly.outer()[i]);
+        int j=0;
+        bg::append(improved_polygon.outer(), poly.outer()[0]);
+        for(int i=0; i< poly.outer().size()-2; i++){
+            double d= distanceFromLine(poly.outer()[i+j+1], poly.outer()[i], poly.outer()[i+j+2]);
             if(d < tolerance){
-                i++;
+                i--;
+                j++;
             } 
+            else
+            {
+                if(i+j+1<poly.outer().size()-1){
+                    bg::append(improved_polygon.outer(), poly.outer()[i+j+1]);
+                    i=i+j;
+                    j=0;
+                }
+                else
+                    i=i+j;
+            }
         }
         bg::append(improved_polygon.outer(), poly.outer()[poly.outer().size()-1]);
         return improved_polygon;
@@ -128,7 +141,7 @@ namespace semmapping
             double edge_distance = sqrt((poly.outer()[i+1].x() - poly.outer()[i].x())*(poly.outer()[i+1].x() - poly.outer()[i].x()) 
                                 + (poly.outer()[i+1].y() - poly.outer()[i].y())*(poly.outer()[i+1].y() - poly.outer()[i].y()));
             //cout<<"("<<poly.outer()[i].x()<<","<<poly.outer()[i].y()<<") et ("<<poly.outer()[i+1].x()<<","<<poly.outer()[i+1].y()<<") edge_distance= "<<edge_distance<<endl;
-            if(edge_distance>0.1){
+            if(edge_distance > 0.03){
                 polygon from_reference_to_edge_area;
                 bg::append(from_reference_to_edge_area.outer(), reference);
                 bg::append(from_reference_to_edge_area.outer(), poly.outer()[i]);
@@ -251,7 +264,9 @@ namespace semmapping
                     else
                         coin_area_factor= sqrt((fabs(coefficient_of_extreme_points[i].first)-i*edge_distance) * coefficient_of_extreme_points[i].second)/sqrt(l*w);*/
                     
-                    edge_factor= (l-(fabs(coefficient_of_extreme_points[i].first)+(1-i)*edge_distance))/l;
+                    //edge_factor= (l-(fabs(coefficient_of_extreme_points[i].first)+(1-i)*edge_distance))/l;
+                    //edge_factor= (l-(fabs(coefficient_of_extreme_points[i].first)+(1-i)*edge_distance))/l;
+                    edge_factor= fabs(l-(fabs(coefficient_of_extreme_points[0].first) + fabs(coefficient_of_extreme_points[1].first)))/l;
                     width_factor= (w-coefficient_of_extreme_points[2].second)/w;
                     //width_factor= (w-coefficient_of_extreme_points[i].second)/w;
                     //width_factor= (w-d_beta[i])/w;
@@ -263,11 +278,11 @@ namespace semmapping
                     cout<<"Similarity factor= "<<normalized_similarity_factor<<" angle_factor= "<<angle_factor<<" coin_area_factor= "<<coin_area_factor<<" edge_factor= "<<edge_factor<<" width_factor= "<<width_factor<<endl;*/
                     //gradient_descent(weights, 1, angle_factor, edge_factor, width_factor);
                     //cout <<"Optimal weights: w1 = " << weights[0] << ", w2 = " << weights[1] << ", w3 = " << weights[2] << endl;
-                    weights[0] = 0.40;
+                    weights[0] = 0.50;
                     weights[1] = 0.30;
-                    weights[2] = 0.30;
+                    weights[2] = 0.20;
                     normalized_similarity_factor= association_score(weights, angle_factor, edge_factor, width_factor);
-                    cout << "Similarity factor= " << normalized_similarity_factor << " angle_factor= " << angle_factor << " edge_factor= "<<edge_factor<<" width_factor= "<<width_factor<<endl;
+                    //cout << "Similarity factor= " << normalized_similarity_factor << " angle_factor= " << angle_factor << " edge_factor= "<<edge_factor<<" width_factor= "<<width_factor<<endl;
 
                     if (normalized_similarity_factor < 0.4){
                         polygon box;
@@ -286,16 +301,23 @@ namespace semmapping
     {
         // Getting real object dimensions from knowledge base, return <0,0> if object dont exist
         std::pair<double, double> dimensions= get_real_object_length_width(name);
-        cout<< "New detection of a "<< name << endl ;
+        //cout<< "New detection of a "<< name << endl ;
         if (dimensions.first!=0 && dimensions.second!=0){
             // Geometric association and generation of possible OBBs  
             std::vector<std::pair<polygon, double>> selected_obb_list;
             double area_fit= bg::area(poly)/(dimensions.first*dimensions.second);
+            //cout<<"area fit= "<<area_fit<<endl;
             if(area_fit > 0.1 && area_fit < 1.5){
                 // Improving polygon
-                //cout<<"polygon initial vertices"<<poly.outer().size()<<endl;
-                poly= improve_polygon(poly, 0.02);
-                //cout<<"polygon final vertices"<<poly.outer().size()<<endl;
+                /*cout<<"polygon initial vertices"<<poly.outer().size()<<endl;
+                for(int i=0; i< poly.outer().size(); i++){
+                    cout<< poly.outer()[i].x()<<" - "<< poly.outer()[i].y()<<endl;
+                }*/
+                poly= improve_polygon(poly, 0.01);
+                /*cout<<"polygon final vertices"<<poly.outer().size()<<endl;
+                for(int i=0; i< poly.outer().size(); i++){
+                    cout<< poly.outer()[i].x()<<" - "<< poly.outer()[i].y()<<endl;
+                }*/
 
                 // Get the polygon first plan edges in reference to the robot 
                 point robot_position = getRobotPosition();
@@ -313,7 +335,7 @@ namespace semmapping
                         if ((selected_obb_list[i].second < best_obb.second))
                             best_obb= selected_obb_list[i]; 
                     }
-                    cout<<"New association solution was used, best_factor= " << best_obb.second<<endl;
+                    //cout<<"New association solution was used, best_factor= " << best_obb.second<<endl;
                     bg::correct(best_obb.first);
                     return best_obb.first;
                 } 
@@ -466,9 +488,9 @@ namespace semmapping
         }
         //multi_point obj_cloud;
         double biggest_area_size = 0;
-        double angle;
         obj.isCombined = true;
         obj.shape_union = computeConvexHullPcl(obj.point_cloud);
+        //double angle;
         //obj.oriented_box = create_oriented_box(obj.shape_union, angle);
         //obj.rotation_angle = angle;
         //obj.obb = polygonFromBox(obj.oriented_box, obj.rotation_angle);
@@ -500,7 +522,7 @@ namespace semmapping
 
             removeObject(*it);
         }
-        updateUnion(combinedId);
+        //updateUnion(combinedId);
         return combinedId;
     }
 
@@ -572,7 +594,7 @@ namespace semmapping
                 }
                 else
                 {
-                    double angle;
+                    //double angle;
                     tableObj.shape_union = computeConvexHullPcl(tableObj.point_cloud);
                     //tableObj.oriented_box = create_oriented_box(tableObj.shape_union, angel);
                     //tableObj.rotation_angle = angel;
@@ -616,7 +638,7 @@ namespace semmapping
                 obj.exist_certainty = calculateCertainty(obj.counting_queue);
             }
             obj.isCombined = false;
-            if((dist_to_obj >=  0.2 && dist_to_obj <=  1.8) && obj.counting_queue.size() >= param_config.queue_thresh && obj.exist_certainty < 0.25) {
+            if((dist_to_obj >=  0.2 && dist_to_obj <=  2.8) && obj.counting_queue.size() >= param_config.queue_thresh && obj.exist_certainty < 0.25) {
                 //if (obj.exist_certainty < 0.1){//} param_config.certainty_thresh) {
                 removeObject(id);
                 ROS_INFO_STREAM("Object " << obj.name << " removed");
@@ -643,7 +665,7 @@ namespace semmapping
         obj.point_cloud = cloud;
         bg::centroid(obj.shape_union, obj.shape_union_cen);
 
-        double angle;
+        //double angle;
         //obj.oriented_box = create_oriented_box(obj.shape_union, angle);
         //obj.rotation_angle = angle;
         //obj.obb = polygonFromBox(obj.oriented_box, obj.rotation_angle);
@@ -1128,13 +1150,19 @@ namespace semmapping
         return position_msg;
     }
 
+    void SemanticMap::classRating(double ev_list[4], double mapping_factor, double dengler_factor){
+        ev_list[0]++;
+        ev_list[1]= (ev_list[1]*(ev_list[0]-1) + mapping_factor)/ev_list[0];
+        ev_list[2]= (ev_list[2]*(ev_list[0]-1) + dengler_factor)/ev_list[0];
+    }
     void SemanticMap::mapRating(){
         if(!objectList.empty()){
-            double class_chair_factor=0, class_table_factor=0, class_shelf_factor=0;
-            double class_chair_mean_factor=0, class_table_mean_factor=0, class_shelf_mean_factor=0;
-            double class_chair_factor_dengler=0, class_table_factor_dengler=0, class_shelf_factor_dengler=0;
-            double class_chair_mean_factor_dengler=0, class_table_mean_factor_dengler=0, class_shelf_mean_factor_dengler=0;
-            int n_chair=0, n_table=0, n_shelf=0;
+            // first: number of instances, second: our solution factor, third: dengler factor 
+            double ev_class_table[4]={0,0,0,0};
+            double ev_class_chair[4]={0,0,0,0};
+            double ev_class_shelf[4]={0,0,0,0};
+            double ev_class_sofa[4]={0,0,0,0};
+            int false_detection=0;
 
             for (auto &val : objectList)
             {
@@ -1142,47 +1170,52 @@ namespace semmapping
                 bool object_not_found= true;
                 for(auto &val2 : groundTruthObjectList){
                     SemanticObject &gtObj = val2.second;
-                    double mapping_factor=0;
-                    double mapping_factor_dengler=0;
+                    cout << "object name " << obj.name <<" - Truth object name: "<< gtObj.name<< endl;
                     if(obj.exist_certainty > 0.25 && obj.name == gtObj.name){
-                        mapping_factor= iou(obj.obb, gtObj.obb);
-                        mapping_factor_dengler= iou(obj.shape_union, gtObj.obb);
+                        double mapping_factor= iou(obj.obb, gtObj.obb);
+                        double mapping_factor_dengler= iou(obj.shape_union, gtObj.obb);
+                        cout << "mapping factor= " << mapping_factor << endl;
                         if(mapping_factor!=0)
                         {
                             cout<<obj.name<<val.first<<" represents object "<<gtObj.name<<val2.first<<" with iou factor= "<<mapping_factor<<endl;
                             object_not_found= false;
                             if(obj.name=="Chair")
-                            {
-                                n_chair++;
-                                class_chair_factor+= mapping_factor; class_chair_mean_factor= class_chair_factor/ n_chair;  
-                                class_chair_factor_dengler+= mapping_factor_dengler; class_chair_mean_factor_dengler= class_chair_factor_dengler/ n_chair;
-                            }    
+                                classRating(ev_class_chair, mapping_factor, mapping_factor_dengler);
                             if(obj.name=="Table")
-                            {
-                                n_table++;
-                                class_table_factor+= mapping_factor; class_table_mean_factor= class_table_factor/ n_table;
-                                class_table_factor_dengler+= mapping_factor_dengler; class_table_mean_factor_dengler= class_table_factor_dengler/ n_table;
-                            }
+                                classRating(ev_class_table, mapping_factor, mapping_factor_dengler);
                             if(obj.name=="Shelf")
-                            {
-                                n_shelf++;
-                                class_shelf_factor+= mapping_factor; class_shelf_mean_factor= class_shelf_factor/ n_shelf;
-                                class_shelf_factor_dengler+= mapping_factor_dengler; class_shelf_mean_factor_dengler= class_shelf_factor_dengler/ n_shelf;
-                            }
+                                classRating(ev_class_shelf, mapping_factor, mapping_factor_dengler);
+                            if(obj.name=="Sofa bed")
+                                classRating(ev_class_sofa, mapping_factor, mapping_factor_dengler);
                         }
                     }
                 }
-                if(object_not_found)
-                    cout<<obj.name<<val.first<<" dont exist in the truth map!"<<endl;
+
+                if(obj.exist_certainty > 0.25 && object_not_found){
+                    cout << obj.name << val.first << " dont exist in the truth map!" << endl;
+                    if(obj.name=="Chair")
+                        ev_class_chair[3]++;
+                    if(obj.name=="Table")
+                        ev_class_table[3]++;
+                    if(obj.name=="Shelf")
+                        ev_class_shelf[3]++;
+                    if(obj.name=="Sofa bed")
+                        ev_class_sofa[3]++;
+                    false_detection++;
+                }
             }
-            cout<<"Our solution: " <<endl;
-            cout<<"The mean similaity factor for class Chair is "<< class_chair_mean_factor<<" for "<< n_chair<< " mapped Chairs" <<endl;
-            cout<<"The mean similaity factor for class Table is "<< class_table_mean_factor<<" for "<< n_table<< " mapped Tables" <<endl;
-            cout<<"The mean similaity factor for class Shelf is "<< class_shelf_mean_factor<<" for "<< n_shelf<< " mapped Shelfs" <<endl;
-            cout<<"Dengler solution: " <<endl;
-            cout<<"The mean similaity factor for class Chair is "<< class_chair_mean_factor_dengler<<" for "<< n_chair<< " mapped Chairs" <<endl;
-            cout<<"The mean similaity factor for class Table is "<< class_table_mean_factor_dengler<<" for "<< n_table<< " mapped Tables" <<endl;
-            cout<<"The mean similaity factor for class Shelf is "<< class_shelf_mean_factor_dengler<<" for "<< n_shelf<< " mapped Shelfs" <<endl;
+            cout<<"--- Our solution ---" << endl;
+            cout<<"The mean similaity factor for class Chair is "<< ev_class_chair[1]<<" for "<< ev_class_chair[0]<< " mapped Chairs" << endl;
+            cout<<"The mean similaity factor for class Table is "<< ev_class_table[1]<<" for "<< ev_class_table[0]<< " mapped Tables" << endl;
+            cout<<"The mean similaity factor for class Shelf is "<< ev_class_shelf[1]<<" for "<< ev_class_shelf[0]<< " mapped Shelfs" << endl;
+            cout<<"The mean similaity factor for class Sofa is "<< ev_class_sofa[1]<<" for "<< ev_class_sofa[0]<< " mapped Sofas" << endl;
+            cout<<"--- Dengler solution ---" << endl;
+            cout<<"The mean similaity factor for class Chair is "<< ev_class_chair[2]<<" for "<< ev_class_chair[0]<< " mapped Chairs" << endl;
+            cout<<"The mean similaity factor for class Table is "<< ev_class_table[2]<<" for "<< ev_class_table[0]<< " mapped Tables" << endl;
+            cout<<"The mean similaity factor for class Shelf is "<< ev_class_shelf[2]<<" for "<< ev_class_shelf[0]<< " mapped Shelfs" << endl;
+            cout<<"The mean similaity factor for class Sofa is "<< ev_class_sofa[2]<<" for "<< ev_class_sofa[0]<< " mapped Sofas" << endl;
+            cout<<"--- " << false_detection << " False detections ---" << endl;
+            cout<< ev_class_table[3]<<" Tables, "<< ev_class_chair[3]<<" Chairs, "<< ev_class_shelf[3]<<" Shelfs, "<< ev_class_sofa[3]<<" Sofas "<< endl;
         }
         else
             ROS_INFO_STREAM("The Map is empty, so it can't be rated!");
