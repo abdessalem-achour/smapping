@@ -71,7 +71,7 @@ namespace semmapping
 
         if(name=="Chair") {dimensions.first= 0.6; dimensions.second= 0.57;}
         else if (name== "Table") {dimensions.first= 1.782; dimensions.second= 0.8;}
-        else if (name=="Shelf" || name=="Bookcase") {dimensions.first= 0.88; dimensions.second= 0.39;}
+        else if (name=="Shelf" || name=="Bookcase") {dimensions.first= 0.9; dimensions.second= 0.41;}
         else if (name=="Sofa bed" || name=="Couch"){dimensions.first= 0.97; dimensions.second= 2.009;}
         else if (name=="Ball"){dimensions.first= 0.2; dimensions.second= 0.2;}
         else {dimensions.first= 0.0; dimensions.second= 0.0;}
@@ -313,7 +313,7 @@ namespace semmapping
                 for(int i=0; i< poly.outer().size(); i++){
                     cout<< poly.outer()[i].x()<<" - "<< poly.outer()[i].y()<<endl;
                 }*/
-                poly= improve_polygon(poly, 0.01);
+                poly= improve_polygon(poly, 0.02);
                 /*cout<<"polygon final vertices"<<poly.outer().size()<<endl;
                 for(int i=0; i< poly.outer().size(); i++){
                     cout<< poly.outer()[i].x()<<" - "<< poly.outer()[i].y()<<endl;
