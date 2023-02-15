@@ -741,7 +741,7 @@ int main(int argc, char **argv) {
             gtSemanticMapPub.publish(gt_map_msg);
             std::ifstream file2("src/sem_mapping/semmapping/maps/test1.yaml");
             map.readMapData(file2);
-            map.mapRating();
+            map.mapRating2();
         }
         else if (command == "save") {
             std::string fname = readNext(in, it);

@@ -77,7 +77,9 @@ namespace semmapping
         size_t groundTruthNext_index = 0;
 
         // Initialize the weights
-        std::vector<double> weights= {0.4, 0.4, 0.2};
+        std::vector<double> weights= {0.5, 0.3, 0.2};
+        /*std::vector<double> weights= {0, 0, 0};
+        double min_f1_score= std::numeric_limits<double>::max();*/
 
 
         inline static double ref_fit(const polygon &newpg, const polygon &refpg)
@@ -93,7 +95,7 @@ namespace semmapping
             bg::union_(a, b, un);
             multi_polygon sect;
             bg::intersection(a, b, sect);
-            std::cout << "intersect: " << bg::area(sect) << " unioin: " <<bg::area(un) << std::endl;
+            //std::cout << "intersect: " << bg::area(sect) << " unioin: " <<bg::area(un) << std::endl;
             //intersection over union
             if(bg::area(un)!=0)
                 return bg::area(sect) / bg::area(un);
@@ -260,7 +262,7 @@ namespace semmapping
             
             mapping_msgs::SemanticMap::Ptr createGroundTruthMapMessage();
             bool loadGroundTruthMap(std::istream &input);
-            void classRating(double ev_list[4], double mapping_factor, double dengler_factor);
+            void classRating(std::pair<std::string, double*> &class_data, double mapping_factor, double dengler_factor, double com_offset, double com_offset_dengler);
             void mapRating();
             void zScoreNormalization(double &f1, double &f2, double &f3, double &f4);
             double distanceFromLine(point p, point start, point end);
@@ -268,6 +270,8 @@ namespace semmapping
             //std::pair<double, double> get_second_extremun(std::pair<double, double> point_coefficient, std::pair<double, double> coefficient_of_all_points[]);
             void gradient_descent(std::vector<double> &weights, int n, double f1, double f2, double f3);
             double association_score(std::vector<double> &weights, double f1, double f2, double f3);
+            void grid_search(polygon poly, polygon box, std::vector<double> &weights, double &min_f1_score, double f1, double f2, double f3);
+            void mapRating2();
 
             int viewer_index = 0;
             semmapping::ParamsConfig &param_config;

@@ -250,48 +250,40 @@ namespace semmapping
             for (int i=0; i<2; i++){
                 bool c1= fabs(coefficient_of_extreme_points[i].first)+(1-i)*edge_distance <= l;
                 bool c2= coefficient_of_extreme_points[2].second <= w;
-                //bool c3= coefficient_of_extreme_points[i].second > 0;
                 if (c1 && c2){ 
-                    double angle_factor, width_factor, variable3, angle_association_variable, edge_factor, coin_area_factor, normalized_similarity_factor;
-                    
-                    //angle_factor= (fabs(coefficient_of_extreme_points[i].first) - i*edge_distance) / l;
+                    double angle_factor, width_factor, edge_factor, box_error;
                     
                     angle_factor= fabs(d_alpha[i])/l;
-
-                    /*if(angle_factor == 0 && coefficient_of_extreme_points[i].second == 0)
-                        //coin_area_factor= (fabs(coefficient_of_extreme_points[i].first - coefficient_of_second_extreme_points[i].first) * coefficient_of_second_extreme_points[i].second)/(l*w);
-                        coin_area_factor= 1.0;
-                    else
-                        coin_area_factor= sqrt((fabs(coefficient_of_extreme_points[i].first)-i*edge_distance) * coefficient_of_extreme_points[i].second)/sqrt(l*w);*/
-                    
-                    //edge_factor= (l-(fabs(coefficient_of_extreme_points[i].first)+(1-i)*edge_distance))/l;
-                    //edge_factor= (l-(fabs(coefficient_of_extreme_points[i].first)+(1-i)*edge_distance))/l;
                     edge_factor= fabs(l-(fabs(coefficient_of_extreme_points[0].first) + fabs(coefficient_of_extreme_points[1].first)))/l;
                     width_factor= (w-coefficient_of_extreme_points[2].second)/w;
-                    //width_factor= (w-coefficient_of_extreme_points[i].second)/w;
-                    //width_factor= (w-d_beta[i])/w;
-                    //width_factor= (w-(coefficient_of_extreme_points[i].second+coefficient_of_extreme_points[2].second)/2)/w;
-                    //width_factor= (w - sqrt(pow(fabs(d[i]),2) + pow(coefficient_of_extreme_points[i].second,2))) / w;
-                    //width_factor= (w-(d_beta[i]+coefficient_of_extreme_points[2].second)/2)/w;
+                    
+                    
+                    // Weights definition mode
+                    /*
+                    polygon box; 
+                    box= create_shifted_bounding_box_with_real_dimensions(i, first_point, v_directeur, coefficient_of_extreme_points[i].first, length, width);
+                    cout<<"new box generated"<<endl;
+                    
+                    grid_search(poly, box, weights, min_f1_score, angle_factor, edge_factor, width_factor);
+                    box_error= association_score(weights, angle_factor, edge_factor, width_factor);
 
-                    /*normalized_similarity_factor=0.25*angle_factor + 0.25*coin_area_factor + 0.25*edge_factor + 0.25*width_factor;
-                    cout<<"Similarity factor= "<<normalized_similarity_factor<<" angle_factor= "<<angle_factor<<" coin_area_factor= "<<coin_area_factor<<" edge_factor= "<<edge_factor<<" width_factor= "<<width_factor<<endl;*/
-                    //gradient_descent(weights, 1, angle_factor, edge_factor, width_factor);
-                    //cout <<"Optimal weights: w1 = " << weights[0] << ", w2 = " << weights[1] << ", w3 = " << weights[2] << endl;
-                    weights[0] = 0.50;
-                    weights[1] = 0.30;
-                    weights[2] = 0.20;
-                    normalized_similarity_factor= association_score(weights, angle_factor, edge_factor, width_factor);
-                    //cout << "Similarity factor= " << normalized_similarity_factor << " angle_factor= " << angle_factor << " edge_factor= "<<edge_factor<<" width_factor= "<<width_factor<<endl;
+                    cout<<"weights= "<<weights[0]<<" "<<weights[1]<<" "<<weights[2]<< " ,min_f1_score= "<< min_f1_score<<endl;
+                    */
+                    
+                    // Mapping mode
+                    
+                    weights[0] = 0.50; weights[1] = 0.30; weights[2] = 0.20;
+                    box_error= association_score(weights, angle_factor, edge_factor, width_factor);
 
-                    if (normalized_similarity_factor < 0.4){
+                    if (box_error < 0.4){
                         polygon box;
                         box= create_shifted_bounding_box_with_real_dimensions(i, first_point, v_directeur, coefficient_of_extreme_points[i].first, length, width);
                         std::pair<polygon, double> new_candidat;
                         new_candidat.first=box;
-                        new_candidat.second= normalized_similarity_factor;
+                        new_candidat.second= box_error;
                         selected_obb_list.push_back(new_candidat);
                     } 
+                    
                 }
             } 
         }
@@ -1013,11 +1005,29 @@ namespace semmapping
             }
             try
             {
+                bg::read_wkt(entry["shape_union_cen"].as<std::string>(), obj.shape_union_cen);
+            }
+            catch (const bg::read_wkt_exception &e)
+            {
+                ROS_ERROR_STREAM("Error reading object shape centroid: " << e.what());
+                return false;
+            }
+            try
+            {
                 bg::read_wkt(entry["oriented_box"].as<std::string>(), obj.obb);
             }
             catch (const bg::read_wkt_exception &e)
             {
                 ROS_ERROR_STREAM("Error reading obb: " << e.what());
+                return false;
+            }
+            try
+            {
+                bg::read_wkt(entry["oriented_box_cen"].as<std::string>(), obj.oriented_box_cen);
+            }
+            catch (const bg::read_wkt_exception &e)
+            {
+                ROS_ERROR_STREAM("Error reading obb centroid: " << e.what());
                 return false;
             }
             obj.bounding_box = bg::return_envelope<box>(obj.shape_union);
@@ -1150,12 +1160,15 @@ namespace semmapping
         return position_msg;
     }
 
-    void SemanticMap::classRating(double ev_list[4], double mapping_factor, double dengler_factor){
-        ev_list[0]++;
-        ev_list[1]= (ev_list[1]*(ev_list[0]-1) + mapping_factor)/ev_list[0];
-        ev_list[2]= (ev_list[2]*(ev_list[0]-1) + dengler_factor)/ev_list[0];
+    void SemanticMap::classRating(std::pair<std::string, double*> &class_data, double mapping_factor, double dengler_factor, double com_offset, double com_offset_dengler){ 
+        class_data.second[0]++;
+        class_data.second[1]= (class_data.second[1]*(class_data.second[0]-1) + mapping_factor)/class_data.second[0];
+        class_data.second[2]= (class_data.second[2]*(class_data.second[0]-1) + dengler_factor)/class_data.second[0];
+        class_data.second[4]= (class_data.second[4]*(class_data.second[0]-1) + com_offset)/class_data.second[0];
+        class_data.second[5]= (class_data.second[5]*(class_data.second[0]-1) + com_offset_dengler)/class_data.second[0];
     }
-    void SemanticMap::mapRating(){
+    
+    /*void SemanticMap::mapRating(){
         if(!objectList.empty()){
             // first: number of instances, second: our solution factor, third: dengler factor 
             double ev_class_table[4]={0,0,0,0};
@@ -1170,14 +1183,22 @@ namespace semmapping
                 bool object_not_found= true;
                 for(auto &val2 : groundTruthObjectList){
                     SemanticObject &gtObj = val2.second;
-                    cout << "object name " << obj.name <<" - Truth object name: "<< gtObj.name<< endl;
+                    //cout << "object name " << obj.name <<" - Truth object name: "<< gtObj.name<< endl;
                     if(obj.exist_certainty > 0.25 && obj.name == gtObj.name){
                         double mapping_factor= iou(obj.obb, gtObj.obb);
                         double mapping_factor_dengler= iou(obj.shape_union, gtObj.obb);
-                        cout << "mapping factor= " << mapping_factor << endl;
+                        point truth_centroid;
+                        bg::centroid(gtObj.obb, truth_centroid);
+                        double com_offset_dengler, com_offset;
+                        com_offset_dengler= sqrt((obj.shape_union_cen.x() - truth_centroid.x())*(obj.shape_union_cen.x() - truth_centroid.x()) 
+                                + (obj.shape_union_cen.y() - truth_centroid.y())*(obj.shape_union_cen.y() - truth_centroid.y()));
+                        com_offset= sqrt((obj.oriented_box_cen.x() - truth_centroid.x())*(obj.oriented_box_cen.x() - truth_centroid.x()) 
+                                + (obj.oriented_box_cen.y() - truth_centroid.y())*(obj.oriented_box_cen.y() - truth_centroid.y()));
+                        
                         if(mapping_factor!=0)
                         {
-                            cout<<obj.name<<val.first<<" represents object "<<gtObj.name<<val2.first<<" with iou factor= "<<mapping_factor<<endl;
+                            cout<<obj.name<<val.first<<" represents object "<<gtObj.name<<val2.first<<" with iou factor= " << mapping_factor << endl;
+                            cout << "mapping factor= " << mapping_factor << "CoM offset dengler= " << com_offset_dengler << "CoM offset= " << com_offset << endl;
                             object_not_found= false;
                             if(obj.name=="Chair")
                                 classRating(ev_class_chair, mapping_factor, mapping_factor_dengler);
@@ -1219,7 +1240,7 @@ namespace semmapping
         }
         else
             ROS_INFO_STREAM("The Map is empty, so it can't be rated!");
-    }
+    }*/
 
     // function to apply Z-score normalization
     void SemanticMap::zScoreNormalization(double &f1, double &f2, double &f3, double &f4) {
@@ -1280,5 +1301,105 @@ namespace semmapping
             if (abs(current_score - last_score) < tolerance) break;
             last_score = current_score;
         }
+    }
+
+    void SemanticMap::grid_search(polygon poly, polygon box, std::vector<double> &weights, double &min_f1_score, double f1, double f2, double f3)
+    {
+        std::vector<double> weights1, weights2, weights3;
+
+        double step = 0.1;
+        double curr_IOU = iou(poly, box);
+
+        for (double w1 = 0.4; w1 < 0.6; w1 += step) {
+            for (double w2 = 0.1; w2 < 1.0 - w1; w2 += step) {
+                double w3 = 1 - (w1 + w2);    // Ensure that the weights sum to 1
+                
+                double curr_ERROR = w1*f1 + w2*f2 + w3*f3;
+                double curr_f1_score = 2 * (((1-curr_IOU)*curr_ERROR)/((1-curr_IOU)+curr_ERROR));
+
+                if (curr_f1_score <= min_f1_score) {
+                    weights[0] = w1;
+                    weights[1] = w2;
+                    weights[2] = w3;
+                    min_f1_score= curr_f1_score;
+                }
+            }
+        }
+        cout<<"min_f1_score= " << min_f1_score << endl;
+    }
+    
+    void SemanticMap::mapRating2(){
+        std::vector<std::string> evaluted_classes{"Chair", "Table", "Shelf", "Sofa bed"};
+        std::vector<std::pair<std::string, double*>> all_classes_data;
+
+        double initial_data1[6]={0,0,0,0,0,0}; double initial_data2[6]={0,0,0,0,0,0}; double initial_data3[6]={0,0,0,0,0,0}; double initial_data4[6]={0,0,0,0,0,0};
+        all_classes_data.push_back(std::make_pair("Chair", initial_data1));
+        all_classes_data.push_back(std::make_pair("Table", initial_data2));
+        all_classes_data.push_back(std::make_pair("Shelf", initial_data3));
+        all_classes_data.push_back(std::make_pair("Sofa bed", initial_data4));
+
+        if(!objectList.empty()){
+            // first: number of instances, second: our solution factor, third: dengler factor 
+            int false_detection=0;
+
+            for (auto &val : objectList)
+            {
+                SemanticObject &obj = val.second;
+                bool object_not_found= true;
+                for(auto &val2 : groundTruthObjectList){
+                    SemanticObject &gtObj = val2.second;
+                    //cout << "object name " << obj.name <<" - Truth object name: "<< gtObj.name<< endl;
+                    if(obj.exist_certainty > 0.25 && obj.name == gtObj.name){
+                        double mapping_factor= iou(obj.obb, gtObj.obb);
+                        double mapping_factor_dengler= iou(obj.shape_union, gtObj.obb);
+                        point truth_centroid;
+                        bg::centroid(gtObj.obb, truth_centroid);
+                        double com_offset_dengler, com_offset;
+                        com_offset_dengler= sqrt((obj.shape_union_cen.x() - truth_centroid.x())*(obj.shape_union_cen.x() - truth_centroid.x()) 
+                                + (obj.shape_union_cen.y() - truth_centroid.y())*(obj.shape_union_cen.y() - truth_centroid.y()));
+                        com_offset= sqrt((obj.oriented_box_cen.x() - truth_centroid.x())*(obj.oriented_box_cen.x() - truth_centroid.x()) 
+                                + (obj.oriented_box_cen.y() - truth_centroid.y())*(obj.oriented_box_cen.y() - truth_centroid.y()));
+                        
+                        if(mapping_factor!=0)
+                        {
+                            cout<< obj.name << val.first <<" represents object " << gtObj.name << val2.first << " with IOU: " << mapping_factor << " and CoM Offset: " 
+                            << com_offset << endl;
+                            object_not_found= false;
+                            std::vector<std::pair<std::string, double*>>::iterator it;
+                            for(it = all_classes_data.begin(); it != all_classes_data.end(); it++){
+                                std::pair<std::string, double*> class_data = *it;
+                                if(class_data.first == obj.name){
+                                    classRating(class_data, mapping_factor, mapping_factor_dengler, com_offset, com_offset_dengler);
+                                }
+                            }
+                                
+                        }
+                    }
+                }
+
+                if(obj.exist_certainty > 0.25 && object_not_found){
+                    cout << obj.name << val.first << " dont exist in the truth map!" << endl;
+                    std::vector<std::pair<std::string, double*>>::iterator it;
+                    for(it = all_classes_data.begin(); it != all_classes_data.end(); it++){
+                        std::pair<std::string, double*> class_data = *it;
+                        if(class_data.first == obj.name)
+                            class_data.second[3]++;
+                    }
+                    false_detection++;
+                }
+            }
+
+            cout <<"--- Map Evaluation ---" << endl;
+            cout << std::left << setw(20)<< "class name" << setw(20)<< "TP" << setw(20)<< "FP"<< setw(20) << "Mean IOU" << setw(20) <<"Mean IOU Dengler"
+            << setw(20) << "Mean CoM offset" << setw(20) <<"Mean CoM Dengler"<< endl;
+            std::vector<std::pair<std::string, double*>>::iterator it;
+            for(it = all_classes_data.begin(); it != all_classes_data.end(); it++){
+                std::pair<std::string, double*> class_data = *it;
+                cout << std::left << setw(20)<< class_data.first << setw(20) << class_data.second[0] << setw(20)<< class_data.second[3] << setw(20)
+                << class_data.second[1] << setw(20) << class_data.second[2]<< setw(20) << class_data.second[4]<< setw(20) << class_data.second[5] << endl;
+            }
+        }
+        else
+            ROS_INFO_STREAM("The Map is empty, so it can't be rated!");
     }
 }
