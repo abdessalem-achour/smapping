@@ -267,11 +267,11 @@ namespace semmapping
             void zScoreNormalization(double &f1, double &f2, double &f3, double &f4);
             double distanceFromLine(point p, point start, point end);
             polygon improve_polygon(polygon poly, double tolerance);
-            //std::pair<double, double> get_second_extremun(std::pair<double, double> point_coefficient, std::pair<double, double> coefficient_of_all_points[]);
             void gradient_descent(std::vector<double> &weights, int n, double f1, double f2, double f3);
             double association_score(std::vector<double> &weights, double f1, double f2, double f3);
             void grid_search(polygon poly, polygon box, std::vector<double> &weights, double &min_f1_score, double f1, double f2, double f3);
             void mapRating2();
+            void save_stats(std::vector<std::pair<std::string, double*>> all_classes_data);
 
             int viewer_index = 0;
             semmapping::ParamsConfig &param_config;

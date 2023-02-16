@@ -743,6 +743,13 @@ int main(int argc, char **argv) {
             map.readMapData(file2);
             map.mapRating2();
         }
+        else if(command == "current_map_score"){
+            std::ifstream file("src/sem_mapping/semmapping/maps/truth_map_well_arranged_world.yaml");
+            map.loadGroundTruthMap(file);
+            mapping_msgs::SemanticMap::Ptr gt_map_msg= map.createGroundTruthMapMessage();
+            gtSemanticMapPub.publish(gt_map_msg);
+            map.mapRating2();
+        }
         else if (command == "save") {
             std::string fname = readNext(in, it);
             std::cout << "Saving map file: " << fname << std::endl;

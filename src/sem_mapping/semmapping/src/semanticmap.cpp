@@ -17,6 +17,8 @@
 #include <yaml-cpp/yaml.h>
 #include <chrono>
 #include <pcl/features/normal_3d.h>
+#include <iostream>
+#include <fstream>
 
 namespace semmapping
 {
@@ -159,26 +161,6 @@ namespace semmapping
         }
         return first_plan_edges_list;
     }
-    
-    /*std::pair<double, double> SemanticMap::get_second_extremun(std::pair<double, double> point_coefficient, std::pair<double, double> coefficient_of_all_points[]){
-        for(int i=0; i< coefficient_of_all_points.size();i++){
-            if(coefficient_of_all_points[i].first==point_coefficient.first && coefficient_of_all_points[i].second==point_coefficient.second)
-            {
-                if(point_coefficient.first==0 && point_coefficient.second==0){
-                    if(i==0)
-                        return coefficient_of_all_points[coefficient_of_all_points.size()-1];
-                    else
-                        return coefficient_of_all_points[i-1];
-                }
-                else{
-                    if(i==coefficient_of_all_points.size()-1)
-                        return coefficient_of_all_points[0];
-                    else
-                        return coefficient_of_all_points[i+1];
-                }
-            }
-        }   
-    }*/
 
     void SemanticMap::associate_real_box_to_partial_polygon(polygon poly, std::list<std::pair<point,point>> first_plan_edges, double length, double width, std::vector<std::pair<polygon, double>> &selected_obb_list)
     {   
@@ -672,11 +654,11 @@ namespace semmapping
         if (obj.name == "Table"){
             tableList.insert(next_index);
         }
-        ROS_INFO_STREAM("Adding object" << obj.name << "to map");
+        //ROS_INFO_STREAM("Adding object" << obj.name << "to map");
         objectList[next_index] = obj;
         rtree_entry ent = {obj.bounding_box, next_index};
         objectRtree.insert(ent);
-        ROS_INFO_STREAM("Succesfully added, size: " << objectRtree.size());
+        //ROS_INFO_STREAM("Succesfully added, size: " << objectRtree.size());
         next_index++;
     }
 
@@ -1033,6 +1015,7 @@ namespace semmapping
             obj.bounding_box = bg::return_envelope<box>(obj.shape_union);
             addObject(obj);
         }
+        cout << "Map to evaluate loaded !" << endl;
         return true;
     }
 
@@ -1061,9 +1044,10 @@ namespace semmapping
             groundTruthObjectList[groundTruthNext_index] = obj;
             rtree_entry ent = {obj.bounding_box, groundTruthNext_index};
             groundTruthObjectRtree.insert(ent);
-            ROS_INFO_STREAM("Succesfully added to GTMap, size: " << groundTruthObjectRtree.size());
+            //ROS_INFO_STREAM("Succesfully added to GTMap, size: " << groundTruthObjectRtree.size());
             groundTruthNext_index++;
         }
+        cout << "Ground Truth Map loaded !" << endl;
         return true;
     }
    
@@ -1328,6 +1312,19 @@ namespace semmapping
         cout<<"min_f1_score= " << min_f1_score << endl;
     }
     
+    void SemanticMap::save_stats(std::vector<std::pair<std::string, double*>> all_classes_data){
+        std::ofstream myfile;
+        myfile.open ("src/sem_mapping/semmapping/maps/map_stats/world1_tests.csv", ios::out | ios::app);
+        myfile << "New map data:" << "\n";
+        std::vector<std::pair<std::string, double*>>::iterator it;
+        for(it = all_classes_data.begin(); it != all_classes_data.end(); it++){
+            std::pair<std::string, double*> class_data = *it;
+            myfile << class_data.first << ", "<< class_data.second[0] << ", "<< class_data.second[3] << ", "<< class_data.second[1] << ", "<< class_data.second[2] 
+            << ", "<< class_data.second[4] << ", "<< class_data.second[5] << "\n";
+        }
+        myfile.close();
+    }
+
     void SemanticMap::mapRating2(){
         std::vector<std::string> evaluted_classes{"Chair", "Table", "Shelf", "Sofa bed"};
         std::vector<std::pair<std::string, double*>> all_classes_data;
@@ -1398,6 +1395,7 @@ namespace semmapping
                 cout << std::left << setw(20)<< class_data.first << setw(20) << class_data.second[0] << setw(20)<< class_data.second[3] << setw(20)
                 << class_data.second[1] << setw(20) << class_data.second[2]<< setw(20) << class_data.second[4]<< setw(20) << class_data.second[5] << endl;
             }
+            save_stats(all_classes_data);
         }
         else
             ROS_INFO_STREAM("The Map is empty, so it can't be rated!");
