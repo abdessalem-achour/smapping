@@ -80,6 +80,9 @@ namespace semmapping
         std::vector<double> weights= {0.5, 0.3, 0.2};
         /*std::vector<double> weights= {0, 0, 0};
         double min_f1_score= std::numeric_limits<double>::max();*/
+        double number_of_initial_edges = 0;
+        double number_of_edges_after_filtering = 0;
+        double number_of_processed_edges = 0;
 
 
         inline static double ref_fit(const polygon &newpg, const polygon &refpg)

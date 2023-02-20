@@ -7,7 +7,7 @@
 - name: Chair
   shape_union: POLYGON((1.95 -3.82, 2.52 -3.82, 2.52 -4.42, 1.95 -4.42, 1.95 -3.82))
 - name: Shelf
-  shape_union: POLYGON((4.39 -2.34, 4.8 -2.34, 4.8 -3.24, 4.39 -3.24, 4.39 -2.34))
+  shape_union: POLYGON((4.39 -2.34, 4.79 -2.34, 4.79 -3.24, 4.39 -3.24, 4.39 -2.34))
 - name: Table
   shape_union: POLYGON((4.07 1.338, 4.07 3.12, 4.87 3.12, 4.87 1.338, 4.07 1.338))
 - name: Chair

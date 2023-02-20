@@ -6,6 +6,7 @@
   <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_small.world" />-->
   <arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_small_well_arranged.world" />
   <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered.world" />-->
+  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_2.world" /> -->
  
 
 

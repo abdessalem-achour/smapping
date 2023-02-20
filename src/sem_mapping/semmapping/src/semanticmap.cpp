@@ -71,10 +71,11 @@ namespace semmapping
     {
         std::pair<double, double> dimensions;
 
-        if(name=="Chair") {dimensions.first= 0.6; dimensions.second= 0.57;}
+        if(name=="Chair") {dimensions.first= 0.6; dimensions.second= 0.57;} // Chair model in world well arranged
+        //if(name=="Chair") {dimensions.first= 0.57; dimensions.second= 0.57;}  // Chair model in world cluttered
         else if (name== "Table") {dimensions.first= 1.782; dimensions.second= 0.8;}
-        else if (name=="Shelf" || name=="Bookcase") {dimensions.first= 0.9; dimensions.second= 0.41;}
-        else if (name=="Sofa bed" || name=="Couch"){dimensions.first= 0.97; dimensions.second= 2.009;}
+        else if (name=="Shelf") {dimensions.first= 0.9; dimensions.second= 0.4;}
+        else if (name=="Sofa bed"){dimensions.first= 0.97; dimensions.second= 2.009;}
         else if (name=="Ball"){dimensions.first= 0.2; dimensions.second= 0.2;}
         else {dimensions.first= 0.0; dimensions.second= 0.0;}
 
@@ -143,7 +144,7 @@ namespace semmapping
             double edge_distance = sqrt((poly.outer()[i+1].x() - poly.outer()[i].x())*(poly.outer()[i+1].x() - poly.outer()[i].x()) 
                                 + (poly.outer()[i+1].y() - poly.outer()[i].y())*(poly.outer()[i+1].y() - poly.outer()[i].y()));
             //cout<<"("<<poly.outer()[i].x()<<","<<poly.outer()[i].y()<<") et ("<<poly.outer()[i+1].x()<<","<<poly.outer()[i+1].y()<<") edge_distance= "<<edge_distance<<endl;
-            if(edge_distance > 0.03){
+            if(edge_distance > 0.2){
                 polygon from_reference_to_edge_area;
                 bg::append(from_reference_to_edge_area.outer(), reference);
                 bg::append(from_reference_to_edge_area.outer(), poly.outer()[i]);
@@ -287,7 +288,9 @@ namespace semmapping
                 for(int i=0; i< poly.outer().size(); i++){
                     cout<< poly.outer()[i].x()<<" - "<< poly.outer()[i].y()<<endl;
                 }*/
+                number_of_initial_edges+= poly.outer().size()-1;
                 poly= improve_polygon(poly, 0.02);
+                number_of_edges_after_filtering+= poly.outer().size()-1;
                 /*cout<<"polygon final vertices"<<poly.outer().size()<<endl;
                 for(int i=0; i< poly.outer().size(); i++){
                     cout<< poly.outer()[i].x()<<" - "<< poly.outer()[i].y()<<endl;
@@ -296,6 +299,10 @@ namespace semmapping
                 // Get the polygon first plan edges in reference to the robot 
                 point robot_position = getRobotPosition();
                 std::list<std::pair<point,point>> first_plan_edges_list= get_polygon_first_plan_edges(poly, robot_position);
+                number_of_processed_edges+= first_plan_edges_list.size();
+                
+                //cout<<"Initial edges number= "<< number_of_initial_edges << " Number of edges after filtering= "<< number_of_edges_after_filtering
+                //<<" Number of processed edges= "<< number_of_processed_edges << endl;
                 //cout<<"number of first plan edges: "<<first_plan_edges_list.size()<<endl;
                 //cout<< "boxes for LENGTH WIDTH "<< endl ;
                 associate_real_box_to_partial_polygon(poly, first_plan_edges_list, dimensions.first, dimensions.second, selected_obb_list);
@@ -314,13 +321,13 @@ namespace semmapping
                     return best_obb.first;
                 } 
 
-                cout<<"No good candidates, convex hull was used!"<<endl;  
+                //cout<<"No good candidates, convex hull was used!"<<endl;  
             }
-            else
-                cout<<"Area fit condition is not valid, convex hull was used!"<<endl;
+            //else
+                //cout<<"Area fit condition is not valid, convex hull was used!"<<endl;
         }
-        else
-            cout<<"Object dont exist in the knowledge base, convex hull was used!"<<endl;
+        //else
+            //cout<<"Object dont exist in the knowledge base, convex hull was used!"<<endl;
 
         /*double angle;
         box object_box = create_oriented_box(poly, angle);
@@ -1314,13 +1321,14 @@ namespace semmapping
     
     void SemanticMap::save_stats(std::vector<std::pair<std::string, double*>> all_classes_data){
         std::ofstream myfile;
-        myfile.open ("src/sem_mapping/semmapping/maps/map_stats/world1_tests.csv", ios::out | ios::app);
-        myfile << "New map data:" << "\n";
+        //myfile.open ("src/sem_mapping/semmapping/maps/map_stats/world1_tests.csv", ios::out | ios::app);
+        myfile.open ("src/sem_mapping/semmapping/maps/map_stats/world2_tests.csv", ios::out | ios::app);
+        myfile << "New map data" << "\n";
         std::vector<std::pair<std::string, double*>>::iterator it;
         for(it = all_classes_data.begin(); it != all_classes_data.end(); it++){
             std::pair<std::string, double*> class_data = *it;
-            myfile << class_data.first << ", "<< class_data.second[0] << ", "<< class_data.second[3] << ", "<< class_data.second[1] << ", "<< class_data.second[2] 
-            << ", "<< class_data.second[4] << ", "<< class_data.second[5] << "\n";
+            myfile << class_data.first << ","<< class_data.second[0] << ","<< class_data.second[3] << ","<< class_data.second[1] << ","<< class_data.second[2] 
+            << ","<< class_data.second[4] << ","<< class_data.second[5] << "\n";
         }
         myfile.close();
     }

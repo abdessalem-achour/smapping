@@ -36,6 +36,7 @@
     <!--<arg name="map_file" value="$(find mir_gazebo)/maps/map_office_small/occupancy.yaml" />-->
     <!--<arg name="map_file" value="$(find mir_gazebo)/maps/map_office_small_less_elements/less_element_occupancy.yaml" />-->
     <arg name="map_file" value="$(find mir_gazebo)/maps/map_office_small_well_arranged/well_arranged_occupancy_map.yaml" />
+    <!--<arg name="map_file" value="$(find mir_gazebo)/maps/map_office_empty/empty_occupancy.yaml" /> -->
     <arg name="prefix" value="$(arg tf_prefix)" />
   </include>
 
