@@ -83,6 +83,8 @@ namespace semmapping
         double number_of_initial_edges = 0;
         double number_of_edges_after_filtering = 0;
         double number_of_processed_edges = 0;
+        double association_time = 0;
+        double number_of_association=0;
 
 
         inline static double ref_fit(const polygon &newpg, const polygon &refpg)

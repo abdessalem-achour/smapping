@@ -283,32 +283,29 @@ namespace semmapping
             double area_fit= bg::area(poly)/(dimensions.first*dimensions.second);
             //cout<<"area fit= "<<area_fit<<endl;
             if(area_fit > 0.1 && area_fit < 1.5){
-                // Improving polygon
-                /*cout<<"polygon initial vertices"<<poly.outer().size()<<endl;
-                for(int i=0; i< poly.outer().size(); i++){
-                    cout<< poly.outer()[i].x()<<" - "<< poly.outer()[i].y()<<endl;
-                }*/
+                /* Launch chrono to compute association time */
+                // std::chrono::time_point<std::chrono::system_clock> start, end;
+                // start = std::chrono::system_clock::now();
+
+                /* Improving polygon */
                 number_of_initial_edges+= poly.outer().size()-1;
                 poly= improve_polygon(poly, 0.02);
                 number_of_edges_after_filtering+= poly.outer().size()-1;
-                /*cout<<"polygon final vertices"<<poly.outer().size()<<endl;
-                for(int i=0; i< poly.outer().size(); i++){
-                    cout<< poly.outer()[i].x()<<" - "<< poly.outer()[i].y()<<endl;
-                }*/
 
-                // Get the polygon first plan edges in reference to the robot 
+                /* Get the polygon first plan edges in reference to the robot */
                 point robot_position = getRobotPosition();
                 std::list<std::pair<point,point>> first_plan_edges_list= get_polygon_first_plan_edges(poly, robot_position);
                 number_of_processed_edges+= first_plan_edges_list.size();
                 
-                //cout<<"Initial edges number= "<< number_of_initial_edges << " Number of edges after filtering= "<< number_of_edges_after_filtering
-                //<<" Number of processed edges= "<< number_of_processed_edges << endl;
-                //cout<<"number of first plan edges: "<<first_plan_edges_list.size()<<endl;
-                //cout<< "boxes for LENGTH WIDTH "<< endl ;
+                /* Vizualising the number of edges after polygon filtering and foregrounde edges selection*/
+                // cout<<"Initial edges number= "<< number_of_initial_edges << " Number of edges after filtering= "<< number_of_edges_after_filtering
+                // <<" Number of processed edges= "<< number_of_processed_edges << endl;
+
+                /* Predefined bounding boxes association */
                 associate_real_box_to_partial_polygon(poly, first_plan_edges_list, dimensions.first, dimensions.second, selected_obb_list);
-                //cout<< "boxes for WIDTH LENGTH"<< endl ;
                 associate_real_box_to_partial_polygon(poly, first_plan_edges_list, dimensions.second, dimensions.first, selected_obb_list);
-                // Selecting the best_obb using lamda and beta values 
+
+                /* Selecting the best_obb using lamda and beta values */ 
                 if (selected_obb_list.size()){
                     std::pair<polygon, double> best_obb= selected_obb_list[0];
                     for(int i=0; i < selected_obb_list.size(); i++)
@@ -316,24 +313,41 @@ namespace semmapping
                         if ((selected_obb_list[i].second < best_obb.second))
                             best_obb= selected_obb_list[i]; 
                     }
-                    //cout<<"New association solution was used, best_factor= " << best_obb.second<<endl;
+                    // cout << "New association solution was used, best_factor= " << best_obb.second << endl;
+
+                    /* Computing the association time */
+                    // number_of_association++;
+                    // end = std::chrono::system_clock::now();
+                    // std::chrono::duration<double> elapsed_seconds = end - start;
+                    // cout<<"association time = "<<elapsed_seconds.count()<<" association number= "<<number_of_association<<endl;
+                    // std::ofstream myfile;
+                    // myfile.open ("src/sem_mapping/semmapping/processing_time_cluttered.csv", ios::out | ios::app);
+                    // myfile << elapsed_seconds.count() << ","<< number_of_association << "\n";
+                    // myfile.close();
+
                     bg::correct(best_obb.first);
                     return best_obb.first;
                 } 
+                
+                /* Computing the association time */
+                // number_of_association++;
+                // end = std::chrono::system_clock::now();
+                // std::chrono::duration<double> elapsed_seconds = end - start;
+                // cout<<"association time = "<<elapsed_seconds.count()<<" association number= "<<number_of_association<<endl;
+                // std::ofstream myfile;
+                // myfile.open ("src/sem_mapping/semmapping/processing_time_cluttered.csv", ios::out | ios::app);
+                // myfile << elapsed_seconds.count() << ","<< number_of_association << "\n";
+                // myfile.close();
 
-                //cout<<"No good candidates, convex hull was used!"<<endl;  
+                // cout << "No good candidates, convex hull was used!" << endl;  
             }
-            //else
-                //cout<<"Area fit condition is not valid, convex hull was used!"<<endl;
+            // else
+                // cout << "Area fit condition is not valid, convex hull was used!" << endl;
         }
-        //else
-            //cout<<"Object dont exist in the knowledge base, convex hull was used!"<<endl;
+        // else
+            // cout<<"Object dont exist in the knowledge base, convex hull was used!" << endl;
 
-        /*double angle;
-        box object_box = create_oriented_box(poly, angle);
-        return polygonFromBox(object_box, angle);*/
         return poly;
-    
     }
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloudFromInd(pcl::PointIndices::Ptr input_indices,  pcl::PointCloud<pcl::PointXYZ>::ConstPtr input_cloud)
