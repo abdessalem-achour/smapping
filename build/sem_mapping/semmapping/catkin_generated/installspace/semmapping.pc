@@ -4,5 +4,5 @@ Name: semmapping
 Description: Description of semmapping
 Version: 0.1.0
 Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib 
+Libs: -L${prefix}/lib -lsemmapping -lyaml-cpp
 Requires: dynamic_reconfigure roscpp rospy

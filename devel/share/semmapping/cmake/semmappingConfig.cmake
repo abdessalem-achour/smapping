@@ -116,7 +116,7 @@ if(NOT "/home/abdessalem/smapping/devel/include;/home/abdessalem/smapping/src/se
   endforeach()
 endif()
 
-set(libraries "")
+set(libraries "semmapping;yaml-cpp")
 foreach(library ${libraries})
   # keep build configuration keywords, target names and absolute libraries as-is
   if("${library}" MATCHES "^(debug|optimized|general)$")

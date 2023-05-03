@@ -183,6 +183,21 @@ mapping/fast:
 .PHONY : mapping/fast
 
 # Convenience name for target.
+sem_mapping/semmapping/CMakeFiles/semmapping.dir/rule:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 sem_mapping/semmapping/CMakeFiles/semmapping.dir/rule
+.PHONY : sem_mapping/semmapping/CMakeFiles/semmapping.dir/rule
+
+# Convenience name for target.
+semmapping: sem_mapping/semmapping/CMakeFiles/semmapping.dir/rule
+
+.PHONY : semmapping
+
+# fast build rule for target.
+semmapping/fast:
+	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/semmapping/CMakeFiles/semmapping.dir/build.make sem_mapping/semmapping/CMakeFiles/semmapping.dir/build
+.PHONY : semmapping/fast
+
+# Convenience name for target.
 sem_mapping/semmapping/CMakeFiles/pcl_ros_gencfg.dir/rule:
 	cd /home/abdessalem/smapping/build && $(MAKE) -f CMakeFiles/Makefile2 sem_mapping/semmapping/CMakeFiles/pcl_ros_gencfg.dir/rule
 .PHONY : sem_mapping/semmapping/CMakeFiles/pcl_ros_gencfg.dir/rule
@@ -411,6 +426,7 @@ src/semanticmap.o: src/semanticmap.cpp.o
 # target to build an object file
 src/semanticmap.cpp.o:
 	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/semmapping/CMakeFiles/mapping.dir/build.make sem_mapping/semmapping/CMakeFiles/mapping.dir/src/semanticmap.cpp.o
+	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/semmapping/CMakeFiles/semmapping.dir/build.make sem_mapping/semmapping/CMakeFiles/semmapping.dir/src/semanticmap.cpp.o
 .PHONY : src/semanticmap.cpp.o
 
 src/semanticmap.i: src/semanticmap.cpp.i
@@ -420,6 +436,7 @@ src/semanticmap.i: src/semanticmap.cpp.i
 # target to preprocess a source file
 src/semanticmap.cpp.i:
 	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/semmapping/CMakeFiles/mapping.dir/build.make sem_mapping/semmapping/CMakeFiles/mapping.dir/src/semanticmap.cpp.i
+	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/semmapping/CMakeFiles/semmapping.dir/build.make sem_mapping/semmapping/CMakeFiles/semmapping.dir/src/semanticmap.cpp.i
 .PHONY : src/semanticmap.cpp.i
 
 src/semanticmap.s: src/semanticmap.cpp.s
@@ -429,6 +446,7 @@ src/semanticmap.s: src/semanticmap.cpp.s
 # target to generate assembly for a file
 src/semanticmap.cpp.s:
 	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/semmapping/CMakeFiles/mapping.dir/build.make sem_mapping/semmapping/CMakeFiles/mapping.dir/src/semanticmap.cpp.s
+	cd /home/abdessalem/smapping/build && $(MAKE) -f sem_mapping/semmapping/CMakeFiles/semmapping.dir/build.make sem_mapping/semmapping/CMakeFiles/semmapping.dir/src/semanticmap.cpp.s
 .PHONY : src/semanticmap.cpp.s
 
 # Help Target
@@ -442,6 +460,7 @@ help:
 	@echo "... list_install_components"
 	@echo "... test"
 	@echo "... mapping"
+	@echo "... semmapping"
 	@echo "... pcl_ros_gencfg"
 	@echo "... pcl_msgs_generate_messages_lisp"
 	@echo "... pcl_msgs_generate_messages_py"

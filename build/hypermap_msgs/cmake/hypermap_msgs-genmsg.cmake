@@ -34,7 +34,7 @@ add_custom_target(_hypermap_msgs_generate_messages_check_deps_${_filename}
 
 get_filename_component(_filename "/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticMap.msg" NAME_WE)
 add_custom_target(_hypermap_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "hypermap_msgs" "/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticMap.msg" "geometry_msgs/Point32:std_msgs/Header:geometry_msgs/Point:hypermap_msgs/SemanticObject:geometry_msgs/Polygon"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "hypermap_msgs" "/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticMap.msg" "std_msgs/Header:geometry_msgs/Point32:geometry_msgs/Point:hypermap_msgs/SemanticObject:geometry_msgs/Polygon"
 )
 
 get_filename_component(_filename "/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticMapUpdate.msg" NAME_WE)
@@ -49,22 +49,22 @@ add_custom_target(_hypermap_msgs_generate_messages_check_deps_${_filename}
 
 get_filename_component(_filename "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetIntsByArea.srv" NAME_WE)
 add_custom_target(_hypermap_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "hypermap_msgs" "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetIntsByArea.srv" "geometry_msgs/Point32:std_msgs/Header:geometry_msgs/Point:geometry_msgs/Polygon:geometry_msgs/PolygonStamped"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "hypermap_msgs" "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetIntsByArea.srv" "geometry_msgs/PolygonStamped:std_msgs/Header:geometry_msgs/Point32:geometry_msgs/Point:geometry_msgs/Polygon"
 )
 
 get_filename_component(_filename "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByInt.srv" NAME_WE)
 add_custom_target(_hypermap_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "hypermap_msgs" "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByInt.srv" "geometry_msgs/Point32:std_msgs/Header:geometry_msgs/Point:geometry_msgs/Polygon:geometry_msgs/PolygonStamped"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "hypermap_msgs" "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByInt.srv" "geometry_msgs/PolygonStamped:std_msgs/Header:geometry_msgs/Point32:geometry_msgs/Point:geometry_msgs/Polygon"
 )
 
 get_filename_component(_filename "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByString.srv" NAME_WE)
 add_custom_target(_hypermap_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "hypermap_msgs" "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByString.srv" "geometry_msgs/Point32:std_msgs/Header:geometry_msgs/Point:geometry_msgs/Polygon:geometry_msgs/PolygonStamped"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "hypermap_msgs" "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByString.srv" "geometry_msgs/PolygonStamped:std_msgs/Header:geometry_msgs/Point32:geometry_msgs/Point:geometry_msgs/Polygon"
 )
 
 get_filename_component(_filename "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetSemanticByArea.srv" NAME_WE)
 add_custom_target(_hypermap_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "hypermap_msgs" "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetSemanticByArea.srv" "geometry_msgs/Point32:std_msgs/Header:geometry_msgs/Point:hypermap_msgs/SemanticObject:geometry_msgs/Polygon:geometry_msgs/PolygonStamped"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "hypermap_msgs" "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetSemanticByArea.srv" "geometry_msgs/PolygonStamped:std_msgs/Header:geometry_msgs/Point32:geometry_msgs/Point:hypermap_msgs/SemanticObject:geometry_msgs/Polygon"
 )
 
 get_filename_component(_filename "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetSemanticByString.srv" NAME_WE)
@@ -79,7 +79,7 @@ add_custom_target(_hypermap_msgs_generate_messages_check_deps_${_filename}
 
 get_filename_component(_filename "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetStringsByArea.srv" NAME_WE)
 add_custom_target(_hypermap_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "hypermap_msgs" "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetStringsByArea.srv" "geometry_msgs/Point32:std_msgs/Header:geometry_msgs/Point:geometry_msgs/Polygon:geometry_msgs/PolygonStamped"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "hypermap_msgs" "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetStringsByArea.srv" "geometry_msgs/PolygonStamped:std_msgs/Header:geometry_msgs/Point32:geometry_msgs/Point:geometry_msgs/Polygon"
 )
 
 get_filename_component(_filename "/home/abdessalem/smapping/src/hypermap_msgs/srv/LoadMap.srv" NAME_WE)
@@ -119,7 +119,7 @@ _generate_msg_cpp(hypermap_msgs
 _generate_msg_cpp(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticMap.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/hypermap_msgs
 )
 _generate_msg_cpp(hypermap_msgs
@@ -139,25 +139,25 @@ _generate_srv_cpp(hypermap_msgs
 _generate_srv_cpp(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetIntsByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_cpp(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByInt.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_cpp(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByString.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_cpp(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetSemanticByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_cpp(hypermap_msgs
@@ -175,7 +175,7 @@ _generate_srv_cpp(hypermap_msgs
 _generate_srv_cpp(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetStringsByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_cpp(hypermap_msgs
@@ -264,7 +264,7 @@ _generate_msg_eus(hypermap_msgs
 _generate_msg_eus(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticMap.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/hypermap_msgs
 )
 _generate_msg_eus(hypermap_msgs
@@ -284,25 +284,25 @@ _generate_srv_eus(hypermap_msgs
 _generate_srv_eus(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetIntsByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_eus(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByInt.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_eus(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByString.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_eus(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetSemanticByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_eus(hypermap_msgs
@@ -320,7 +320,7 @@ _generate_srv_eus(hypermap_msgs
 _generate_srv_eus(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetStringsByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_eus(hypermap_msgs
@@ -409,7 +409,7 @@ _generate_msg_lisp(hypermap_msgs
 _generate_msg_lisp(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticMap.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/hypermap_msgs
 )
 _generate_msg_lisp(hypermap_msgs
@@ -429,25 +429,25 @@ _generate_srv_lisp(hypermap_msgs
 _generate_srv_lisp(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetIntsByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_lisp(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByInt.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_lisp(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByString.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_lisp(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetSemanticByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_lisp(hypermap_msgs
@@ -465,7 +465,7 @@ _generate_srv_lisp(hypermap_msgs
 _generate_srv_lisp(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetStringsByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_lisp(hypermap_msgs
@@ -554,7 +554,7 @@ _generate_msg_nodejs(hypermap_msgs
 _generate_msg_nodejs(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticMap.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/hypermap_msgs
 )
 _generate_msg_nodejs(hypermap_msgs
@@ -574,25 +574,25 @@ _generate_srv_nodejs(hypermap_msgs
 _generate_srv_nodejs(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetIntsByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_nodejs(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByInt.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_nodejs(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByString.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_nodejs(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetSemanticByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_nodejs(hypermap_msgs
@@ -610,7 +610,7 @@ _generate_srv_nodejs(hypermap_msgs
 _generate_srv_nodejs(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetStringsByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_nodejs(hypermap_msgs
@@ -699,7 +699,7 @@ _generate_msg_py(hypermap_msgs
 _generate_msg_py(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticMap.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/hypermap_msgs
 )
 _generate_msg_py(hypermap_msgs
@@ -719,25 +719,25 @@ _generate_srv_py(hypermap_msgs
 _generate_srv_py(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetIntsByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_py(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByInt.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_py(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetLocationsByString.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_py(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetSemanticByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/home/abdessalem/smapping/src/hypermap_msgs/msg/SemanticObject.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_py(hypermap_msgs
@@ -755,7 +755,7 @@ _generate_srv_py(hypermap_msgs
 _generate_srv_py(hypermap_msgs
   "/home/abdessalem/smapping/src/hypermap_msgs/srv/GetStringsByArea.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/PolygonStamped.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point32.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Polygon.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/hypermap_msgs
 )
 _generate_srv_py(hypermap_msgs

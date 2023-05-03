@@ -114,8 +114,8 @@ generate_dynamic_reconfigure_options(cfg/Params.cfg)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
    INCLUDE_DIRS include
-   DEPENDS OpenMP
-#  LIBRARIES semmapping
+   DEPENDS OpenMP YAMLCPP yaml-cpp
+   LIBRARIES ${PROJECT_NAME}
    CATKIN_DEPENDS dynamic_reconfigure roscpp rospy
 #  CATKIN_DEPENDS roscpp rospy sensor_msgs hypermap_msgs darknet_ros_msgs
 #  DEPENDS system_lib
@@ -144,9 +144,8 @@ add_definitions(
 )
 
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/semmapping.cpp
-# )
+add_library(${PROJECT_NAME} src/semanticmap.cpp)
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries

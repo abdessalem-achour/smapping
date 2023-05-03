@@ -1422,4 +1422,20 @@ namespace semmapping
         else
             ROS_INFO_STREAM("The Map is empty, so it can't be rated!");
     }
+
+    std::map<size_t, SemanticObject> SemanticMap::getObjectList(){
+        return objectList;
+    }
+
+    void SemanticMap::setObjectList(std::map<size_t, SemanticObject> object_List){
+        objectList= object_List;
+    }
+
+    size_t SemanticMap::getNextIndex(){
+        return next_index;
+    }
+    void SemanticMap::setNextIndex(size_t nextIndex){
+        next_index= nextIndex;
+
+    }
 }

@@ -277,6 +277,10 @@ namespace semmapping
             void grid_search(polygon poly, polygon box, std::vector<double> &weights, double &min_f1_score, double f1, double f2, double f3);
             void mapRating2();
             void save_stats(std::vector<std::pair<std::string, double*>> all_classes_data);
+            std::map<size_t, SemanticObject> getObjectList();
+            void setObjectList(std::map<size_t, SemanticObject> object_List);
+            size_t getNextIndex();
+            void setNextIndex(size_t next_index);
 
             int viewer_index = 0;
             semmapping::ParamsConfig &param_config;

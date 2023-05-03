@@ -4835,6 +4835,19 @@ mapping/fast:
 .PHONY : mapping/fast
 
 #=============================================================================
+# Target rules for targets named semmapping
+
+# Build rule for target.
+semmapping: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 semmapping
+.PHONY : semmapping
+
+# fast build rule for target.
+semmapping/fast:
+	$(MAKE) -f sem_mapping/semmapping/CMakeFiles/semmapping.dir/build.make sem_mapping/semmapping/CMakeFiles/semmapping.dir/build
+.PHONY : semmapping/fast
+
+#=============================================================================
 # Target rules for targets named pcl_ros_gencfg
 
 # Build rule for target.
@@ -5002,6 +5015,19 @@ topic_tools_generate_messages_py: cmake_check_build_system
 topic_tools_generate_messages_py/fast:
 	$(MAKE) -f sem_mapping/semmapping/CMakeFiles/topic_tools_generate_messages_py.dir/build.make sem_mapping/semmapping/CMakeFiles/topic_tools_generate_messages_py.dir/build
 .PHONY : topic_tools_generate_messages_py/fast
+
+#=============================================================================
+# Target rules for targets named col_semmapping_node
+
+# Build rule for target.
+col_semmapping_node: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 col_semmapping_node
+.PHONY : col_semmapping_node
+
+# fast build rule for target.
+col_semmapping_node/fast:
+	$(MAKE) -f sem_mapping/col_semmapping/CMakeFiles/col_semmapping_node.dir/build.make sem_mapping/col_semmapping/CMakeFiles/col_semmapping_node.dir/build
+.PHONY : col_semmapping_node/fast
 
 #=============================================================================
 # Target rules for targets named rviz_generate_messages_eus
@@ -5791,6 +5817,7 @@ help:
 	@echo "... dwb_msgs_generate_messages_nodejs"
 	@echo "... dwb_msgs_generate_messages_py"
 	@echo "... mapping"
+	@echo "... semmapping"
 	@echo "... pcl_ros_gencfg"
 	@echo "... pcl_msgs_generate_messages_lisp"
 	@echo "... pcl_msgs_generate_messages_py"
@@ -5804,6 +5831,7 @@ help:
 	@echo "... topic_tools_generate_messages_eus"
 	@echo "... topic_tools_generate_messages_lisp"
 	@echo "... topic_tools_generate_messages_py"
+	@echo "... col_semmapping_node"
 	@echo "... rviz_generate_messages_eus"
 	@echo "... rviz_generate_messages_nodejs"
 	@echo "... rviz_generate_messages_py"
