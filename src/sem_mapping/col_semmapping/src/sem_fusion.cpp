@@ -6,7 +6,7 @@
 
 namespace semmapping
 {
-    SemanticFusion::SemanticFusion(){}
+    SemanticFusion::SemanticFusion() {}
 
     void SemanticFusion::show_map_id()
     {
@@ -27,13 +27,22 @@ namespace semmapping
         obj.shapes.push_back({initial_obj.shape_union, polygon1_centroid, initial_obj.exist_certainty});
         obj.shapes.push_back({recieved_obj.shape_union, polygon2_centroid, recieved_obj.exist_certainty});
         obj.counting_queue.push(1);
+        for (auto &val : obj.shapes)
+        {
+            cout << "(" << val.shape.outer()[0].x() << "," << val.shape.outer()[0].y() << ") (" << val.shape.outer()[1].x() << "," << val.shape.outer()[1].y() << ") ("
+                 << val.shape.outer()[2].x() << "," << val.shape.outer()[2].y() << ") (" << val.shape.outer()[3].x() << "," << val.shape.outer()[3].y() << ")" << endl;
 
-        if (initial_obj.exist_certainty > recieved_obj.exist_certainty){
+            cout << " " << val.certainty << endl;
+        }
+
+        if (initial_obj.exist_certainty > recieved_obj.exist_certainty)
+        {
             obj.exist_certainty = initial_obj.exist_certainty;
             obj.shape_union = initial_obj.shape_union;
             obj.obb = initial_obj.obb;
         }
-        else{
+        else
+        {
             obj.exist_certainty = recieved_obj.exist_certainty;
             obj.shape_union = recieved_obj.shape_union;
             obj.obb = recieved_obj.obb;
@@ -42,8 +51,123 @@ namespace semmapping
         obj.bounding_box = bg::return_envelope<box>(obj.obb);
         bg::centroid(obj.shape_union, obj.shape_union_cen);
         bg::centroid(obj.obb, obj.oriented_box_cen);
+        obj.point_cloud = nullptr;
 
         return obj;
+    }
+
+    SemanticObject SemanticFusion::GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj)
+    {
+        SemanticObject obj;
+        obj.name = initial_obj.name;
+        obj.rotation_angle = 0;
+        obj.isCombined = true;
+
+        point polygon1_centroid, polygon2_centroid;
+        bg::centroid(initial_obj.shape_union, polygon1_centroid);
+        bg::centroid(received_obj.shape_union, polygon2_centroid);
+        obj.shapes.push_back({initial_obj.shape_union, polygon1_centroid, initial_obj.exist_certainty});
+        obj.shapes.push_back({received_obj.shape_union, polygon2_centroid, received_obj.exist_certainty});
+
+        double initial_obb_score = ref_fit(initial_obj.obb, received_obj.shape_union);
+        double received_obb_score = ref_fit(received_obj.obb, initial_obj.shape_union);
+        cout << "initial_obb_score= " << initial_obb_score << "received_obb_score= " << received_obb_score << endl;
+
+        if (initial_obb_score > received_obb_score)
+        {
+            obj.exist_certainty = initial_obj.exist_certainty;
+            obj.shape_union = initial_obj.shape_union;
+            obj.obb = initial_obj.obb;
+        }
+        else
+        {
+            obj.exist_certainty = received_obj.exist_certainty;
+            obj.shape_union = received_obj.shape_union;
+            obj.obb = received_obj.obb;
+        }
+
+        obj.bounding_box = bg::return_envelope<box>(obj.obb);
+        bg::centroid(obj.shape_union, obj.shape_union_cen);
+        bg::centroid(obj.obb, obj.oriented_box_cen);
+        obj.point_cloud = nullptr;
+
+        return obj;
+    }
+
+    bool SemanticFusion::similarClasses(std::string object1_name, std::string object2_name)
+    {
+        if ((object1_name == "Sofa bed" && object2_name == "Couch") || (object1_name == "Couch" && object2_name == "Sofa bed"))
+        {
+            cout << "similar classes !!!" << endl;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool SemanticFusion::checkTheAbilityOfObjectsToOverlap(std::string object1_name, std::string object2_name){
+        if(object1_name == object2_name)
+            return true;
+        else if(similarClasses(object1_name, object2_name))
+            return true;
+        else if ((object1_name == "Chair" && object2_name == "Table") || (object1_name == "Table" && object2_name == "Chair")){
+            cout << "The overlap is possible !!!" << endl;
+            return true;
+        } 
+        else{
+            cout << "The overlap is not possible !!!" << endl;
+            return false;
+        }
+    }
+
+    void SemanticFusion::removeMapInconsistencies(semmapping::SemanticMap map, semmapping::SemanticMap &map_cleared)
+    {
+        if (!map.getObjectList().empty()){
+            //map_cleared is initially empty, then the first object of the map is added directly
+            if (map_cleared.getObjectList().empty())
+                map_cleared.addObject(map.getObjectList()[0]);
+
+            //fill map_cleared while merging redundant objects with different labels
+            for (auto &val : map.getObjectList()){
+                SemanticObject &obj = val.second;
+                if (obj.exist_certainty > 0.25){
+                    for (auto &val2 : map_cleared.getObjectList()){
+                        SemanticObject &cleared_map_obj = val2.second;
+                        double overlap = iou(obj.obb, cleared_map_obj.obb);
+                        bool possible_overlap = checkTheAbilityOfObjectsToOverlap(obj.name, cleared_map_obj.name);
+                        if((overlap > 0.5) && possible_overlap){
+                            //possible overlap + Same or similar object labels
+                            if (obj.name == cleared_map_obj.name || similarClasses(obj.name, cleared_map_obj.name)){
+                                cout << obj.name << val.first << " represents object " << cleared_map_obj.name << val2.first << endl;
+                                SemanticObject fused_obj;
+                                fused_obj = GeometricFusionOfSemanticObject(cleared_map_obj, obj);
+                                obj.isCombined = true;
+                                map_cleared.removeObject(val2.first);
+                                map_cleared.addObject(fused_obj);
+                            }
+                            //possible overlap + different  objects
+                            else{
+                                cout << obj.name << val.first << " represents object " << cleared_map_obj.name << val2.first << endl;
+                                obj.isCombined = true;
+                                obj.point_cloud = nullptr;
+                                map_cleared.addObject(obj);
+                            }
+                        } 
+
+                        //if((overlap > 0.5) && !possible_overlap){}
+
+                    }
+
+                    if(!obj.isCombined){
+                        obj.point_cloud = nullptr;
+                        map_cleared.addObject(obj);
+                    }
+                }
+                
+            }
+        }
     }
 
     void SemanticFusion::semfusion(semmapping::SemanticMap previous_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map)
@@ -53,36 +177,42 @@ namespace semmapping
             for (auto &val : received_map.getObjectList())
             {
                 SemanticObject &obj = val.second;
-                for(auto &val2 : previous_map.getObjectList())
+                for (auto &val2 : previous_map.getObjectList())
                 {
-                    size_t objId = val2.first;
                     SemanticObject &gtObj = val2.second;
                     point truth_centroid;
                     bg::centroid(gtObj.obb, truth_centroid);
-                    double com_offset= sqrt((obj.oriented_box_cen.x() - truth_centroid.x())*(obj.oriented_box_cen.x() - truth_centroid.x()) 
-                        + (obj.oriented_box_cen.y() - truth_centroid.y())*(obj.oriented_box_cen.y() - truth_centroid.y()));
+                    double com_offset = sqrt((obj.oriented_box_cen.x() - truth_centroid.x()) * (obj.oriented_box_cen.x() - truth_centroid.x()) + (obj.oriented_box_cen.y() - truth_centroid.y()) * (obj.oriented_box_cen.y() - truth_centroid.y()));
 
-                    if(obj.exist_certainty > 0.25 && obj.name == gtObj.name)
+                    if (obj.exist_certainty > 0.25)
                     {
-                        double similarity_factor= iou(obj.obb, gtObj.obb);
-                        if(similarity_factor  > 0.5)
+                        double similarity_factor = iou(obj.obb, gtObj.obb);
+                        if (similarity_factor > 0.5 && (obj.name == gtObj.name || similarClasses(obj.name, gtObj.name)))
                         {
-                            cout<< obj.name << val.first <<" represents object " << gtObj.name << val2.first << " with IOU: " << similarity_factor << " and CoM Offset: " 
-                            << com_offset << endl;
+                            // if(similarity_factor  > 0.5 && obj.name == gtObj.name){
+                            cout << "-- Case 1: Overlap + Same class --" << endl;
+                            cout << obj.name << val.first << " represents object " << gtObj.name << val2.first << " with IOU: " << similarity_factor << " and CoM Offset: "
+                                 << com_offset << endl;
                             SemanticObject fused_obj;
-                            fused_obj= fuseObjectBoundingBoxes(obj, gtObj);
+                            // fused_obj= fuseObjectBoundingBoxes(obj, gtObj);
+                            fused_obj = GeometricFusionOfSemanticObject(gtObj, obj);
+                            obj.isCombined = true;
                             global_map.addObject(fused_obj);
                         }
-                                
+
                     }
+                }
+
+                if (obj.exist_certainty > 0.5 && !obj.isCombined){
+                    global_map.addObject(obj);
                 }
             }
         }
         else
         {
             global_map.setObjectList(received_map.getObjectList());
-            cout <<"Global map is empty, recieved map is considered as global map!" << endl;
+            cout << "Global map is empty, recieved map is considered as global map!" << endl;
         }
     }
 
-}
+    }

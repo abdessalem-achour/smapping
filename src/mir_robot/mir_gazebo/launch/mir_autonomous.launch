@@ -41,11 +41,11 @@
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mir_navigation)/rviz/navigation.rviz"/>
 
   <!-- Object Detection-->
-  <node pkg= "tensorflow_object_detector" name="detect_ros" type="detect_ros.py"  output="screen"> 
+  <!--<node pkg= "tensorflow_object_detector" name="detect_ros" type="detect_ros.py"  output="screen"> 
     <remap from="image" to="/camera/rgb/image_raw/compressed"/>
     <remap from='points' to='/camera/depth/points'/>
 	  <param name="compressed" value="true" />
-	</node>
+	</node>-->
 
 
   <!--<node pkg="image_view" type="image_view" name="image_view">

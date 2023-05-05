@@ -44,7 +44,7 @@ SemanticMapDisplay::SemanticMapDisplay() : rviz::Display(), loaded_(false)
     topic_property_ = new rviz::RosTopicProperty("Topic", "", ros::message_traits::datatype<mapping_msgs::SemanticMap>(),
                                                  "hypermap_msgs::SemanticMap topic to subscribe to.", this, SLOT(updateTopic()));
 
-    show_polygons_property_ = new rviz::BoolProperty("Show shapes", true, "Display shapes of semantic objects", this);
+    show_polygons_property_ = new rviz::BoolProperty("Show shapes", false, "Display shapes of semantic objects", this);
     show_obbs_property_ = new rviz::BoolProperty("Show obbs", true, "Display obbs of semantic objects", this);
     show_labels_property_ = new rviz::BoolProperty("Show labels", true, "Display names of semantic objects", this);
     char_height_property_ = new rviz::FloatProperty("Char height", 0.3, "Char height for labels", this);
