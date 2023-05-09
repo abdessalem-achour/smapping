@@ -87,7 +87,9 @@ int main(int argc, char **argv) {
      {
         map.readMapData(map1_file); map1_file.close();
         map2.readMapData(map2_file); map2_file.close();
+        cout << "-- Map 1 cleared --" << endl;
         fusion_node.removeMapInconsistencies(map, map_cleared);
+        cout << "-- Map 2 cleared --" << endl;
         fusion_node.removeMapInconsistencies(map2, map2_cleared);
         fusion_node.semfusion(map_cleared, map2_cleared, global_map);
         global_map.writeMapData(fusion_file); 
