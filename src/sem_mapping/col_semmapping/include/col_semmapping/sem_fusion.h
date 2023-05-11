@@ -42,18 +42,19 @@ namespace semmapping
             return dimensions;
         }
 
-
         std::list<std::string> map_considered_objects{"Chair","Table","Shelf","Sofa bed","Couch"};
 
         public:
             SemanticFusion();
             void show_map_id();
-            SemanticObject fuseObjectBoundingBoxes(SemanticObject initial_obj, SemanticObject recieved_obj);
+            SemanticObject copySemanticObject(SemanticObject obj);
+            SemanticObject nmsFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject recieved_obj);
             SemanticObject GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj);
             bool similarClasses(std::string object1_name, std::string object_name2);
             bool checkTheAbilityOfObjectsToOverlap(std::string object1_name, std::string object_name2);
             bool inConsideredObjectList(std::string object_name);
             bool validObjectSurface(std::string object_name, polygon object_obb);
+            bool isRectangular(polygon object_obb);
             void removeMapInconsistencies(semmapping::SemanticMap map, semmapping::SemanticMap &map_cleared);
             void semfusion(semmapping::SemanticMap previous_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map);
     };

@@ -13,45 +13,39 @@ namespace semmapping
         ROS_INFO_STREAM("Semantic Fusion Node");
     }
 
-    // Semantic Object fusion function: returns object with the best exist_certainty
-    SemanticObject SemanticFusion::fuseObjectBoundingBoxes(SemanticObject initial_obj, SemanticObject recieved_obj)
+    SemanticObject SemanticFusion::copySemanticObject(SemanticObject obj)
+    {
+        SemanticObject c_obj;
+        c_obj.name = obj.name;
+        c_obj.rotation_angle = 0;
+        c_obj.isCombined = true;
+        c_obj.exist_certainty = obj.exist_certainty;
+        c_obj.shape_union = obj.shape_union;
+        c_obj.obb = obj.obb;
+        c_obj.obb_score = obj.obb_score;
+        c_obj.bounding_box = bg::return_envelope<box>(obj.obb);
+        bg::centroid(c_obj.shape_union, c_obj.shape_union_cen);
+        bg::centroid(c_obj.obb, c_obj.oriented_box_cen);
+        c_obj.point_cloud = nullptr;
+        return c_obj;
+    }
+
+    // Semantic Object fusion function: returns object OBB with the best score
+    SemanticObject SemanticFusion::nmsFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj)
     {
         SemanticObject obj;
-        obj.name = initial_obj.name;
-        obj.rotation_angle = 0;
-        obj.isCombined = true;
-
-        point polygon1_centroid, polygon2_centroid;
-        bg::centroid(initial_obj.shape_union, polygon1_centroid);
-        bg::centroid(recieved_obj.shape_union, polygon2_centroid);
-        obj.shapes.push_back({initial_obj.shape_union, polygon1_centroid, initial_obj.exist_certainty});
-        obj.shapes.push_back({recieved_obj.shape_union, polygon2_centroid, recieved_obj.exist_certainty});
-        obj.counting_queue.push(1);
-        for (auto &val : obj.shapes)
-        {
-            cout << "(" << val.shape.outer()[0].x() << "," << val.shape.outer()[0].y() << ") (" << val.shape.outer()[1].x() << "," << val.shape.outer()[1].y() << ") ("
-                 << val.shape.outer()[2].x() << "," << val.shape.outer()[2].y() << ") (" << val.shape.outer()[3].x() << "," << val.shape.outer()[3].y() << ")" << endl;
-
-            cout << " " << val.certainty << endl;
-        }
-
-        if (initial_obj.exist_certainty > recieved_obj.exist_certainty)
-        {
-            obj.exist_certainty = initial_obj.exist_certainty;
-            obj.shape_union = initial_obj.shape_union;
-            obj.obb = initial_obj.obb;
-        }
+        if (initial_obj.obb_score > received_obj.obb_score)
+            obj=copySemanticObject(initial_obj);
         else
-        {
-            obj.exist_certainty = recieved_obj.exist_certainty;
-            obj.shape_union = recieved_obj.shape_union;
-            obj.obb = recieved_obj.obb;
-        }
+            obj=copySemanticObject(received_obj);
 
-        obj.bounding_box = bg::return_envelope<box>(obj.obb);
-        bg::centroid(obj.shape_union, obj.shape_union_cen);
-        bg::centroid(obj.obb, obj.oriented_box_cen);
-        obj.point_cloud = nullptr;
+        //Partial polygons of fused object are stored in obj.shapes
+        point initial_obj_centroid, received_obj_centroid;
+        bg::centroid(initial_obj.shape_union, initial_obj_centroid); bg::centroid(received_obj.shape_union, received_obj_centroid);
+        obj.shapes.push_back({initial_obj.shape_union, initial_obj_centroid, initial_obj.exist_certainty});
+        obj.shapes.push_back({received_obj.shape_union, received_obj_centroid, received_obj.exist_certainty});
+
+        obj.isCombined = true;
 
         return obj;
     }
@@ -59,48 +53,44 @@ namespace semmapping
     SemanticObject SemanticFusion::GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj)
     {
         SemanticObject obj;
-        obj.name = initial_obj.name;
-        obj.rotation_angle = 0;
-        obj.isCombined = true;
 
-        point polygon1_centroid, polygon2_centroid;
-        bg::centroid(initial_obj.shape_union, polygon1_centroid);
-        bg::centroid(received_obj.shape_union, polygon2_centroid);
-        obj.shapes.push_back({initial_obj.shape_union, polygon1_centroid, initial_obj.exist_certainty});
-        obj.shapes.push_back({received_obj.shape_union, polygon2_centroid, received_obj.exist_certainty});
+        double initial_obb_score = (ref_fit(initial_obj.obb, received_obj.shape_union) + ref_fit(initial_obj.obb, initial_obj.shape_union))/2;
+        double received_obb_score = (ref_fit(received_obj.obb, initial_obj.shape_union) + ref_fit(received_obj.obb, received_obj.shape_union))/2;
 
-        double initial_obb_score = ref_fit(initial_obj.obb, received_obj.shape_union);
-        double received_obb_score = ref_fit(received_obj.obb, initial_obj.shape_union);
-        cout << "initial_obb_score= " << initial_obb_score << " received_obb_score= " << received_obb_score << endl;
-        cout << "initial obb size= " << initial_obj.obb.outer().size() << " -- received obb size= " << received_obj.obb.outer().size()<< endl;
-
-        if(initial_obj.obb.outer().size() == 5 && received_obj.obb.outer().size() != 5){
-            obj.exist_certainty = initial_obj.exist_certainty;
-            obj.shape_union = initial_obj.shape_union;
-            obj.obb = initial_obj.obb;
+        if(isRectangular(initial_obj.obb) && isRectangular(received_obj.obb))
+        {
+            cout<<"initial_obb_mapping_score= "<<initial_obj.obb_score<<" - received_obb_mapping_score= "<<received_obj.obb_score<<endl;
+            cout<<"initial_obb_fusion_score= "<<initial_obb_score<<" - received_obb_fusion_score= "<<received_obb_score<<endl;
+            if (initial_obb_score > received_obb_score)
+                obj=copySemanticObject(initial_obj);
+            else
+                obj=copySemanticObject(received_obj);
         }
-        else if(initial_obj.obb.outer().size() != 5 && received_obj.obb.outer().size() == 5){
-            obj.exist_certainty = received_obj.exist_certainty;
-            obj.shape_union = received_obj.shape_union;
-            obj.obb = received_obj.obb;
-        }
+        else if(isRectangular(initial_obj.obb))
+            obj=copySemanticObject(initial_obj);
+        else if(isRectangular(received_obj.obb))
+            obj=copySemanticObject(received_obj);
         else{
-            if (initial_obb_score > received_obb_score){
-                obj.exist_certainty = initial_obj.exist_certainty;
-                obj.shape_union = initial_obj.shape_union;
-                obj.obb = initial_obj.obb;
-            }
-            else {
-            obj.exist_certainty = received_obj.exist_certainty;
-            obj.shape_union = received_obj.shape_union;
-            obj.obb = received_obj.obb;
-            }
+            obj.name = initial_obj.name;
+            obj.rotation_angle = 0;
+            multi_polygon sect;
+            bg::intersection(initial_obj.obb, received_obj.obb, sect);
+            obj.exist_certainty = (initial_obj.exist_certainty + received_obj.exist_certainty)/2;
+            obj.shape_union = sect[0];
+            obj.obb = sect[0];
+            obj.bounding_box = bg::return_envelope<box>(obj.obb);
+            bg::centroid(obj.shape_union, obj.shape_union_cen);
+            bg::centroid(obj.obb, obj.oriented_box_cen);
+            obj.point_cloud = nullptr;
         }
 
-        obj.bounding_box = bg::return_envelope<box>(obj.obb);
-        bg::centroid(obj.shape_union, obj.shape_union_cen);
-        bg::centroid(obj.obb, obj.oriented_box_cen);
-        obj.point_cloud = nullptr;
+        //Partial polygons of fused object are stored in obj.shapes
+        point initial_obj_centroid, received_obj_centroid;
+        bg::centroid(initial_obj.shape_union, initial_obj_centroid); bg::centroid(received_obj.shape_union, received_obj_centroid);
+        obj.shapes.push_back({initial_obj.shape_union, initial_obj_centroid, initial_obj.exist_certainty});
+        obj.shapes.push_back({received_obj.shape_union, received_obj_centroid, received_obj.exist_certainty});
+
+        obj.isCombined = true;
 
         return obj;
     }
@@ -131,7 +121,8 @@ namespace semmapping
         return found;
     }
 
-    bool SemanticFusion::validObjectSurface(std::string object_name, polygon object_obb){
+    bool SemanticFusion::validObjectSurface(std::string object_name, polygon object_obb)
+    {
         std::pair<double, double> dimensions= get_real_object_length_width(object_name);
         double area_fit= bg::area(object_obb)/(dimensions.first*dimensions.second);
         if(area_fit < 1.5){
@@ -144,6 +135,54 @@ namespace semmapping
         }
     }
 
+    bool SemanticFusion::isRectangular(polygon object_obb)
+    {
+        if(object_obb.outer().size() != 5)
+            return false;
+        //When a polygon has 4 edges, check if it is a rectangle    
+        //Check the length of the diagonals, the diagonals must be equal.
+        double diag1_distance= sqrt((object_obb.outer()[2].x() - object_obb.outer()[0].x())*(object_obb.outer()[2].x() - object_obb.outer()[0].x()) 
+                            + (object_obb.outer()[2].y() - object_obb.outer()[0].y())*(object_obb.outer()[2].y() - object_obb.outer()[0].y()));
+        double diag2_distance= sqrt((object_obb.outer()[3].x() - object_obb.outer()[1].x())*(object_obb.outer()[3].x() - object_obb.outer()[1].x()) 
+                            + (object_obb.outer()[3].y() - object_obb.outer()[1].y())*(object_obb.outer()[3].y() - object_obb.outer()[1].y()));
+        double error = 0.05;
+        //cout<<"diag1_distance= "<<diag1_distance<<" diag2_distance= "<< diag2_distance<<endl;
+        bool condition1= std::abs(diag1_distance - diag2_distance) < error;
+        if(!condition1){
+            //cout<<"object is not rectangular"<<endl;
+            return false;
+        }
+        //Determine polygon diagonals intersection
+        double a = object_obb.outer()[2].y() - object_obb.outer()[0].y();
+        double b = object_obb.outer()[0].x() - object_obb.outer()[2].x();
+        double c = (a * object_obb.outer()[0].x()) + (b * object_obb.outer()[0].y());
+        double a1 = object_obb.outer()[1].y() - object_obb.outer()[3].y();
+        double b1 = object_obb.outer()[3].x() - object_obb.outer()[1].x();
+        double c1 = (a1 * object_obb.outer()[3].x()) + (b1 * object_obb.outer()[3].y());
+        double det = a*b1 - a1*b;
+        double x_intersection = (b1*c - b*c1)/det;
+        double y_intersection = (a*c1 - a1*c)/det;
+
+        //The polygon is rectongular if diagonals are equal length and bisect
+    
+        /*cout<<"x_intersection= "<<x_intersection<<" y_intersection= "<< y_intersection<<endl;
+        cout<<"(x_A+x_B / 2)= " << (object_obb.outer()[0].x()+object_obb.outer()[2].x())/2 << "(y_A+y_B / 2)= " << (object_obb.outer()[0].y()+object_obb.outer()[2].y())/2 <<endl;
+        cout<<"(x_D+x_C / 2)= " << (object_obb.outer()[1].x()+object_obb.outer()[3].x())/2 << "(y_D+y_C / 2)= " << (object_obb.outer()[1].y()+object_obb.outer()[3].y())/2 <<endl;*/
+        bool condition2= std::abs(x_intersection - ((object_obb.outer()[0].x() + object_obb.outer()[2].x())/2)) < error
+                        && std::abs(y_intersection - ((object_obb.outer()[0].y() + object_obb.outer()[2].y())/2)) < error;
+        bool condition3= std::abs(x_intersection - ((object_obb.outer()[1].x() + object_obb.outer()[3].x())/2)) < error
+                        && std::abs(y_intersection - ((object_obb.outer()[1].y() + object_obb.outer()[3].y())/2)) < error;
+
+        if(condition2 && condition3){
+            //cout<<"object is rectangular"<<endl;
+            return true;
+        }
+        else{
+            //cout<<"object is not rectangular"<<endl;
+            return false;
+        }
+    }
+    
     void SemanticFusion::removeMapInconsistencies(semmapping::SemanticMap map, semmapping::SemanticMap &map_cleared)
     {
         if (!map.getObjectList().empty()){
@@ -164,7 +203,7 @@ namespace semmapping
                         if((overlap > 0.4) && possible_overlap){
                             //Same or similar object labels
                             if (obj.name == cleared_map_obj.name || similarClasses(obj.name, cleared_map_obj.name)){
-                                cout << obj.name << val.first << " represents object " << cleared_map_obj.name << val2.first << endl;
+                                cout << obj.name << val.first << " overlap with object " << cleared_map_obj.name << val2.first << endl;
                                 SemanticObject fused_obj;
                                 fused_obj = GeometricFusionOfSemanticObject(cleared_map_obj, obj);
                                 obj.isCombined = true;
@@ -173,7 +212,7 @@ namespace semmapping
                             }
                             //Different labels
                             else{
-                                cout << obj.name << val.first << " represents object " << cleared_map_obj.name << val2.first << endl;
+                                cout << obj.name << val.first << " overlap with object " << cleared_map_obj.name << val2.first << endl;
                                 obj.isCombined = true;
                                 obj.point_cloud = nullptr;
                                 map_cleared.addObject(obj);
@@ -210,7 +249,8 @@ namespace semmapping
         }
     }
 
-    void SemanticFusion::semfusion(semmapping::SemanticMap previous_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map){
+    void SemanticFusion::semfusion(semmapping::SemanticMap previous_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map)
+    {
         cout << "-- Fused Map --" << endl;
         if (!previous_map.getObjectList().empty())
         {
@@ -233,7 +273,7 @@ namespace semmapping
                                cout << obj.name << val.first << " represents object " << gtObj.name << val2.first << " with IOU: " << similarity_factor << " and CoM Offset: "
                                     << com_offset << endl;
                                SemanticObject fused_obj;
-                               // fused_obj= fuseObjectBoundingBoxes(obj, gtObj);
+                               //fused_obj= nmsFusionOfSemanticObject(gtObj, obj);
                                fused_obj = GeometricFusionOfSemanticObject(gtObj, obj);
                                obj.isCombined = true;
                                global_map.addObject(fused_obj);
@@ -242,7 +282,7 @@ namespace semmapping
                     }
                     //an object that exists in a single map will be added if its certainty of existence is > 0.5
                     if (obj.exist_certainty > 0.5 && !obj.isCombined){
-                       cout << "-- Case 2: object exists in one map --" << endl;
+                       cout << obj.name << val.first <<" exists in one map, added to global map!" << endl;
                        obj.point_cloud = nullptr;
                        global_map.addObject(obj);
                     }
@@ -256,4 +296,4 @@ namespace semmapping
         }
     }
 
-    }
+}

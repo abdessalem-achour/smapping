@@ -4,7 +4,9 @@
 #include <csignal>
 
 ros::Publisher previousSemanticMapPub;
+ros::Publisher unfilteredPreviousSemanticMapPub;
 ros::Publisher receivedSemanticMapPub;
+ros::Publisher unfilteredReceivedSemanticMapPub;
 ros::Publisher fusedSemanticMapPub;
 
 std::string readNext(const std::string &str, std::string::const_iterator &begin) {
@@ -45,7 +47,9 @@ int main(int argc, char **argv) {
   ros::NodeHandle n;
 
   previousSemanticMapPub = n.advertise<mapping_msgs::SemanticMap>("/previous_semantic_map", 1, true);
+  unfilteredPreviousSemanticMapPub = n.advertise<mapping_msgs::SemanticMap>("/unfiltered_previous_semantic_map", 1, true);
   receivedSemanticMapPub = n.advertise<mapping_msgs::SemanticMap>("/received_semantic_map", 1, true);
+  unfilteredReceivedSemanticMapPub = n.advertise<mapping_msgs::SemanticMap>("/unfiltered_received_semantic_map", 1, true);
   fusedSemanticMapPub = n.advertise<mapping_msgs::SemanticMap>("/fused_semantic_map", 1, true);
 
 
@@ -91,19 +95,24 @@ int main(int argc, char **argv) {
         fusion_node.removeMapInconsistencies(map, map_cleared);
         cout << "-- Map 2 cleared --" << endl;
         fusion_node.removeMapInconsistencies(map2, map2_cleared);
-        fusion_node.semfusion(map_cleared, map2_cleared, global_map);
+        //fusion_node.semfusion(map_cleared, map2_cleared, global_map);
+        fusion_node.semfusion(map, map2, global_map);
         global_map.writeMapData(fusion_file); 
         fusion_file.close();
       }
     else if(command == "load_maps")
       {
         semmapping::point robot;
+        mapping_msgs::SemanticMap::Ptr unfiltered_previous_map_msg= map.createMapMessage(robot, true);
         mapping_msgs::SemanticMap::Ptr previous_map_msg= map_cleared.createMapMessage(robot, true);
+        mapping_msgs::SemanticMap::Ptr unfiltered_received_map_msg= map2.createMapMessage(robot, true);
         mapping_msgs::SemanticMap::Ptr received_map_msg= map2_cleared.createMapMessage(robot, true);
         mapping_msgs::SemanticMap::Ptr fused_map_msg= global_map.createMapMessage(robot, true);
         previousSemanticMapPub.publish(previous_map_msg);
+        unfilteredPreviousSemanticMapPub.publish(unfiltered_previous_map_msg);
         std::cout << "Previous Map loaded successfully" << std::endl;
         receivedSemanticMapPub.publish(received_map_msg);
+        unfilteredReceivedSemanticMapPub.publish(unfiltered_received_map_msg);
         std::cout << "Received Map loaded successfully" << std::endl;
         fusedSemanticMapPub.publish(fused_map_msg);
         std::cout << "Fused Map loaded successfully" << std::endl;

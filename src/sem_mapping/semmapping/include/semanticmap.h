@@ -58,6 +58,7 @@ namespace semmapping
     int times_merged = 0;
     int pushed_to_queue = 0;
     bool isCombined = false;
+    double obb_score = 0;
     //std::vector<std::string> tags;
     //std::vector<double> confidence;
     };
@@ -254,7 +255,7 @@ namespace semmapping
             std::pair<double, double> get_real_object_length_width(const std::string &name);
             polygon create_shifted_bounding_box_with_real_dimensions(int direction, point reference, double v_directeur[2], double shift_distance, double length, double width);
             void associate_real_box_to_partial_polygon(polygon poly, std::list<std::pair<point,point>> first_plan_edges, double length, double width, std::vector<std::pair<polygon, double>> &selected_obb_list);
-            polygon create_object_box_using_prior_knowledge(polygon poly, const std::string &name);
+            std::pair<polygon, double> create_object_box_using_prior_knowledge(polygon poly, const std::string &name);
             std::list<std::pair<point, point>> get_polygon_first_plan_edges(polygon poly, point reference);
             polygon polygonFromBox(const box &bbox, const double &angle);
             std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsEuc(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);

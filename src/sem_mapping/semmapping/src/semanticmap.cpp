@@ -272,7 +272,7 @@ namespace semmapping
         }
     }
 
-    polygon SemanticMap::create_object_box_using_prior_knowledge(polygon poly, const std::string &name)
+    std::pair<polygon, double> SemanticMap::create_object_box_using_prior_knowledge(polygon poly, const std::string &name)
     {
         // Getting real object dimensions from knowledge base, return <0,0> if object dont exist
         std::pair<double, double> dimensions= get_real_object_length_width(name);
@@ -326,7 +326,7 @@ namespace semmapping
                     // myfile.close();
 
                     bg::correct(best_obb.first);
-                    return best_obb.first;
+                    return best_obb;
                 } 
                 
                 /* Computing the association time */
@@ -346,8 +346,11 @@ namespace semmapping
         }
         // else
             // cout<<"Object dont exist in the knowledge base, convex hull was used!" << endl;
+        std::pair<polygon, double> best_obb;
+        best_obb.first= poly;
+        best_obb.second= 1;
 
-        return poly;
+        return best_obb;
     }
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloudFromInd(pcl::PointIndices::Ptr input_indices,  pcl::PointCloud<pcl::PointXYZ>::ConstPtr input_cloud)
@@ -489,7 +492,11 @@ namespace semmapping
         //obj.oriented_box = create_oriented_box(obj.shape_union, angle);
         //obj.rotation_angle = angle;
         //obj.obb = polygonFromBox(obj.oriented_box, obj.rotation_angle);
-        obj.obb = create_object_box_using_prior_knowledge(obj.shape_union, obj.name);
+        //obj.obb = create_object_box_using_prior_knowledge(obj.shape_union, obj.name);
+        std::pair<polygon, double> selected_obb;
+        selected_obb= create_object_box_using_prior_knowledge(obj.shape_union, obj.name);
+        obj.obb = selected_obb.first;
+        obj.obb_score = 1-selected_obb.second;
         bg::centroid(obj.obb, obj.oriented_box_cen);
         bg::centroid( obj.shape_union, obj.shape_union_cen);
 
@@ -594,7 +601,11 @@ namespace semmapping
                     //tableObj.oriented_box = create_oriented_box(tableObj.shape_union, angel);
                     //tableObj.rotation_angle = angel;
                     //tableObj.obb = polygonFromBox(tableObj.oriented_box, tableObj.rotation_angle);
-                    tableObj.obb = create_object_box_using_prior_knowledge(tableObj.shape_union, tableObj.name);
+                    //tableObj.obb = create_object_box_using_prior_knowledge(tableObj.shape_union, tableObj.name);
+                    std::pair<polygon, double> selected_obb;
+                    selected_obb= create_object_box_using_prior_knowledge(tableObj.shape_union, tableObj.name);
+                    tableObj.obb = selected_obb.first;
+                    tableObj.obb_score = 1-selected_obb.second;
                 }
             }
         }
@@ -664,7 +675,12 @@ namespace semmapping
         //obj.oriented_box = create_oriented_box(obj.shape_union, angle);
         //obj.rotation_angle = angle;
         //obj.obb = polygonFromBox(obj.oriented_box, obj.rotation_angle);
-        obj.obb = create_object_box_using_prior_knowledge(obj.shape_union, obj.name);
+        //obj.obb = create_object_box_using_prior_knowledge(obj.shape_union, obj.name);
+        std::pair<polygon, double> selected_obb;
+        selected_obb= create_object_box_using_prior_knowledge(obj.shape_union, obj.name);
+        obj.obb = selected_obb.first;
+        obj.obb_score = 1-selected_obb.second;
+        
         bg::centroid(obj.obb, obj.oriented_box_cen);
         //std::cout << "obj obb 2 size: " << obj.obb.outer().size() << std::endl;
         addObject(obj);
@@ -982,6 +998,7 @@ namespace semmapping
             std::ostringstream obb_cen;
             obb_cen << bg::wkt(obj.oriented_box_cen);
             n["oriented_box_cen"] = obb_cen.str();
+            n["oriented_box_score"] = obj.obb_score;
             map.push_back(n);
         }
         output << map;
@@ -1034,6 +1051,7 @@ namespace semmapping
                 return false;
             }
             obj.bounding_box = bg::return_envelope<box>(obj.shape_union);
+            obj.obb_score = entry["oriented_box_score"].as<double>();
             addObject(obj);
         }
         cout << "Map to evaluate loaded !" << endl;
