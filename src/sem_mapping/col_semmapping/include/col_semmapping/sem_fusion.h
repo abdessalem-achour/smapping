@@ -55,8 +55,8 @@ namespace semmapping
             bool inConsideredObjectList(std::string object_name);
             bool validObjectSurface(std::string object_name, polygon object_obb);
             bool isRectangular(polygon object_obb);
-            void removeMapInconsistencies(semmapping::SemanticMap map, semmapping::SemanticMap &map_cleared);
-            void semfusion(semmapping::SemanticMap previous_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map);
+            void removeMapInconsistencies(semmapping::SemanticMap map, semmapping::SemanticMap &map_cleared, double overlap_threshold = 0.1);
+            void semfusion(semmapping::SemanticMap previous_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.0);
     };
 }
 
