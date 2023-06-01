@@ -1186,84 +1186,10 @@ namespace semmapping
     void SemanticMap::classRating(std::pair<std::string, double*> &class_data, double mapping_factor, double dengler_factor, double com_offset, double com_offset_dengler){ 
         class_data.second[0]++;
         class_data.second[1]= (class_data.second[1]*(class_data.second[0]-1) + mapping_factor)/class_data.second[0];
-        class_data.second[2]= (class_data.second[2]*(class_data.second[0]-1) + dengler_factor)/class_data.second[0];
-        class_data.second[4]= (class_data.second[4]*(class_data.second[0]-1) + com_offset)/class_data.second[0];
+        class_data.second[2]= (class_data.second[2]*(class_data.second[0]-1) + com_offset)/class_data.second[0];
+        class_data.second[4]= (class_data.second[4]*(class_data.second[0]-1) + dengler_factor)/class_data.second[0];
         class_data.second[5]= (class_data.second[5]*(class_data.second[0]-1) + com_offset_dengler)/class_data.second[0];
     }
-    
-    /*void SemanticMap::mapRating(){
-        if(!objectList.empty()){
-            // first: number of instances, second: our solution factor, third: dengler factor 
-            double ev_class_table[4]={0,0,0,0};
-            double ev_class_chair[4]={0,0,0,0};
-            double ev_class_shelf[4]={0,0,0,0};
-            double ev_class_sofa[4]={0,0,0,0};
-            int false_detection=0;
-
-            for (auto &val : objectList)
-            {
-                SemanticObject &obj = val.second;
-                bool object_not_found= true;
-                for(auto &val2 : groundTruthObjectList){
-                    SemanticObject &gtObj = val2.second;
-                    //cout << "object name " << obj.name <<" - Truth object name: "<< gtObj.name<< endl;
-                    if(obj.exist_certainty > 0.25 && obj.name == gtObj.name){
-                        double mapping_factor= iou(obj.obb, gtObj.obb);
-                        double mapping_factor_dengler= iou(obj.shape_union, gtObj.obb);
-                        point truth_centroid;
-                        bg::centroid(gtObj.obb, truth_centroid);
-                        double com_offset_dengler, com_offset;
-                        com_offset_dengler= sqrt((obj.shape_union_cen.x() - truth_centroid.x())*(obj.shape_union_cen.x() - truth_centroid.x()) 
-                                + (obj.shape_union_cen.y() - truth_centroid.y())*(obj.shape_union_cen.y() - truth_centroid.y()));
-                        com_offset= sqrt((obj.oriented_box_cen.x() - truth_centroid.x())*(obj.oriented_box_cen.x() - truth_centroid.x()) 
-                                + (obj.oriented_box_cen.y() - truth_centroid.y())*(obj.oriented_box_cen.y() - truth_centroid.y()));
-                        
-                        if(mapping_factor!=0)
-                        {
-                            cout<<obj.name<<val.first<<" represents object "<<gtObj.name<<val2.first<<" with iou factor= " << mapping_factor << endl;
-                            cout << "mapping factor= " << mapping_factor << "CoM offset dengler= " << com_offset_dengler << "CoM offset= " << com_offset << endl;
-                            object_not_found= false;
-                            if(obj.name=="Chair")
-                                classRating(ev_class_chair, mapping_factor, mapping_factor_dengler);
-                            if(obj.name=="Table")
-                                classRating(ev_class_table, mapping_factor, mapping_factor_dengler);
-                            if(obj.name=="Shelf")
-                                classRating(ev_class_shelf, mapping_factor, mapping_factor_dengler);
-                            if(obj.name=="Sofa bed")
-                                classRating(ev_class_sofa, mapping_factor, mapping_factor_dengler);
-                        }
-                    }
-                }
-
-                if(obj.exist_certainty > 0.25 && object_not_found){
-                    cout << obj.name << val.first << " dont exist in the truth map!" << endl;
-                    if(obj.name=="Chair")
-                        ev_class_chair[3]++;
-                    if(obj.name=="Table")
-                        ev_class_table[3]++;
-                    if(obj.name=="Shelf")
-                        ev_class_shelf[3]++;
-                    if(obj.name=="Sofa bed")
-                        ev_class_sofa[3]++;
-                    false_detection++;
-                }
-            }
-            cout<<"--- Our solution ---" << endl;
-            cout<<"The mean similaity factor for class Chair is "<< ev_class_chair[1]<<" for "<< ev_class_chair[0]<< " mapped Chairs" << endl;
-            cout<<"The mean similaity factor for class Table is "<< ev_class_table[1]<<" for "<< ev_class_table[0]<< " mapped Tables" << endl;
-            cout<<"The mean similaity factor for class Shelf is "<< ev_class_shelf[1]<<" for "<< ev_class_shelf[0]<< " mapped Shelfs" << endl;
-            cout<<"The mean similaity factor for class Sofa is "<< ev_class_sofa[1]<<" for "<< ev_class_sofa[0]<< " mapped Sofas" << endl;
-            cout<<"--- Dengler solution ---" << endl;
-            cout<<"The mean similaity factor for class Chair is "<< ev_class_chair[2]<<" for "<< ev_class_chair[0]<< " mapped Chairs" << endl;
-            cout<<"The mean similaity factor for class Table is "<< ev_class_table[2]<<" for "<< ev_class_table[0]<< " mapped Tables" << endl;
-            cout<<"The mean similaity factor for class Shelf is "<< ev_class_shelf[2]<<" for "<< ev_class_shelf[0]<< " mapped Shelfs" << endl;
-            cout<<"The mean similaity factor for class Sofa is "<< ev_class_sofa[2]<<" for "<< ev_class_sofa[0]<< " mapped Sofas" << endl;
-            cout<<"--- " << false_detection << " False detections ---" << endl;
-            cout<< ev_class_table[3]<<" Tables, "<< ev_class_chair[3]<<" Chairs, "<< ev_class_shelf[3]<<" Shelfs, "<< ev_class_sofa[3]<<" Sofas "<< endl;
-        }
-        else
-            ROS_INFO_STREAM("The Map is empty, so it can't be rated!");
-    }*/
 
     // function to apply Z-score normalization
     void SemanticMap::zScoreNormalization(double &f1, double &f2, double &f3, double &f4) {
@@ -1351,24 +1277,29 @@ namespace semmapping
         cout<<"min_f1_score= " << min_f1_score << endl;
     }
     
-    void SemanticMap::save_stats(std::vector<std::pair<std::string, double*>> all_classes_data){
+    void SemanticMap::save_stats(std::vector<std::pair<std::string, double*>> all_classes_data, std::string filename, bool save_dengler_stats){
         std::ofstream myfile;
-        //myfile.open ("src/sem_mapping/semmapping/maps/map_stats/world1_tests.csv", ios::out | ios::app);
-        myfile.open ("src/sem_mapping/semmapping/maps/map_stats/world2_tests.csv", ios::out | ios::app);
+        myfile.open (filename, ios::out | ios::app);
         myfile << "New map data" << "\n";
         std::vector<std::pair<std::string, double*>>::iterator it;
         for(it = all_classes_data.begin(); it != all_classes_data.end(); it++){
             std::pair<std::string, double*> class_data = *it;
-            myfile << class_data.first << ","<< class_data.second[0] << ","<< class_data.second[3] << ","<< class_data.second[1] << ","<< class_data.second[2] 
-            << ","<< class_data.second[4] << ","<< class_data.second[5] << "\n";
+            if(save_dengler_stats){
+                //Class, TP, FP, Mean IOU, Mean IOU Dengler, Mean CoM Offset, Mean CoM Dengler
+                myfile << class_data.first << ","<< class_data.second[0] << ","<< class_data.second[3] << ","<< class_data.second[1] << ","<< class_data.second[4] 
+                << ","<< class_data.second[2] << ","<< class_data.second[5] << "\n";
+            }
+            else{
+                //Class, TP, FP, Mean IOU, Mean CoM Offset
+                myfile << class_data.first << ","<< class_data.second[0] << ","<< class_data.second[3] << ","<< class_data.second[1] << ","<< class_data.second[2] << "\n";
+            }
         }
         myfile.close();
     }
 
-    void SemanticMap::mapRating2(){
+    void SemanticMap::evaluteMap(std::string filename){
         std::vector<std::string> evaluted_classes{"Chair", "Table", "Shelf", "Sofa bed"};
         std::vector<std::pair<std::string, double*>> all_classes_data;
-
         double initial_data1[6]={0,0,0,0,0,0}; double initial_data2[6]={0,0,0,0,0,0}; double initial_data3[6]={0,0,0,0,0,0}; double initial_data4[6]={0,0,0,0,0,0};
         all_classes_data.push_back(std::make_pair("Chair", initial_data1));
         all_classes_data.push_back(std::make_pair("Table", initial_data2));
@@ -1378,9 +1309,7 @@ namespace semmapping
         if(!objectList.empty()){
             // first: number of instances, second: our solution factor, third: dengler factor 
             int false_detection=0;
-
-            for (auto &val : objectList)
-            {
+            for (auto &val : objectList){
                 SemanticObject &obj = val.second;
                 bool object_not_found= true;
                 for(auto &val2 : groundTruthObjectList){
@@ -1399,8 +1328,8 @@ namespace semmapping
                         
                         if(mapping_factor!=0)
                         {
-                            cout<< obj.name << val.first <<" represents object " << gtObj.name << val2.first << " with IOU: " << mapping_factor << " and CoM Offset: " 
-                            << com_offset << endl;
+                            //cout<< obj.name << val.first <<" represents object " << gtObj.name << val2.first << " with IOU: " << mapping_factor << " and CoM Offset: " 
+                            //<< com_offset << endl;
                             object_not_found= false;
                             std::vector<std::pair<std::string, double*>>::iterator it;
                             for(it = all_classes_data.begin(); it != all_classes_data.end(); it++){
@@ -1408,14 +1337,13 @@ namespace semmapping
                                 if(class_data.first == obj.name){
                                     classRating(class_data, mapping_factor, mapping_factor_dengler, com_offset, com_offset_dengler);
                                 }
-                            }
-                                
+                            }     
                         }
                     }
                 }
 
                 if(obj.exist_certainty > 0.25 && object_not_found){
-                    cout << obj.name << val.first << " dont exist in the truth map!" << endl;
+                    //cout << obj.name << val.first << " dont exist in the truth map!" << endl;
                     std::vector<std::pair<std::string, double*>>::iterator it;
                     for(it = all_classes_data.begin(); it != all_classes_data.end(); it++){
                         std::pair<std::string, double*> class_data = *it;
@@ -1433,9 +1361,9 @@ namespace semmapping
             for(it = all_classes_data.begin(); it != all_classes_data.end(); it++){
                 std::pair<std::string, double*> class_data = *it;
                 cout << std::left << setw(20)<< class_data.first << setw(20) << class_data.second[0] << setw(20)<< class_data.second[3] << setw(20)
-                << class_data.second[1] << setw(20) << class_data.second[2]<< setw(20) << class_data.second[4]<< setw(20) << class_data.second[5] << endl;
+                << class_data.second[1] << setw(20) << class_data.second[4]<< setw(20) << class_data.second[2]<< setw(20) << class_data.second[5] << endl;
             }
-            save_stats(all_classes_data);
+            save_stats(all_classes_data, filename, false);
         }
         else
             ROS_INFO_STREAM("The Map is empty, so it can't be rated!");
@@ -1452,8 +1380,16 @@ namespace semmapping
     size_t SemanticMap::getNextIndex(){
         return next_index;
     }
+    
     void SemanticMap::setNextIndex(size_t nextIndex){
         next_index= nextIndex;
+    }
 
+    std::map<size_t, SemanticObject> SemanticMap::getGroundTruthObjectList(){
+        return groundTruthObjectList;
+    }
+
+    void SemanticMap::setGroundTruthObjectList(std::map<size_t, SemanticObject> object_List){
+        groundTruthObjectList= object_List;
     }
 }

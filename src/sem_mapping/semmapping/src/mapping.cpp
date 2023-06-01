@@ -115,6 +115,9 @@ ros::Publisher debug2CloudPub;
 ros::Publisher position_pub;
 //ros::Publisher ObbMapPub;
 
+//Testing files paths
+std::string ground_truth_map_file_name= "src/sem_mapping/semmapping/maps/truth_map_well_arranged_world.yaml";
+
 //pcl::visualization::CloudViewer *viewer;
 pcl::visualization::PCLVisualizer *viewer;
 boost::mutex viewer_mtx;
@@ -703,10 +706,9 @@ int main(int argc, char **argv) {
             file.close();
         } 
         else if (command == "load_ground_truth_map") {
-            std::string fname = "src/sem_mapping/semmapping/maps/truth_map_well_arranged_world.yaml";
             //std::string fname = "src/sem_mapping/semmapping/maps/truth_map_cluttered_world_2.yaml";
-            std::cout << "Loading ground truth map file: " << fname << std::endl;
-            std::ifstream file(fname);
+            std::cout << "Loading ground truth map file: " << ground_truth_map_file_name << std::endl;
+            std::ifstream file(ground_truth_map_file_name);
             if (!file) {
                 std::cout << "Ground truth map could not be opened" << std::endl;
                 continue;
@@ -736,22 +738,22 @@ int main(int argc, char **argv) {
             file.close();
         } 
         else if(command == "map_score"){
-            std::ifstream file("src/sem_mapping/semmapping/maps/truth_map_well_arranged_world.yaml");
+            std::ifstream file(ground_truth_map_file_name);
             //std::ifstream file("src/sem_mapping/semmapping/maps/truth_map_cluttered_world_2.yaml");
             map.loadGroundTruthMap(file);
             mapping_msgs::SemanticMap::Ptr gt_map_msg= map.createGroundTruthMapMessage();
             gtSemanticMapPub.publish(gt_map_msg);
             std::ifstream file2("src/sem_mapping/semmapping/maps/test1.yaml");
             map.readMapData(file2);
-            map.mapRating2();
+            map.evaluteMap("src/sem_mapping/semmapping/maps/map_stats/world2_tests.csv");
         }
         else if(command == "current_map_score"){
-            std::ifstream file("src/sem_mapping/semmapping/maps/truth_map_well_arranged_world.yaml");
+            std::ifstream file(ground_truth_map_file_name);
             //std::ifstream file("src/sem_mapping/semmapping/maps/truth_map_cluttered_world_2.yaml");
             map.loadGroundTruthMap(file);
             mapping_msgs::SemanticMap::Ptr gt_map_msg= map.createGroundTruthMapMessage();
             gtSemanticMapPub.publish(gt_map_msg);
-            map.mapRating2();
+            map.evaluteMap("src/sem_mapping/semmapping/maps/map_stats/world2_tests.csv");
         }
         else if (command == "save") {
             std::string fname = readNext(in, it);

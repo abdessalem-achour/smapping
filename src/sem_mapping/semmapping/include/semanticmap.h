@@ -276,12 +276,14 @@ namespace semmapping
             void gradient_descent(std::vector<double> &weights, int n, double f1, double f2, double f3);
             double association_score(std::vector<double> &weights, double f1, double f2, double f3);
             void grid_search(polygon poly, polygon box, std::vector<double> &weights, double &min_f1_score, double f1, double f2, double f3);
-            void mapRating2();
-            void save_stats(std::vector<std::pair<std::string, double*>> all_classes_data);
+            void evaluteMap(std::string filename);
+            void save_stats(std::vector<std::pair<std::string, double*>> all_classes_data, std::string filename, bool save_dengler_stats);
             std::map<size_t, SemanticObject> getObjectList();
             void setObjectList(std::map<size_t, SemanticObject> object_List);
             size_t getNextIndex();
             void setNextIndex(size_t next_index);
+            std::map<size_t, SemanticObject> getGroundTruthObjectList();
+            void setGroundTruthObjectList(std::map<size_t, SemanticObject> object_List);
 
             int viewer_index = 0;
             semmapping::ParamsConfig &param_config;

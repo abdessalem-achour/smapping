@@ -57,6 +57,10 @@ namespace semmapping
             bool isRectangular(polygon object_obb);
             void removeMapInconsistencies(semmapping::SemanticMap map, semmapping::SemanticMap &map_cleared, double overlap_threshold = 0.1);
             void semfusion(semmapping::SemanticMap previous_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.0);
+            // Methods for evaluating merged maps
+            void updateClassStats(std::pair<std::string, double*> &class_data, double mapping_factor, double com_offset);
+            void saveMapStats(std::vector<std::pair<std::string, double*>> all_classes_data, std::string filename);
+            void evaluteFusedMap(std::map<size_t, SemanticObject> objectList, std::map<size_t, SemanticObject> groundTruthObjectList, std::string backup_file_name);
     };
 }
 

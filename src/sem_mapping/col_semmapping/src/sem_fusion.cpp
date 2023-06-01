@@ -59,8 +59,8 @@ namespace semmapping
 
         if(isRectangular(initial_obj.obb) && isRectangular(received_obj.obb))
         {
-            cout<<"initial_obb_mapping_score= "<<initial_obj.obb_score<<" - received_obb_mapping_score= "<<received_obj.obb_score<<endl;
-            cout<<"initial_obb_fusion_score= "<<initial_obb_score<<" - received_obb_fusion_score= "<<received_obb_score<<endl;
+            //cout<<"initial_obb_mapping_score= "<<initial_obj.obb_score<<" - received_obb_mapping_score= "<<received_obj.obb_score<<endl;
+            //cout<<"initial_obb_fusion_score= "<<initial_obb_score<<" - received_obb_fusion_score= "<<received_obb_score<<endl;
             if (initial_obb_score > received_obb_score)
                 obj=copySemanticObject(initial_obj);
             else
@@ -202,7 +202,7 @@ namespace semmapping
                             new_obj.isCombined = true;
                             //Overlap between objects is possible
                             if(possible_overlap){
-                                cout << new_obj.name << val.first << " overlap with object " << ref_obj.name << val2.first << endl;
+                                //cout << new_obj.name << val.first << " overlap with object " << ref_obj.name << val2.first << endl;
                                 //Same or similar labels: fuse objects
                                 if (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name)){
                                     SemanticObject fused_obj;
@@ -263,8 +263,8 @@ namespace semmapping
                         double overlap = iou(new_obj.obb, ref_obj.obb);
                         if (overlap > overlap_threshold && (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name)))
                         {
-                            cout << new_obj.name << val.first << " represents object " << ref_obj.name << val2.first << " with IOU: " << overlap <<
-                            " and CoM Offset: " << com_offset << endl;
+                            //cout << new_obj.name << val.first << " represents object " << ref_obj.name << val2.first << " with IOU: " << overlap <<
+                            //" and CoM Offset: " << com_offset << endl;
                             SemanticObject fused_obj;
                             //fused_obj= nmsFusionOfSemanticObject(ref_obj, new_obj);
                             fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj);
@@ -274,7 +274,7 @@ namespace semmapping
                     }
                     //an object that exists in a single map will be added if its certainty of existence is > 0.5
                     if (!new_obj.isCombined && new_obj.exist_certainty > 0.5){
-                        cout << new_obj.name << val.first <<" exists in one map, added to global map!" << endl;
+                        //cout << new_obj.name << val.first <<" exists in one map, added to global map!" << endl;
                         new_obj.point_cloud = nullptr;
                         global_map.addObject(new_obj);
                     }
@@ -286,6 +286,90 @@ namespace semmapping
             global_map.setObjectList(received_map.getObjectList());
             cout << "Global map is empty, received map is considered as global map!" << endl;
         }
+    }
+
+    // Methods for evaluating merged maps
+
+    void SemanticFusion::updateClassStats(std::pair<std::string, double*> &class_data, double mapping_factor, double com_offset){ 
+        class_data.second[0]++;
+        class_data.second[1]= (class_data.second[1]*(class_data.second[0]-1) + mapping_factor)/class_data.second[0];
+        class_data.second[2]= (class_data.second[2]*(class_data.second[0]-1) + com_offset)/class_data.second[0];
+    }
+
+    void SemanticFusion::saveMapStats(std::vector<std::pair<std::string, double*>> all_classes_data, std::string filename){
+        std::ofstream myfile;
+        myfile.open (filename, ios::out | ios::app);
+        myfile << "Fused map data" << "\n";
+        std::vector<std::pair<std::string, double*>>::iterator it;
+        for(it = all_classes_data.begin(); it != all_classes_data.end(); it++){
+            std::pair<std::string, double*> class_data = *it;
+            //Class, TP, FP, Mean IOU, Mean CoM Offset
+            myfile << class_data.first << ","<< class_data.second[0] << ","<< class_data.second[3] << ","<< class_data.second[1] << ","<< class_data.second[2] << "\n";
+        }
+        myfile.close();
+    }
+    
+    void SemanticFusion::evaluteFusedMap(std::map<size_t, SemanticObject> objectList, std::map<size_t, SemanticObject> groundTruthObjectList, std::string backup_file_name){
+        std::vector<std::pair<std::string, double*>> all_classes_stats;
+        double class1_stats[4]={0,0,0,0}; double class2_stats[4]={0,0,0,0}; double class3_stats[4]={0,0,0,0}; double class4_stats[4]={0,0,0,0};
+        all_classes_stats.push_back(std::make_pair("Chair", class1_stats));
+        all_classes_stats.push_back(std::make_pair("Table", class2_stats));
+        all_classes_stats.push_back(std::make_pair("Shelf", class3_stats));
+        all_classes_stats.push_back(std::make_pair("Sofa bed", class4_stats));
+
+        if(!objectList.empty()){
+            int number_of_false_detections=0;
+            for (auto &val : objectList){
+                SemanticObject &obj = val.second;
+                bool object_not_in_ground_truth_map= true;
+                if(obj.exist_certainty > 0.25){
+                    for(auto &val2 : groundTruthObjectList){
+                        SemanticObject &gtObj = val2.second;
+                        if(obj.name == gtObj.name || similarClasses(obj.name, gtObj.name)){
+                            point truth_centroid; bg::centroid(gtObj.obb, truth_centroid);
+                            double com_offset= sqrt((obj.oriented_box_cen.x() - truth_centroid.x())*(obj.oriented_box_cen.x() - truth_centroid.x())
+                            + (obj.oriented_box_cen.y() - truth_centroid.y())*(obj.oriented_box_cen.y() - truth_centroid.y()));
+                            double overlap= iou(obj.obb, gtObj.obb);
+                            if(overlap){
+                                //cout<< obj.name << val.first <<" represents object " << gtObj.name << val2.first << " with IOU: " << overlap << " and CoM Offset: " 
+                                //<< com_offset << endl;
+                                object_not_in_ground_truth_map= false;
+                                std::vector<std::pair<std::string, double*>>::iterator it;
+                                for(it = all_classes_stats.begin(); it != all_classes_stats.end(); it++){
+                                    std::pair<std::string, double*> class_data = *it;
+                                    if(class_data.first == obj.name)
+                                        updateClassStats(class_data, overlap, com_offset);
+                                }
+                                    
+                            }
+                        }
+                    }
+
+                    if(object_not_in_ground_truth_map){
+                        //cout << obj.name << val.first << " dont exist in the truth map!" << endl;
+                        std::vector<std::pair<std::string, double*>>::iterator it;
+                        for(it = all_classes_stats.begin(); it != all_classes_stats.end(); it++){
+                            std::pair<std::string, double*> class_data = *it;
+                            if(class_data.first == obj.name)
+                                class_data.second[3]++;
+                        }
+                        number_of_false_detections++;
+                    }
+                }
+            }
+
+            cout <<"--- Fused Map Evaluation ---" << endl;
+            cout << std::left << setw(20)<< "class name" << setw(20)<< "TP" << setw(20)<< "FP" << setw(20) << "Mean IOU" << setw(20) << "Mean CoM offset" << endl;
+            std::vector<std::pair<std::string, double*>>::iterator it;
+            for(it = all_classes_stats.begin(); it != all_classes_stats.end(); it++){
+                std::pair<std::string, double*> class_data = *it;
+                cout << std::left << setw(20)<< class_data.first << setw(20) << class_data.second[0] << setw(20)<< class_data.second[3]
+                << setw(20) << class_data.second[1] << setw(20) << class_data.second[2]<< endl;
+            }
+            saveMapStats(all_classes_stats, backup_file_name);
+        }
+        else
+            ROS_INFO_STREAM("The Fused Map is empty, so it can't be evaluated!");
     }
 
 }
