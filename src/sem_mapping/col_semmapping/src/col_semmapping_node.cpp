@@ -17,7 +17,7 @@ std::string single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_map
 std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/"+reference_map_name;
 std::string backup_file_name= "src/sem_mapping/col_semmapping/statistical_data/"+reference_map_name+".csv";
 //Parameters for manual testing
-std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/test1.yaml";
+std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/test10.yaml";
 std::string fused_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/fused_maps/test_fusion.yaml";
 
 int get_command_number(std::string command){
@@ -33,6 +33,8 @@ int get_command_number(std::string command){
     return 5;
   else if(command == "evaluate_all_maps_in_directory")
     return 6;
+  else if(command == "evaluate_cleared_reference_map")
+    return 7;
   else
     return 10;
 }
@@ -210,6 +212,14 @@ int main(int argc, char **argv){
           global_map.readMapData(fused_map_file); fused_map_file.close();
           fusion_node.evaluteFusedMap(global_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);
           }
+        break;
+        }
+      case 7: //evaluate_cleared_reference_map
+        {
+        std::ifstream file(ground_truth_map_file_name);
+        cleared_ref_map.loadGroundTruthMap(file);
+        cleared_ref_map.evaluteMap(backup_file_name);
+        file.close();
         break;
         }
       default:
