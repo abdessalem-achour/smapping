@@ -1191,16 +1191,6 @@ namespace semmapping
         class_data.second[5]= (class_data.second[5]*(class_data.second[0]-1) + com_offset_dengler)/class_data.second[0];
     }
 
-    // function to apply Z-score normalization
-    void SemanticMap::zScoreNormalization(double &f1, double &f2, double &f3, double &f4) {
-        double mean = (f1 + f2 + f3 + f4) / 4;
-        double std_dev = sqrt((f1 - mean)*(f1 - mean) + (f2 - mean)*(f2 - mean) + (f3 - mean)*(f3 - mean) + (f4 - mean)*(f4 - mean)) / sqrt(4);
-        f1 = (f1 - mean) / std_dev;
-        f2 = (f2 - mean) / std_dev;
-        f3 = (f3 - mean) / std_dev;
-        f4 = (f4 - mean) / std_dev;
-    }
-
     double SemanticMap::association_score(std::vector<double> &weights, double f1, double f2, double f3) {
     // Calculate the score using the weights and the input variables
     return weights[0] * f1 + weights[1] * f2 + weights[2] * f3;
@@ -1363,7 +1353,7 @@ namespace semmapping
                 cout << std::left << setw(20)<< class_data.first << setw(20) << class_data.second[0] << setw(20)<< class_data.second[3] << setw(20)
                 << class_data.second[1] << setw(20) << class_data.second[4]<< setw(20) << class_data.second[2]<< setw(20) << class_data.second[5] << endl;
             }
-            save_stats(all_classes_data, filename, false);
+            //save_stats(all_classes_data, filename, false);
         }
         else
             ROS_INFO_STREAM("The Map is empty, so it can't be rated!");

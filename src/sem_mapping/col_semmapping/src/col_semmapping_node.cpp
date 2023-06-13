@@ -11,13 +11,13 @@ ros::Publisher fusedSemanticMapPub;
 
 //Testing parameters
 std::string ground_truth_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/ground_truth_maps/truth_map_well_arranged_world.yaml";
-std::string reference_map_name="ref_map2"; //ref_map2 very bad_map & ref_map3 good map
+std::string reference_map_name="ref_map3"; //ref_map2 very bad_map & ref_map3 good map
 std::string reference_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/reference_maps/"+reference_map_name+".yaml";
 std::string single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/single_robot_maps";
-std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/"+reference_map_name;
-std::string backup_file_name= "src/sem_mapping/col_semmapping/statistical_data/"+reference_map_name+".csv";
+std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/"+reference_map_name; //+"_nms";
+std::string backup_file_name= "src/sem_mapping/col_semmapping/statistical_data/"+reference_map_name+".csv"; //"_nms"+".csv";
 //Parameters for manual testing
-std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/test10.yaml";
+std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/test4.yaml";
 std::string fused_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/fused_maps/test_fusion.yaml";
 
 int get_command_number(std::string command){
@@ -148,7 +148,7 @@ int main(int argc, char **argv){
       case 1: //fuse_maps
         {
         // Fuse and save the two maps
-        fusion_node.semfusion(cleared_ref_map, cleared_received_map, global_map); //fusion_node.semfusion(ref_map, received_map, global_map);
+        fusion_node.semfusion(cleared_ref_map, cleared_received_map, global_map, 0.0); //fusion_node.semfusion(ref_map, received_map, global_map);
         global_map.writeMapData(fusion_file); 
         fusion_file.close();
         // Create and publish fused map message
@@ -196,7 +196,7 @@ int main(int argc, char **argv){
           fusion_node.semfusion(cleared_ref_map, cleared_received_map, global_map); //fusion_node.semfusion(ref_map, received_map, global_map);
           // Save the fused map
           std::stringstream filename;
-          filename << "src/sem_mapping/col_semmapping/fused_maps/fused_maps/"+ reference_map_name +"/map_" << std::setw(4) << std::setfill('0') << filecount << ".yaml";
+          filename << fused_maps_directory +"/map_" << std::setw(4) << std::setfill('0') << filecount << ".yaml";
           std::ofstream fusion_file(filename.str().c_str());
           global_map.writeMapData(fusion_file); 
           fusion_file.close();

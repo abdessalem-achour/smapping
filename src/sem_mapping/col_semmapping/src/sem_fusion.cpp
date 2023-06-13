@@ -266,6 +266,7 @@ namespace semmapping
                             new_obj.inGlobalMap = true; //parameter used to determine whether or not the object is already in the global map
                             new_obj.isOverlapping = true; //parameter indicating that the object's polygon overlaps another instance of the object or another object.
                             SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj);
+                            //SemanticObject fused_obj= nmsFusionOfSemanticObject(ref_obj, new_obj);
                             global_map.removeObject(val2.first);
                             global_map.addObject(fused_obj);
                         }   
@@ -286,7 +287,8 @@ namespace semmapping
                             {
                                 //cout << new_obj.name << val.first << " represents object " << ref_obj.name << val2.first << " with IOU: " << overlap <<
                                 //" and CoM Offset: " << com_offset << endl;
-                                SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj); //fused_obj= nmsFusionOfSemanticObject(ref_obj, new_obj);
+                                SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj); 
+                                //SemanticObject fused_obj= nmsFusionOfSemanticObject(ref_obj, new_obj);
                                 new_obj.isOverlapping = true;
                                 global_map.addObject(fused_obj);
                             }
@@ -387,7 +389,7 @@ namespace semmapping
                 cout << std::left << setw(20)<< class_data.first << setw(20) << class_data.second[0] << setw(20)<< class_data.second[3]
                 << setw(20) << class_data.second[1] << setw(20) << class_data.second[2]<< endl;
             }
-            saveMapStats(all_classes_stats, backup_file_name);
+            //saveMapStats(all_classes_stats, backup_file_name);
         }
         else
             ROS_INFO_STREAM("The Fused Map is empty, so it can't be evaluated!");

@@ -233,6 +233,15 @@ namespace semmapping
 
         public:
             SemanticMap(tf2_ros::Buffer &tfBuffer, pcl::visualization::PCLVisualizer* &viewer, boost::mutex &viewer_mtx, int &semmap_vport0, int &semmap_vport1, semmapping::ParamsConfig &param_config );
+            //Getter and setter methods
+            std::map<size_t, SemanticObject> getObjectList();
+            void setObjectList(std::map<size_t, SemanticObject> object_List);
+            size_t getNextIndex();
+            void setNextIndex(size_t next_index);
+            std::map<size_t, SemanticObject> getGroundTruthObjectList();
+            void setGroundTruthObjectList(std::map<size_t, SemanticObject> object_List);
+
+            //Semantic Mapping Methods
             void addEvidence(const std::string &name, const polygon &pg, double mean_height,  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
             void removeEvidence(const polygon &visibilityArea, const point &robot);
             void deleteLeastConsistentShape(size_t id);
@@ -254,39 +263,34 @@ namespace semmapping
             std::set<size_t> getObjectsWithinRange(const polygon &pg);
             std::set<size_t> getObjectsByNameInRange(const std::string &name, const polygon &pg);
             std::set<size_t> getObjectsByNameInRange(const std::string &name, const box &bx);
+            polygon polygonFromBox(const box &bbox, const double &angle);
+            std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsEuc(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
+            std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsReg(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
+            mapping_msgs::SemanticMap::Ptr createMapMessage(const point &robot,double loaded);
+            mapping_msgs::ObjectPositions::Ptr findObjectPosition(const mapping_msgs::FindObjects &request);
+
+            //Prior knowledge integration
             box create_oriented_box(polygon poly, double &best_angle);
             std::pair<double, double> get_real_object_length_width(const std::string &name);
             polygon create_shifted_bounding_box_with_real_dimensions(int direction, point reference, double v_directeur[2], double shift_distance, double length, double width);
             void associate_real_box_to_partial_polygon(polygon poly, std::list<std::pair<point,point>> first_plan_edges, double length, double width, std::vector<std::pair<polygon, double>> &selected_obb_list);
             std::pair<polygon, double> create_object_box_using_prior_knowledge(polygon poly, const std::string &name);
             std::list<std::pair<point, point>> get_polygon_first_plan_edges(polygon poly, point reference);
-            polygon polygonFromBox(const box &bbox, const double &angle);
-            std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsEuc(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
-            std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsReg(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
-            mapping_msgs::SemanticMap::Ptr createMapMessage(const point &robot,double loaded);
-            mapping_msgs::ObjectPositions::Ptr findObjectPosition(const mapping_msgs::FindObjects &request);
+            double distanceFromLine(point p, point start, point end);
+            polygon improve_polygon(polygon poly, double tolerance);
+            double association_score(std::vector<double> &weights, double f1, double f2, double f3);
+            
+            //Testing Methods
             bool writeMapData(std::ostream &output);
             bool writeLikelihoodData(std::ostream &output);
             bool readMapData(std::istream &input);
-            
-            mapping_msgs::SemanticMap::Ptr createGroundTruthMapMessage();
             bool loadGroundTruthMap(std::istream &input);
+            mapping_msgs::SemanticMap::Ptr createGroundTruthMapMessage();
             void classRating(std::pair<std::string, double*> &class_data, double mapping_factor, double dengler_factor, double com_offset, double com_offset_dengler);
-            void mapRating();
-            void zScoreNormalization(double &f1, double &f2, double &f3, double &f4);
-            double distanceFromLine(point p, point start, point end);
-            polygon improve_polygon(polygon poly, double tolerance);
             void gradient_descent(std::vector<double> &weights, int n, double f1, double f2, double f3);
-            double association_score(std::vector<double> &weights, double f1, double f2, double f3);
             void grid_search(polygon poly, polygon box, std::vector<double> &weights, double &min_f1_score, double f1, double f2, double f3);
             void evaluteMap(std::string filename);
             void save_stats(std::vector<std::pair<std::string, double*>> all_classes_data, std::string filename, bool save_dengler_stats);
-            std::map<size_t, SemanticObject> getObjectList();
-            void setObjectList(std::map<size_t, SemanticObject> object_List);
-            size_t getNextIndex();
-            void setNextIndex(size_t next_index);
-            std::map<size_t, SemanticObject> getGroundTruthObjectList();
-            void setGroundTruthObjectList(std::map<size_t, SemanticObject> object_List);
 
             int viewer_index = 0;
             semmapping::ParamsConfig &param_config;
