@@ -30,6 +30,114 @@ namespace semmapping
         return c_obj;
     }
 
+    point SemanticFusion::obbLeftTop(polygon obb){
+        point extreme_left_top= obb.outer()[0];
+        for(int i=0; i < obb.outer().size()-1;i++){
+            if(obb.outer()[i].x()<=extreme_left_top.x() && obb.outer()[i].y()>=extreme_left_top.y())
+                extreme_left_top=obb.outer()[i];
+        }
+        return extreme_left_top;
+    }
+
+    point SemanticFusion::obbRightTop(polygon obb){
+        point extreme_right_top= obb.outer()[0];
+        for(int i=0; i < obb.outer().size()-1;i++){
+            if(obb.outer()[i].x()>=extreme_right_top.x() && obb.outer()[i].y()>=extreme_right_top.y())
+                extreme_right_top=obb.outer()[i];
+        }
+        return extreme_right_top;
+    }
+    
+    point SemanticFusion::getNearestPoint(point p, polygon poly){
+        point n_point;
+        double min_distance = sqrt((poly.outer()[0].x() - p.x()) * (poly.outer()[0].x() - p.x()) 
+                                + (poly.outer()[0].y() - p.y()) * (poly.outer()[0].y() - p.y()));
+        n_point = poly.outer()[0];
+        for (int i=0; i < poly.outer().size()-1;i++){
+            double distance = sqrt((poly.outer()[i].x() - p.x()) * (poly.outer()[i].x() - p.x()) 
+                                + (poly.outer()[i].y() - p.y()) * (poly.outer()[i].y() - p.y()));
+            if (distance < min_distance) {
+                min_distance = distance;
+                n_point = poly.outer()[i];
+            }
+        }
+        return n_point;
+    }
+    
+    polygon SemanticFusion::fuse_similar_bounding_boxes(polygon obb1, polygon obb2){
+        point obb1_cen, obb2_cen;
+        bg::centroid(obb1, obb1_cen);
+        bg::centroid(obb2, obb2_cen);
+        double displacement = sqrt((obb1_cen.x() - obb2_cen.x())*(obb1_cen.x() - obb2_cen.x()) + (obb1_cen.y() - obb2_cen.y())*(obb1_cen.y() - obb2_cen.y()));
+
+        /*double angle1 = atan2(b.y()-a.y(), b.x() - a.x());
+        double angle2 = atan2(f.y()-e.y(), f.x() - e.x());
+        double rot_angle = (angle2-angle1)/2;
+        cout<< "angle1= "<<angle1<<" angle2= "<<angle2<<" rot_angle= "<<rot_angle<<endl;*/
+
+        point fused_obb_cen;
+        fused_obb_cen.x((obb1_cen.x() + obb2_cen.x()) / 2);
+        fused_obb_cen.y((obb1_cen.y() + obb2_cen.y()) / 2);
+
+        point origin; origin.x(0); origin.y(0);
+        polygon rot_obb1, trans_obb1, trans_obb2, fused_obb;
+        point obb1TranslationVector;
+        obb1TranslationVector.x(origin.x() - obb1_cen.x());
+        obb1TranslationVector.y(origin.y() - obb1_cen.y());
+        bg::strategy::transform::translate_transformer<double, 2, 2> translateObb1ToOrigin(obb1TranslationVector.x(), obb1TranslationVector.y());
+        bg::transform(obb1, trans_obb1, translateObb1ToOrigin);
+        
+        point obb2TranslationVector;
+        obb2TranslationVector.x(origin.x() - obb2_cen.x());
+        obb2TranslationVector.y(origin.y() - obb2_cen.y());
+        bg::strategy::transform::translate_transformer<double, 2, 2> translateObb2ToOrigin(obb2TranslationVector.x(), obb2TranslationVector.y());
+        bg::transform(obb2, trans_obb2, translateObb2ToOrigin);
+
+
+        /*point a = obbLeftTop(trans_obb1); point b = obbRightTop(trans_obb1);
+        point e = obbLeftTop(trans_obb2); point f = obbRightTop(trans_obb2);*/
+
+        point b = obbRightTop(trans_obb1);
+        point f = getNearestPoint(b, trans_obb2);
+
+        /*double angle1 = atan2(b.y() - origin.y(), b.x() - origin.x());
+        double angle2 = atan2(f.y() - origin.y(), f.x() - origin.x());
+        double rot_angle = angle1 + (angle2 - angle1)/2;
+        cout<< "angle1= "<<angle1<<" angle2= "<<angle2<<" rot_angle= "<<rot_angle<<endl;*/
+
+        double dot_product= (b.x()-origin.x()) * (f.x()-origin.x()) + (b.y()-origin.y()) * (f.y()-origin.y());
+        double magn1=sqrt((b.y()-origin.y()) * (b.y()-origin.y()) + (b.x()-origin.x()) * (b.x()-origin.x()));
+        double magn2=sqrt((f.y()-origin.y()) * (f.y()-origin.y()) + (f.x()-origin.x()) * (f.x()-origin.x()));
+        double test= dot_product / (magn1 * magn2);
+        
+        cout<<"test= "<< test <<endl;
+        double rot_angle;
+        if(test < 1.0 && test > -1.0){
+            if(b.x() < f.x())
+                rot_angle = std::acos(test)/2;
+            else
+                rot_angle = (-1) * std::acos(test)/2;
+            cout<< "dot= "<<dot_product<<" magn1= "<<magn1<<" magn2= "<<magn2<<" rot_angle_method2= "<<rot_angle<<endl;           
+        }
+        else{
+            cout << "out of range !!!" << endl;
+            rot_angle=0;
+        }
+
+        /*bg::strategy::transform::rotate_transformer<boost::geometry::radian, double, 2, 2> rotate(rot_angle);
+        bg::transform(trans_obb1, fused_obb, rotate);*/
+
+        bg::strategy::transform::matrix_transformer<double, 2, 2> rot(
+            cos(rot_angle), sin(rot_angle), 0,
+           -sin(rot_angle), cos(rot_angle), 0,
+            0,          0,          1);
+        bg::transform(trans_obb1, rot_obb1, rot);
+
+        bg::strategy::transform::translate_transformer<double, 2, 2> final_translate(fused_obb_cen.x(), fused_obb_cen.y());
+        bg::transform(rot_obb1, fused_obb, final_translate);
+        return fused_obb;
+    }
+    
     // Semantic Object fusion function: returns object OBB with the best score
     SemanticObject SemanticFusion::nmsFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj)
     {
@@ -50,26 +158,39 @@ namespace semmapping
         return obj;
     }
 
-    SemanticObject SemanticFusion::GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj)
+    SemanticObject SemanticFusion::GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj, semmapping::SemanticMap map)
     {
         SemanticObject obj;
-
         double initial_obb_score = (ref_fit(initial_obj.obb, received_obj.shape_union) + ref_fit(initial_obj.obb, initial_obj.shape_union))/2;
         double received_obb_score = (ref_fit(received_obj.obb, initial_obj.shape_union) + ref_fit(received_obj.obb, received_obj.shape_union))/2;
-
-        if(isRectangular(initial_obj.obb) && isRectangular(received_obj.obb))
-        {
-            //cout<<"initial_obb_mapping_score= "<<initial_obj.obb_score<<" - received_obb_mapping_score= "<<received_obj.obb_score<<endl;
-            //cout<<"initial_obb_fusion_score= "<<initial_obb_score<<" - received_obb_fusion_score= "<<received_obb_score<<endl;
-            if (initial_obb_score > received_obb_score)
-                obj=copySemanticObject(initial_obj);
-            else
-                obj=copySemanticObject(received_obj);
+        if(isRectangular(initial_obj.obb) && isRectangular(received_obj.obb)){
+            if(iou(initial_obj.obb, received_obj.obb) < 0.6){
+                //cout<<"initial_obb_mapping_score= "<<initial_obj.obb_score<<" - received_obb_mapping_score= "<<received_obj.obb_score<<endl;
+                //cout<<"initial_obb_fusion_score= "<<initial_obb_score<<" - received_obb_fusion_score= "<<received_obb_score<<endl;
+                if (initial_obb_score > received_obb_score)
+                    obj = copySemanticObject(initial_obj);
+                else
+                    obj = copySemanticObject(received_obj);
+            }
+            else{
+                cout<<"object name= "<< initial_obj.name <<"IOU= "<< iou(initial_obj.obb, received_obj.obb)<<endl;
+                obj.name = initial_obj.name;
+                obj.rotation_angle = 0;
+                obj.isCombined = true;
+                obj.exist_certainty = (initial_obj.exist_certainty + received_obj.exist_certainty)/2;
+                obj.obb = fuse_similar_bounding_boxes(initial_obj.obb, received_obj.obb);
+                obj.shape_union = obj.obb;
+                obj.obb_score = (initial_obj.obb_score + received_obj.obb_score)/2;
+                obj.bounding_box = bg::return_envelope<box>(obj.obb);
+                bg::centroid(obj.shape_union, obj.shape_union_cen);
+                bg::centroid(obj.obb, obj.oriented_box_cen);
+                obj.point_cloud = nullptr;
+            }
         }
         else if(isRectangular(initial_obj.obb))
-            obj=copySemanticObject(initial_obj);
+            obj = copySemanticObject(initial_obj);
         else if(isRectangular(received_obj.obb))
-            obj=copySemanticObject(received_obj);
+            obj = copySemanticObject(received_obj);
         else{
             obj.name = initial_obj.name;
             obj.rotation_angle = 0;
@@ -77,21 +198,22 @@ namespace semmapping
             bg::intersection(initial_obj.obb, received_obj.obb, sect);
             obj.exist_certainty = (initial_obj.exist_certainty + received_obj.exist_certainty)/2;
             obj.shape_union = sect[0];
-            obj.obb = sect[0];
+            //obj.obb = sect[0];
+            //Regenerate a new OBB representation for the resulting polygon
+            std::pair<polygon, double> selected_obb = map.create_object_box_using_prior_knowledge(obj.shape_union, obj.name, false); //use_first_plan_edges=false
+            obj.obb = selected_obb.first;
+            obj.obb_score = 1-selected_obb.second;
             obj.bounding_box = bg::return_envelope<box>(obj.obb);
             bg::centroid(obj.shape_union, obj.shape_union_cen);
             bg::centroid(obj.obb, obj.oriented_box_cen);
             obj.point_cloud = nullptr;
         }
-
         //Partial polygons of fused object are stored in obj.shapes
         point initial_obj_centroid, received_obj_centroid;
         bg::centroid(initial_obj.shape_union, initial_obj_centroid); bg::centroid(received_obj.shape_union, received_obj_centroid);
         obj.shapes.push_back({initial_obj.shape_union, initial_obj_centroid, initial_obj.exist_certainty});
         obj.shapes.push_back({received_obj.shape_union, received_obj_centroid, received_obj.exist_certainty});
-
         obj.isCombined = true;
-
         return obj;
     }
 
@@ -198,7 +320,7 @@ namespace semmapping
                         if((new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name)) && overlap > overlap_threshold){
                             new_obj.inFilteredMap = true;
                             new_obj.isOverlapping = true;
-                            SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj);
+                            SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj, filtered_map);
                             filtered_map.removeObject(val2.first);
                             filtered_map.addObject(fused_obj);
                         }   
@@ -265,7 +387,7 @@ namespace semmapping
                         if(overlap > overlap_threshold && (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name))){
                             new_obj.inGlobalMap = true; //parameter used to determine whether or not the object is already in the global map
                             new_obj.isOverlapping = true; //parameter indicating that the object's polygon overlaps another instance of the object or another object.
-                            SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj);
+                            SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj, global_map);
                             //SemanticObject fused_obj= nmsFusionOfSemanticObject(ref_obj, new_obj);
                             global_map.removeObject(val2.first);
                             global_map.addObject(fused_obj);
@@ -287,7 +409,7 @@ namespace semmapping
                             {
                                 //cout << new_obj.name << val.first << " represents object " << ref_obj.name << val2.first << " with IOU: " << overlap <<
                                 //" and CoM Offset: " << com_offset << endl;
-                                SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj); 
+                                SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj, global_map); 
                                 //SemanticObject fused_obj= nmsFusionOfSemanticObject(ref_obj, new_obj);
                                 new_obj.isOverlapping = true;
                                 global_map.addObject(fused_obj);

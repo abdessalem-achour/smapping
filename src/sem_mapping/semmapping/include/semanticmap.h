@@ -274,8 +274,9 @@ namespace semmapping
             std::pair<double, double> get_real_object_length_width(const std::string &name);
             polygon create_shifted_bounding_box_with_real_dimensions(int direction, point reference, double v_directeur[2], double shift_distance, double length, double width);
             void associate_real_box_to_partial_polygon(polygon poly, std::list<std::pair<point,point>> first_plan_edges, double length, double width, std::vector<std::pair<polygon, double>> &selected_obb_list);
-            std::pair<polygon, double> create_object_box_using_prior_knowledge(polygon poly, const std::string &name);
+            std::pair<polygon, double> create_object_box_using_prior_knowledge(polygon poly, const std::string &name, bool use_first_plan_edges=true);
             std::list<std::pair<point, point>> get_polygon_first_plan_edges(polygon poly, point reference);
+            std::list<std::pair<point, point>> get_association_valid_edges(polygon poly);
             double distanceFromLine(point p, point start, point end);
             polygon improve_polygon(polygon poly, double tolerance);
             double association_score(std::vector<double> &weights, double f1, double f2, double f3);

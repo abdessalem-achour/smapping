@@ -49,7 +49,7 @@ namespace semmapping
             void show_map_id();
             SemanticObject copySemanticObject(SemanticObject obj);
             SemanticObject nmsFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject recieved_obj);
-            SemanticObject GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj);
+            SemanticObject GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj, semmapping::SemanticMap global_map);
             bool similarClasses(std::string object1_name, std::string object_name2);
             bool checkTheAbilityOfObjectsToOverlap(std::string object1_name, std::string object_name2);
             bool inConsideredObjectList(std::string object_name);
@@ -61,6 +61,10 @@ namespace semmapping
             void updateClassStats(std::pair<std::string, double*> &class_data, double mapping_factor, double com_offset);
             void saveMapStats(std::vector<std::pair<std::string, double*>> all_classes_data, std::string filename);
             void evaluteFusedMap(std::map<size_t, SemanticObject> objectList, std::map<size_t, SemanticObject> groundTruthObjectList, std::string backup_file_name);
+            point obbLeftTop(polygon obb);
+            point obbRightTop(polygon obb);
+            point getNearestPoint(point p, polygon poly);
+            polygon fuse_similar_bounding_boxes(polygon obb1, polygon obb2);
     };
 }
 

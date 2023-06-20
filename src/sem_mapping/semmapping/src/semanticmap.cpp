@@ -163,6 +163,21 @@ namespace semmapping
         return first_plan_edges_list;
     }
 
+    std::list<std::pair<point, point>> SemanticMap::get_association_valid_edges(polygon poly){
+        std::list<std::pair<point, point>> association_edges_list;
+        for(int i=0; i< poly.outer().size()-1; i++){
+            double edge_distance = sqrt((poly.outer()[i+1].x() - poly.outer()[i].x())*(poly.outer()[i+1].x() - poly.outer()[i].x()) 
+                                + (poly.outer()[i+1].y() - poly.outer()[i].y())*(poly.outer()[i+1].y() - poly.outer()[i].y()));
+            if(edge_distance > 0.2){
+                std::pair<point, point> edge;
+                edge.first= poly.outer()[i];
+                edge.second= poly.outer()[i+1];
+                association_edges_list.push_back(edge);
+            }
+        }
+        return association_edges_list;
+    }
+
     void SemanticMap::associate_real_box_to_partial_polygon(polygon poly, std::list<std::pair<point,point>> first_plan_edges, double length, double width, std::vector<std::pair<polygon, double>> &selected_obb_list)
     {   
         // Repeat the process on all first plan edges of the polygon
@@ -272,7 +287,7 @@ namespace semmapping
         }
     }
 
-    std::pair<polygon, double> SemanticMap::create_object_box_using_prior_knowledge(polygon poly, const std::string &name)
+    std::pair<polygon, double> SemanticMap::create_object_box_using_prior_knowledge(polygon poly, const std::string &name, bool use_first_plan_edges)
     {
         // Getting real object dimensions from knowledge base, return <0,0> if object dont exist
         std::pair<double, double> dimensions= get_real_object_length_width(name);
@@ -293,17 +308,19 @@ namespace semmapping
                 number_of_edges_after_filtering+= poly.outer().size()-1;
 
                 /* Get the polygon first plan edges in reference to the robot */
-                point robot_position = getRobotPosition();
-                std::list<std::pair<point,point>> first_plan_edges_list= get_polygon_first_plan_edges(poly, robot_position);
-                number_of_processed_edges+= first_plan_edges_list.size();
-                
-                /* Vizualising the number of edges after polygon filtering and foregrounde edges selection*/
-                // cout<<"Initial edges number= "<< number_of_initial_edges << " Number of edges after filtering= "<< number_of_edges_after_filtering
-                // <<" Number of processed edges= "<< number_of_processed_edges << endl;
+                std::list<std::pair<point,point>> association_edges_list;
+                if(use_first_plan_edges){
+                    point robot_position = getRobotPosition();
+                    association_edges_list= get_polygon_first_plan_edges(poly, robot_position); 
+                }
+                else
+                    association_edges_list= get_association_valid_edges(poly);
 
+                number_of_processed_edges+= association_edges_list.size();
+                
                 /* Predefined bounding boxes association */
-                associate_real_box_to_partial_polygon(poly, first_plan_edges_list, dimensions.first, dimensions.second, selected_obb_list);
-                associate_real_box_to_partial_polygon(poly, first_plan_edges_list, dimensions.second, dimensions.first, selected_obb_list);
+                associate_real_box_to_partial_polygon(poly, association_edges_list, dimensions.first, dimensions.second, selected_obb_list);
+                associate_real_box_to_partial_polygon(poly, association_edges_list, dimensions.second, dimensions.first, selected_obb_list);
 
                 /* Selecting the best_obb using lamda and beta values */ 
                 if (selected_obb_list.size()){
@@ -313,7 +330,6 @@ namespace semmapping
                         if ((selected_obb_list[i].second < best_obb.second))
                             best_obb= selected_obb_list[i]; 
                     }
-                    // cout << "New association solution was used, best_factor= " << best_obb.second << endl;
 
                     /* Computing the association time */
                     // number_of_association++;
@@ -349,7 +365,6 @@ namespace semmapping
         std::pair<polygon, double> best_obb;
         best_obb.first= poly;
         best_obb.second= 1;
-
         return best_obb;
     }
 
