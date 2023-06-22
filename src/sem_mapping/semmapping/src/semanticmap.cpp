@@ -317,7 +317,7 @@ namespace semmapping
                     association_edges_list= get_association_valid_edges(poly);
 
                 number_of_processed_edges+= association_edges_list.size();
-                
+
                 /* Predefined bounding boxes association */
                 associate_real_box_to_partial_polygon(poly, association_edges_list, dimensions.first, dimensions.second, selected_obb_list);
                 associate_real_box_to_partial_polygon(poly, association_edges_list, dimensions.second, dimensions.first, selected_obb_list);
@@ -1368,7 +1368,7 @@ namespace semmapping
                 cout << std::left << setw(20)<< class_data.first << setw(20) << class_data.second[0] << setw(20)<< class_data.second[3] << setw(20)
                 << class_data.second[1] << setw(20) << class_data.second[4]<< setw(20) << class_data.second[2]<< setw(20) << class_data.second[5] << endl;
             }
-            //save_stats(all_classes_data, filename, false);
+            save_stats(all_classes_data, filename, false);
         }
         else
             ROS_INFO_STREAM("The Map is empty, so it can't be rated!");

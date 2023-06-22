@@ -11,13 +11,13 @@ ros::Publisher fusedSemanticMapPub;
 
 //Testing parameters
 std::string ground_truth_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/ground_truth_maps/truth_map_well_arranged_world.yaml";
-std::string reference_map_name="ref_map3"; //ref_map2 very bad_map & ref_map3 good map
+std::string reference_map_name="ref_map2"; //ref_map2 very bad_map & ref_map3 good map
 std::string reference_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/reference_maps/"+reference_map_name+".yaml";
 std::string single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/single_robot_maps";
 std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/"+reference_map_name; //+"_nms";
 std::string backup_file_name= "src/sem_mapping/col_semmapping/statistical_data/"+reference_map_name+".csv"; //"_nms"+".csv";
 //Parameters for manual testing
-std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/test2.yaml";
+std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/test5.yaml";
 std::string fused_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/fused_maps/test_fusion.yaml";
 
 int get_command_number(std::string command){

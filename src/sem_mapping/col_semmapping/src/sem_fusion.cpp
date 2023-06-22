@@ -65,75 +65,51 @@ namespace semmapping
     }
     
     polygon SemanticFusion::fuse_similar_bounding_boxes(polygon obb1, polygon obb2){
-        point obb1_cen, obb2_cen;
+        point obb1_cen, obb2_cen, fused_obb_cen;
         bg::centroid(obb1, obb1_cen);
         bg::centroid(obb2, obb2_cen);
-        double displacement = sqrt((obb1_cen.x() - obb2_cen.x())*(obb1_cen.x() - obb2_cen.x()) + (obb1_cen.y() - obb2_cen.y())*(obb1_cen.y() - obb2_cen.y()));
-
-        /*double angle1 = atan2(b.y()-a.y(), b.x() - a.x());
-        double angle2 = atan2(f.y()-e.y(), f.x() - e.x());
-        double rot_angle = (angle2-angle1)/2;
-        cout<< "angle1= "<<angle1<<" angle2= "<<angle2<<" rot_angle= "<<rot_angle<<endl;*/
-
-        point fused_obb_cen;
         fused_obb_cen.x((obb1_cen.x() + obb2_cen.x()) / 2);
         fused_obb_cen.y((obb1_cen.y() + obb2_cen.y()) / 2);
 
         point origin; origin.x(0); origin.y(0);
         polygon rot_obb1, trans_obb1, trans_obb2, fused_obb;
-        point obb1TranslationVector;
+        point obb1TranslationVector, obb2TranslationVector;
         obb1TranslationVector.x(origin.x() - obb1_cen.x());
         obb1TranslationVector.y(origin.y() - obb1_cen.y());
-        bg::strategy::transform::translate_transformer<double, 2, 2> translateObb1ToOrigin(obb1TranslationVector.x(), obb1TranslationVector.y());
-        bg::transform(obb1, trans_obb1, translateObb1ToOrigin);
-        
-        point obb2TranslationVector;
         obb2TranslationVector.x(origin.x() - obb2_cen.x());
         obb2TranslationVector.y(origin.y() - obb2_cen.y());
+        bg::strategy::transform::translate_transformer<double, 2, 2> translateObb1ToOrigin(obb1TranslationVector.x(), obb1TranslationVector.y());
         bg::strategy::transform::translate_transformer<double, 2, 2> translateObb2ToOrigin(obb2TranslationVector.x(), obb2TranslationVector.y());
+        bg::transform(obb1, trans_obb1, translateObb1ToOrigin);
         bg::transform(obb2, trans_obb2, translateObb2ToOrigin);
-
-
-        /*point a = obbLeftTop(trans_obb1); point b = obbRightTop(trans_obb1);
-        point e = obbLeftTop(trans_obb2); point f = obbRightTop(trans_obb2);*/
 
         point b = obbRightTop(trans_obb1);
         point f = getNearestPoint(b, trans_obb2);
-
-        /*double angle1 = atan2(b.y() - origin.y(), b.x() - origin.x());
-        double angle2 = atan2(f.y() - origin.y(), f.x() - origin.x());
-        double rot_angle = angle1 + (angle2 - angle1)/2;
-        cout<< "angle1= "<<angle1<<" angle2= "<<angle2<<" rot_angle= "<<rot_angle<<endl;*/
-
-        double dot_product= (b.x()-origin.x()) * (f.x()-origin.x()) + (b.y()-origin.y()) * (f.y()-origin.y());
-        double magn1=sqrt((b.y()-origin.y()) * (b.y()-origin.y()) + (b.x()-origin.x()) * (b.x()-origin.x()));
-        double magn2=sqrt((f.y()-origin.y()) * (f.y()-origin.y()) + (f.x()-origin.x()) * (f.x()-origin.x()));
-        double test= dot_product / (magn1 * magn2);
+        double dot_product= (b.x() - origin.x()) * (f.x() - origin.x()) + (b.y() - origin.y()) * (f.y() - origin.y());
+        double magn1=sqrt((b.y() - origin.y()) * (b.y() - origin.y()) + (b.x() - origin.x()) * (b.x() - origin.x()));
+        double magn2=sqrt((f.y() - origin.y()) * (f.y() - origin.y()) + (f.x() - origin.x()) * (f.x() - origin.x()));
+        double cos_angle= dot_product / (magn1 * magn2);
         
-        cout<<"test= "<< test <<endl;
-        double rot_angle;
-        if(test < 1.0 && test > -1.0){
-            if(b.x() < f.x())
-                rot_angle = std::acos(test)/2;
-            else
-                rot_angle = (-1) * std::acos(test)/2;
-            cout<< "dot= "<<dot_product<<" magn1= "<<magn1<<" magn2= "<<magn2<<" rot_angle_method2= "<<rot_angle<<endl;           
-        }
-        else{
-            cout << "out of range !!!" << endl;
-            rot_angle=0;
-        }
+        cout<<"cos_angle= "<< cos_angle <<endl;
 
-        /*bg::strategy::transform::rotate_transformer<boost::geometry::radian, double, 2, 2> rotate(rot_angle);
-        bg::transform(trans_obb1, fused_obb, rotate);*/
+        double rot_angle;
+        if( cos_angle>= -1 && cos_angle<=1){
+            if(b.x() < f.x())
+                rot_angle = std::acos(cos_angle)/2;
+            else
+                rot_angle = (-1) * std::acos(cos_angle)/2;
+        }
+        else
+            rot_angle = 0.0;
+        
+        cout<< "dot= "<<dot_product<<" magn1= "<<magn1<<" magn2= "<<magn2<<" rot_angle_method2= "<<rot_angle<<endl;           
 
         bg::strategy::transform::matrix_transformer<double, 2, 2> rot(
             cos(rot_angle), sin(rot_angle), 0,
            -sin(rot_angle), cos(rot_angle), 0,
             0,          0,          1);
-        bg::transform(trans_obb1, rot_obb1, rot);
-
         bg::strategy::transform::translate_transformer<double, 2, 2> final_translate(fused_obb_cen.x(), fused_obb_cen.y());
+        bg::transform(trans_obb1, rot_obb1, rot);
         bg::transform(rot_obb1, fused_obb, final_translate);
         return fused_obb;
     }
@@ -511,7 +487,7 @@ namespace semmapping
                 cout << std::left << setw(20)<< class_data.first << setw(20) << class_data.second[0] << setw(20)<< class_data.second[3]
                 << setw(20) << class_data.second[1] << setw(20) << class_data.second[2]<< endl;
             }
-            //saveMapStats(all_classes_stats, backup_file_name);
+            saveMapStats(all_classes_stats, backup_file_name);
         }
         else
             ROS_INFO_STREAM("The Fused Map is empty, so it can't be evaluated!");
