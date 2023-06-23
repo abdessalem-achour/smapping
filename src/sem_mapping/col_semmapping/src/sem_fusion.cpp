@@ -18,7 +18,7 @@ namespace semmapping
         SemanticObject c_obj;
         c_obj.name = obj.name;
         c_obj.rotation_angle = 0;
-        c_obj.isCombined = true;
+        c_obj.isCombined = false;
         c_obj.exist_certainty = obj.exist_certainty;
         c_obj.shape_union = obj.shape_union;
         c_obj.obb = obj.obb;
@@ -53,7 +53,7 @@ namespace semmapping
         double min_distance = sqrt((poly.outer()[0].x() - p.x()) * (poly.outer()[0].x() - p.x()) 
                                 + (poly.outer()[0].y() - p.y()) * (poly.outer()[0].y() - p.y()));
         n_point = poly.outer()[0];
-        for (int i=0; i < poly.outer().size()-1;i++){
+        for (int i=0; i < poly.outer().size()-1; i++){
             double distance = sqrt((poly.outer()[i].x() - p.x()) * (poly.outer()[i].x() - p.x()) 
                                 + (poly.outer()[i].y() - p.y()) * (poly.outer()[i].y() - p.y()));
             if (distance < min_distance) {
@@ -64,7 +64,7 @@ namespace semmapping
         return n_point;
     }
     
-    polygon SemanticFusion::fuse_similar_bounding_boxes(polygon obb1, polygon obb2){
+    polygon SemanticFusion::fuse_bounding_boxes(polygon obb1, polygon obb2){
         point obb1_cen, obb2_cen, fused_obb_cen;
         bg::centroid(obb1, obb1_cen);
         bg::centroid(obb2, obb2_cen);
@@ -89,9 +89,6 @@ namespace semmapping
         double magn1=sqrt((b.y() - origin.y()) * (b.y() - origin.y()) + (b.x() - origin.x()) * (b.x() - origin.x()));
         double magn2=sqrt((f.y() - origin.y()) * (f.y() - origin.y()) + (f.x() - origin.x()) * (f.x() - origin.x()));
         double cos_angle= dot_product / (magn1 * magn2);
-        
-        cout<<"cos_angle= "<< cos_angle <<endl;
-
         double rot_angle;
         if( cos_angle>= -1 && cos_angle<=1){
             if(b.x() < f.x())
@@ -100,9 +97,7 @@ namespace semmapping
                 rot_angle = (-1) * std::acos(cos_angle)/2;
         }
         else
-            rot_angle = 0.0;
-        
-        cout<< "dot= "<<dot_product<<" magn1= "<<magn1<<" magn2= "<<magn2<<" rot_angle_method2= "<<rot_angle<<endl;           
+            rot_angle = 0.0;          
 
         bg::strategy::transform::matrix_transformer<double, 2, 2> rot(
             cos(rot_angle), sin(rot_angle), 0,
@@ -119,18 +114,16 @@ namespace semmapping
     {
         SemanticObject obj;
         if (initial_obj.obb_score > received_obj.obb_score)
-            obj=copySemanticObject(initial_obj);
+            obj = copySemanticObject(initial_obj);
         else
-            obj=copySemanticObject(received_obj);
+            obj = copySemanticObject(received_obj);
 
         //Partial polygons of fused object are stored in obj.shapes
         point initial_obj_centroid, received_obj_centroid;
         bg::centroid(initial_obj.shape_union, initial_obj_centroid); bg::centroid(received_obj.shape_union, received_obj_centroid);
         obj.shapes.push_back({initial_obj.shape_union, initial_obj_centroid, initial_obj.exist_certainty});
         obj.shapes.push_back({received_obj.shape_union, received_obj_centroid, received_obj.exist_certainty});
-
         obj.isCombined = true;
-
         return obj;
     }
 
@@ -141,20 +134,17 @@ namespace semmapping
         double received_obb_score = (ref_fit(received_obj.obb, initial_obj.shape_union) + ref_fit(received_obj.obb, received_obj.shape_union))/2;
         if(isRectangular(initial_obj.obb) && isRectangular(received_obj.obb)){
             if(iou(initial_obj.obb, received_obj.obb) < 0.6){
-                //cout<<"initial_obb_mapping_score= "<<initial_obj.obb_score<<" - received_obb_mapping_score= "<<received_obj.obb_score<<endl;
-                //cout<<"initial_obb_fusion_score= "<<initial_obb_score<<" - received_obb_fusion_score= "<<received_obb_score<<endl;
                 if (initial_obb_score > received_obb_score)
                     obj = copySemanticObject(initial_obj);
                 else
                     obj = copySemanticObject(received_obj);
             }
             else{
-                cout<<"object name= "<< initial_obj.name <<"IOU= "<< iou(initial_obj.obb, received_obj.obb)<<endl;
                 obj.name = initial_obj.name;
                 obj.rotation_angle = 0;
                 obj.isCombined = true;
                 obj.exist_certainty = (initial_obj.exist_certainty + received_obj.exist_certainty)/2;
-                obj.obb = fuse_similar_bounding_boxes(initial_obj.obb, received_obj.obb);
+                obj.obb = fuse_bounding_boxes(initial_obj.obb, received_obj.obb);
                 obj.shape_union = obj.obb;
                 obj.obb_score = (initial_obj.obb_score + received_obj.obb_score)/2;
                 obj.bounding_box = bg::return_envelope<box>(obj.obb);
@@ -174,8 +164,7 @@ namespace semmapping
             bg::intersection(initial_obj.obb, received_obj.obb, sect);
             obj.exist_certainty = (initial_obj.exist_certainty + received_obj.exist_certainty)/2;
             obj.shape_union = sect[0];
-            //obj.obb = sect[0];
-            //Regenerate a new OBB representation for the resulting polygon
+            // Regenerate a new OBB representation for the resulting polygon
             std::pair<polygon, double> selected_obb = map.create_object_box_using_prior_knowledge(obj.shape_union, obj.name, false); //use_first_plan_edges=false
             obj.obb = selected_obb.first;
             obj.obb_score = 1-selected_obb.second;
@@ -184,7 +173,7 @@ namespace semmapping
             bg::centroid(obj.obb, obj.oriented_box_cen);
             obj.point_cloud = nullptr;
         }
-        //Partial polygons of fused object are stored in obj.shapes
+        // Partial polygons of fused object are stored in obj.shapes
         point initial_obj_centroid, received_obj_centroid;
         bg::centroid(initial_obj.shape_union, initial_obj_centroid); bg::centroid(received_obj.shape_union, received_obj_centroid);
         obj.shapes.push_back({initial_obj.shape_union, initial_obj_centroid, initial_obj.exist_certainty});
@@ -242,12 +231,9 @@ namespace semmapping
         double diag2_distance= sqrt((object_obb.outer()[3].x() - object_obb.outer()[1].x())*(object_obb.outer()[3].x() - object_obb.outer()[1].x()) 
                             + (object_obb.outer()[3].y() - object_obb.outer()[1].y())*(object_obb.outer()[3].y() - object_obb.outer()[1].y()));
         double error = 0.05;
-        //cout<<"diag1_distance= "<<diag1_distance<<" diag2_distance= "<< diag2_distance<<endl;
         bool condition1= std::abs(diag1_distance - diag2_distance) < error;
-        if(!condition1){
-            //cout<<"object is not rectangular"<<endl;
+        if(!condition1)
             return false;
-        }
         //Determine polygon diagonals intersection
         double a = object_obb.outer()[2].y() - object_obb.outer()[0].y();
         double b = object_obb.outer()[0].x() - object_obb.outer()[2].x();
@@ -258,25 +244,15 @@ namespace semmapping
         double det = a*b1 - a1*b;
         double x_intersection = (b1*c - b*c1)/det;
         double y_intersection = (a*c1 - a1*c)/det;
-
         //The polygon is rectongular if diagonals are equal length and bisect
-    
-        /*cout<<"x_intersection= "<<x_intersection<<" y_intersection= "<< y_intersection<<endl;
-        cout<<"(x_A+x_B / 2)= " << (object_obb.outer()[0].x()+object_obb.outer()[2].x())/2 << "(y_A+y_B / 2)= " << (object_obb.outer()[0].y()+object_obb.outer()[2].y())/2 <<endl;
-        cout<<"(x_D+x_C / 2)= " << (object_obb.outer()[1].x()+object_obb.outer()[3].x())/2 << "(y_D+y_C / 2)= " << (object_obb.outer()[1].y()+object_obb.outer()[3].y())/2 <<endl;*/
         bool condition2= std::abs(x_intersection - ((object_obb.outer()[0].x() + object_obb.outer()[2].x())/2)) < error
                         && std::abs(y_intersection - ((object_obb.outer()[0].y() + object_obb.outer()[2].y())/2)) < error;
         bool condition3= std::abs(x_intersection - ((object_obb.outer()[1].x() + object_obb.outer()[3].x())/2)) < error
                         && std::abs(y_intersection - ((object_obb.outer()[1].y() + object_obb.outer()[3].y())/2)) < error;
-
-        if(condition2 && condition3){
-            //cout<<"object is rectangular"<<endl;
+        if(condition2 && condition3)
             return true;
-        }
-        else{
-            //cout<<"object is not rectangular"<<endl;
+        else
             return false;
-        }
     }
     
     void SemanticFusion::removeMapInconsistencies(semmapping::SemanticMap map, semmapping::SemanticMap &filtered_map, double overlap_threshold)

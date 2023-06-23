@@ -17,7 +17,7 @@ std::string single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_map
 std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/"+reference_map_name; //+"_nms";
 std::string backup_file_name= "src/sem_mapping/col_semmapping/statistical_data/"+reference_map_name+".csv"; //"_nms"+".csv";
 //Parameters for manual testing
-std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/test5.yaml";
+std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/test9.yaml";
 std::string fused_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/fused_maps/test_fusion.yaml";
 
 int get_command_number(std::string command){
