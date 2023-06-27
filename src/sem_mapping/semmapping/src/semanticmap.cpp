@@ -1368,7 +1368,7 @@ namespace semmapping
                 cout << std::left << setw(20)<< class_data.first << setw(20) << class_data.second[0] << setw(20)<< class_data.second[3] << setw(20)
                 << class_data.second[1] << setw(20) << class_data.second[4]<< setw(20) << class_data.second[2]<< setw(20) << class_data.second[5] << endl;
             }
-            save_stats(all_classes_data, filename, false);
+            //save_stats(all_classes_data, filename, false);
         }
         else
             ROS_INFO_STREAM("The Map is empty, so it can't be rated!");

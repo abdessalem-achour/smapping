@@ -17,8 +17,22 @@ std::string single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_map
 std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/"+reference_map_name; //+"_nms";
 std::string backup_file_name= "src/sem_mapping/col_semmapping/statistical_data/"+reference_map_name+".csv"; //"_nms"+".csv";
 //Parameters for manual testing
-std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/test9.yaml";
+std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/test6.yaml";
 std::string fused_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/fused_maps/test_fusion.yaml";
+
+void printAvailableCommands(){
+  cout << "--------- Available commands -------------"<< endl;
+  cout << "1) fuse_maps" << endl;
+  cout << "2) fuse_all_maps_in_directory" << endl;
+  cout << "3) evaluate_reference_map" << endl;
+  cout << "4) evaluate_cleared_reference_map"<< endl;
+  cout << "5) evaluate_received_map" << endl;
+  cout << "6) evaluate_fused_map" << endl;
+  cout << "7) evaluate_all_maps_in_directory" << endl;
+  cout << "8) f1Score_all_maps_in_directory" << endl;
+  cout << "9) evaluate_map_filtering_algorithm" << endl;
+  cout << "10) evaluate_cleared_received_map" << endl;
+}
 
 int get_command_number(std::string command){
   if(command == "fuse_maps")
@@ -35,8 +49,14 @@ int get_command_number(std::string command){
     return 6;
   else if(command == "evaluate_cleared_reference_map")
     return 7;
-  else
+  else if(command == "f1Score_all_maps_in_directory")
+    return 8;
+  else if(command == "evaluate_map_filtering_algorithm")
+    return 9;
+  else if(command == "evaluate_cleared_received_map")
     return 10;
+  else
+    return 11;
 }
 
 std::string readNext(const std::string &str, std::string::const_iterator &begin){
@@ -114,6 +134,9 @@ int main(int argc, char **argv){
   // Read reference map and create cleared reference map
   ref_map.readMapData(ref_map_file); ref_map_file.close();
   fusion_node.removeMapInconsistencies(ref_map, cleared_ref_map);
+  std::ifstream file(ground_truth_map_file_name);
+  ref_map.loadGroundTruthMap(file);
+  std::map<size_t, semmapping::SemanticObject> groundTruthObjectList= ref_map.getGroundTruthObjectList();
 
   // Create and publish reference (original/cleared) maps messages
   semmapping::point robot;
@@ -134,9 +157,7 @@ int main(int argc, char **argv){
 
   while(1)
   {
-    cout << "Semantic Fusion Node" << endl;
-    cout << "Available commands: fuse_maps, evaluate_reference_map, evaluate_received_map,"<< endl;
-    cout << "evaluate_fused_map, fuse_all_maps_in_directory, evaluate_all_maps_in_directory" << endl;
+    printAvailableCommands();
     std::string in;
     std::getline(std::cin, in);
     std::string::const_iterator it = in.cbegin();
@@ -162,6 +183,16 @@ int main(int argc, char **argv){
         std::ifstream file(ground_truth_map_file_name);
         ref_map.loadGroundTruthMap(file);
         ref_map.evaluteMap(backup_file_name);
+        int false_negative= fusion_node.numberFalseNegativeInMap(ref_map.getObjectList(), ref_map.getGroundTruthObjectList());
+        std::pair<int,int> positive_detection= fusion_node.numberTrueFalseDetectionInMap(ref_map.getObjectList(), ref_map.getGroundTruthObjectList());
+        int true_positive= positive_detection.first;
+        int false_positive= positive_detection.second;
+        double precision, recall, f1Score;
+        std::array<double,3> indicators;
+        indicators = fusion_node.computeMapF1Score(true_positive, false_positive, false_negative);
+        precision= indicators[0]; recall= indicators[1]; f1Score= indicators[2];
+        cout<<"FN= "<< false_negative <<" TP= "<< true_positive <<" FP= "<< false_positive <<endl;
+        cout<<"precision= "<< precision <<" recall= "<< recall <<" f1Score= "<< f1Score <<endl;
         file.close();
         break;
         }
@@ -170,6 +201,16 @@ int main(int argc, char **argv){
         std::ifstream file2(ground_truth_map_file_name);
         received_map.loadGroundTruthMap(file2);
         received_map.evaluteMap(backup_file_name);
+        int false_negative= fusion_node.numberFalseNegativeInMap(received_map.getObjectList(), received_map.getGroundTruthObjectList());
+        std::pair<int,int> positive_detection= fusion_node.numberTrueFalseDetectionInMap(received_map.getObjectList(), received_map.getGroundTruthObjectList());
+        int true_positive= positive_detection.first;
+        int false_positive= positive_detection.second;
+        double precision, recall, f1Score;
+        std::array<double,3> indicators;
+        indicators = fusion_node.computeMapF1Score(true_positive, false_positive, false_negative);
+        precision= indicators[0]; recall= indicators[1]; f1Score= indicators[2];
+        cout<<"FN= "<< false_negative <<" TP= "<< true_positive <<" FP= "<< false_positive <<endl;
+        cout<<"precision= "<< precision <<" recall= "<< recall <<" f1Score= "<< f1Score <<endl;
         file2.close();
         break;
         }
@@ -219,6 +260,77 @@ int main(int argc, char **argv){
         std::ifstream file(ground_truth_map_file_name);
         cleared_ref_map.loadGroundTruthMap(file);
         cleared_ref_map.evaluteMap(backup_file_name);
+        file.close();
+        break;
+        }
+      case 8: //f1Score_all_maps_in_directory
+        {
+        std::ifstream ground_truth_map_file(ground_truth_map_file_name);
+        received_map.loadGroundTruthMap(ground_truth_map_file);
+        ground_truth_map_file.close();
+        int index=0; double meanF1Score=0;
+        for (const auto & dir_entry: boost::filesystem::directory_iterator(single_robot_maps_directory)){
+          std::ifstream map_file(dir_entry.path().string());
+          received_map.readMapData(map_file); map_file.close();
+          int false_negative= fusion_node.numberFalseNegativeInMap(received_map.getObjectList(), received_map.getGroundTruthObjectList());
+          std::pair<int,int> positive_detection= fusion_node.numberTrueFalseDetectionInMap(received_map.getObjectList(), received_map.getGroundTruthObjectList());
+          int true_positive= positive_detection.first;
+          int false_positive= positive_detection.second;
+          double precision, recall, f1Score;
+          std::array<double,3> indicators;
+          indicators = fusion_node.computeMapF1Score(true_positive, false_positive, false_negative);
+          precision= indicators[0]; recall= indicators[1]; f1Score= indicators[2];
+          index++;
+          meanF1Score+= f1Score;
+          cout<<"Map "<< index <<endl;
+          cout<<"FN= "<< false_negative <<" TP= "<< true_positive <<" FP= "<< false_positive <<endl;
+          cout<<"precision= "<< precision <<" recall= "<< recall <<" f1Score= "<< f1Score <<endl;
+          }
+        meanF1Score/=index;
+        cout<<"meanF1Score= "<< meanF1Score << endl;
+        break;
+        }
+      case 9: //evaluate_map_filtering_algorithm
+        {
+        int index=0; double meanF1Score=0;
+        for (const auto & dir_entry: boost::filesystem::directory_iterator(single_robot_maps_directory)){
+          std::ifstream map_file(dir_entry.path().string());
+          received_map.readMapData(map_file); map_file.close();
+          cleared_received_map.clearAll();
+          fusion_node.removeMapInconsistencies(received_map, cleared_received_map);
+          int fn= fusion_node.numberFalseNegativeInMap(cleared_received_map.getObjectList(), groundTruthObjectList);
+          std::pair<int,int> positive_detection2= fusion_node.numberTrueFalseDetectionInMap(cleared_received_map.getObjectList(), groundTruthObjectList);
+          int tp= positive_detection2.first;
+          int fp= positive_detection2.second;
+          double precision, recall, f1Score;
+          std::array<double,3> indicators2;
+          indicators2 = fusion_node.computeMapF1Score(tp, fp, fn);
+          precision= indicators2[0]; recall= indicators2[1]; f1Score= indicators2[2];
+          index++;
+          meanF1Score+= f1Score;
+          cout<<"Map "<< index <<endl;
+          cout<<"FN= "<< fn <<" TP= "<< tp <<" FP= "<< fp <<endl;
+          cout<<"precision= "<< precision <<" recall= "<< recall <<" f1Score= "<< f1Score <<endl;
+          }
+        meanF1Score/=index;
+        cout<<"meanF1Score= "<< meanF1Score << endl;
+        break;
+        }
+      case 10: //evaluate_cleared_received_map
+        {
+        std::ifstream file(ground_truth_map_file_name);
+        cleared_received_map.loadGroundTruthMap(file);
+        cleared_received_map.evaluteMap(backup_file_name);
+        int false_negative= fusion_node.numberFalseNegativeInMap(cleared_received_map.getObjectList(), cleared_received_map.getGroundTruthObjectList());
+        std::pair<int,int> positive_detection= fusion_node.numberTrueFalseDetectionInMap(cleared_received_map.getObjectList(), cleared_received_map.getGroundTruthObjectList());
+        int true_positive= positive_detection.first;
+        int false_positive= positive_detection.second;
+        double precision, recall, f1Score;
+        std::array<double,3> indicators;
+        indicators = fusion_node.computeMapF1Score(true_positive, false_positive, false_negative);
+        precision= indicators[0]; recall= indicators[1]; f1Score= indicators[2];
+        cout<<"false negative= "<< false_negative <<" true positive= "<< true_positive <<" false_positive= "<< false_positive <<endl;
+        cout<<"precision= "<< precision <<" recall= "<< recall <<" f1Score= "<< f1Score <<endl;
         file.close();
         break;
         }

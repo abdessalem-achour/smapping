@@ -59,8 +59,6 @@ namespace semmapping
     int pushed_to_queue = 0;
     bool isCombined = false;
     bool isOverlapping = false;
-    bool inFilteredMap = false;
-    bool inGlobalMap = false;
     double obb_score = 0;
     //std::vector<std::string> tags;
     //std::vector<double> confidence;
