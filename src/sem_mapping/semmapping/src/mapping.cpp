@@ -555,8 +555,8 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data)
                 ROS_WARN_STREAM("Polygon in map could not be reconstructed for obj: " << box.Class);
                 continue;
             }
-
-            if (semmapping::bg::area(res_pg) > 0.001) {             
+            cout<<"area= "<<semmapping::bg::area(res_pg)<<endl;
+            if (semmapping::bg::area(res_pg) > 0.03) {             
                 map.addEvidence(box.Class, res_pg, calculateMeanHight(res_cloud), res_cloud);
             } else
                 ROS_WARN_STREAM(

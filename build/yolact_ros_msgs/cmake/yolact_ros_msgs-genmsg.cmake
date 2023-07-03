@@ -29,12 +29,12 @@ add_custom_target(_yolact_ros_msgs_generate_messages_check_deps_${_filename}
 
 get_filename_component(_filename "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg" NAME_WE)
 add_custom_target(_yolact_ros_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "yolact_ros_msgs" "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg" "yolact_ros_msgs/Box:yolact_ros_msgs/Mask"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "yolact_ros_msgs" "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg" "yolact_ros_msgs/Mask:yolact_ros_msgs/Box"
 )
 
 get_filename_component(_filename "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detections.msg" NAME_WE)
 add_custom_target(_yolact_ros_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "yolact_ros_msgs" "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detections.msg" "yolact_ros_msgs/Box:yolact_ros_msgs/Mask:yolact_ros_msgs/Detection:std_msgs/Header"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "yolact_ros_msgs" "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detections.msg" "std_msgs/Header:yolact_ros_msgs/Detection:yolact_ros_msgs/Box:yolact_ros_msgs/Mask"
 )
 
 #
@@ -58,13 +58,13 @@ _generate_msg_cpp(yolact_ros_msgs
 _generate_msg_cpp(yolact_ros_msgs
   "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg"
   "${MSG_I_FLAGS}"
-  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg"
+  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/yolact_ros_msgs
 )
 _generate_msg_cpp(yolact_ros_msgs
   "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detections.msg"
   "${MSG_I_FLAGS}"
-  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/yolact_ros_msgs
 )
 
@@ -115,13 +115,13 @@ _generate_msg_eus(yolact_ros_msgs
 _generate_msg_eus(yolact_ros_msgs
   "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg"
   "${MSG_I_FLAGS}"
-  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg"
+  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/yolact_ros_msgs
 )
 _generate_msg_eus(yolact_ros_msgs
   "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detections.msg"
   "${MSG_I_FLAGS}"
-  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/yolact_ros_msgs
 )
 
@@ -172,13 +172,13 @@ _generate_msg_lisp(yolact_ros_msgs
 _generate_msg_lisp(yolact_ros_msgs
   "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg"
   "${MSG_I_FLAGS}"
-  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg"
+  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/yolact_ros_msgs
 )
 _generate_msg_lisp(yolact_ros_msgs
   "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detections.msg"
   "${MSG_I_FLAGS}"
-  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/yolact_ros_msgs
 )
 
@@ -229,13 +229,13 @@ _generate_msg_nodejs(yolact_ros_msgs
 _generate_msg_nodejs(yolact_ros_msgs
   "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg"
   "${MSG_I_FLAGS}"
-  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg"
+  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/yolact_ros_msgs
 )
 _generate_msg_nodejs(yolact_ros_msgs
   "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detections.msg"
   "${MSG_I_FLAGS}"
-  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/yolact_ros_msgs
 )
 
@@ -286,13 +286,13 @@ _generate_msg_py(yolact_ros_msgs
 _generate_msg_py(yolact_ros_msgs
   "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg"
   "${MSG_I_FLAGS}"
-  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg"
+  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/yolact_ros_msgs
 )
 _generate_msg_py(yolact_ros_msgs
   "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detections.msg"
   "${MSG_I_FLAGS}"
-  "/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Detection.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Box.msg;/home/abdessalem/smapping/src/yolact_ros_msgs/msg/Mask.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/yolact_ros_msgs
 )
 

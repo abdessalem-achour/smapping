@@ -42,13 +42,16 @@ namespace semmapping
             return dimensions;
         }
 
-        std::list<std::string> map_considered_objects{"Chair","Table","Sofa bed","Shelf"}; //"Couch"
+        std::list<std::string> map_considered_objects{"Chair","Table","Sofa bed","Shelf", "Couch"}; //"Couch"
 
         public:
             SemanticFusion();
             void show_map_id();
             SemanticObject copySemanticObject(SemanticObject obj);
             SemanticObject nmsFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject recieved_obj);
+            double calculateOBBscore(const SemanticObject& obj1, const SemanticObject& obj2);
+            SemanticObject geometricFusionRectangular(const SemanticObject& initial_obj, const SemanticObject& received_obj);
+            SemanticObject geometricFusionNonRectangular(const SemanticObject& initial_obj, const SemanticObject& received_obj, semmapping::SemanticMap map);
             SemanticObject GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj, semmapping::SemanticMap global_map);
             bool similarClasses(std::string object1_name, std::string object_name2);
             bool checkTheAbilityOfObjectsToOverlap(std::string object1_name, std::string object_name2);
@@ -61,6 +64,7 @@ namespace semmapping
             polygon fuse_bounding_boxes(polygon obb1, polygon obb2);
             void removeMapInconsistencies(semmapping::SemanticMap map, semmapping::SemanticMap &map_cleared, double overlap_threshold = 0.0);
             void semfusion(semmapping::SemanticMap previous_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.0);
+            void semfusion_updated(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.0);
             // Methods for evaluating merged maps
             void updateClassStats(std::pair<std::string, double*> &class_data, double mapping_factor, double com_offset);
             void saveMapStats(std::vector<std::pair<std::string, double*>> all_classes_data, std::string filename);

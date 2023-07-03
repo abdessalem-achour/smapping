@@ -127,7 +127,7 @@ namespace semmapping
         return obj;
     }
 
-    SemanticObject SemanticFusion::GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj, semmapping::SemanticMap map)
+    /*SemanticObject SemanticFusion::GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj, semmapping::SemanticMap map)
     {
         SemanticObject obj;
         double initial_obb_score = (ref_fit(initial_obj.obb, received_obj.shape_union) + ref_fit(initial_obj.obb, initial_obj.shape_union))/2;
@@ -180,8 +180,73 @@ namespace semmapping
         obj.shapes.push_back({received_obj.shape_union, received_obj_centroid, received_obj.exist_certainty});
         obj.isCombined = true;
         return obj;
+    }*/
+
+    // Calculate the oriented bounding box (OBB) score between two shapes.
+    double SemanticFusion::calculateOBBscore(const SemanticObject& obj1, const SemanticObject& obj2) {
+        return (ref_fit(obj1.obb, obj2.shape_union) + ref_fit(obj1.obb, obj1.shape_union)) / 2;
+    }
+    
+    // Perform geometric fusion for two rectangular objects.
+    SemanticObject SemanticFusion::geometricFusionRectangular(const SemanticObject& initial_obj, const SemanticObject& received_obj) {
+        double initial_obb_score = calculateOBBscore(initial_obj, received_obj);
+        double received_obb_score = calculateOBBscore(received_obj, initial_obj);    
+
+        SemanticObject obj;
+        if (iou(initial_obj.obb, received_obj.obb) < 0.6) {
+            if (initial_obb_score > received_obb_score)
+                obj = initial_obj;
+            else
+                obj = received_obj;
+        } else {
+            obj = initial_obj;
+            obj.isCombined = true;
+            obj.exist_certainty = (initial_obj.exist_certainty + received_obj.exist_certainty) / 2;
+            obj.obb = fuse_bounding_boxes(initial_obj.obb, received_obj.obb);
+            obj.shape_union = obj.obb;
+            obj.obb_score = (initial_obj.obb_score + received_obj.obb_score) / 2;
+            obj.bounding_box = bg::return_envelope<box>(obj.obb);
+            bg::centroid(obj.shape_union, obj.shape_union_cen);
+            bg::centroid(obj.obb, obj.oriented_box_cen);
+            obj.point_cloud = nullptr;
+        }
+        return obj;
     }
 
+    // Perform geometric fusion for two non-rectangular objects.
+    SemanticObject SemanticFusion::geometricFusionNonRectangular(const SemanticObject& initial_obj, const SemanticObject& received_obj, semmapping::SemanticMap map) {
+        SemanticObject obj;
+        obj.name = initial_obj.name;
+        obj.rotation_angle = 0;
+        multi_polygon sect;
+        bg::intersection(initial_obj.obb, received_obj.obb, sect);
+        obj.exist_certainty = (initial_obj.exist_certainty + received_obj.exist_certainty) / 2;
+        obj.shape_union = sect[0];
+
+        // Regenerate a new OBB representation for the resulting polygon
+        std::pair<polygon, double> selected_obb = map.create_object_box_using_prior_knowledge(obj.shape_union, obj.name, false); //use_first_plan_edges=false
+        obj.obb = selected_obb.first;
+        obj.obb_score = 1 - selected_obb.second;
+        obj.bounding_box = bg::return_envelope<box>(obj.obb);
+        bg::centroid(obj.shape_union, obj.shape_union_cen);
+        bg::centroid(obj.obb, obj.oriented_box_cen);
+        obj.point_cloud = nullptr;
+        return obj;
+    }
+
+    // Main function for geometric fusion of semantic objects
+    SemanticObject SemanticFusion::GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj, semmapping::SemanticMap map) {
+        if (isRectangular(initial_obj.obb) && isRectangular(received_obj.obb)) {
+            return geometricFusionRectangular(initial_obj, received_obj);
+        } else if (isRectangular(initial_obj.obb)) {
+            return initial_obj;
+        } else if (isRectangular(received_obj.obb)) {
+            return received_obj;
+        } else {
+            return geometricFusionNonRectangular(initial_obj, received_obj, map);
+        }
+    }
+    
     bool SemanticFusion::similarClasses(std::string object1_name, std::string object2_name)
     {
         if ((object1_name == "Sofa bed" && object2_name == "Couch") || (object1_name == "Couch" && object2_name == "Sofa bed"))
@@ -191,10 +256,10 @@ namespace semmapping
     }
 
     bool SemanticFusion::checkTheAbilityOfObjectsToOverlap(std::string object1_name, std::string object2_name){
-        if(object1_name == object2_name)
-            return true;
-        /*else if(similarClasses(object1_name, object2_name))
+        /*if(object1_name == object2_name)
             return true;*/
+        if(similarClasses(object1_name, object2_name))
+            return true;
         else if ((object1_name == "Chair" && object2_name == "Table") || (object1_name == "Table" && object2_name == "Chair"))
             return true;
         else
@@ -257,66 +322,73 @@ namespace semmapping
     
     void SemanticFusion::removeMapInconsistencies(semmapping::SemanticMap map, semmapping::SemanticMap &filtered_map, double overlap_threshold)
     {
-        if (!map.getObjectList().empty()){
-            //fill filtered_map while merging redundant objects with different labels
-            for (auto &val : map.getObjectList()){
-                bool addedToFilteredMap = false;
-                bool isOverlapping = false;
-                SemanticObject &new_obj = val.second;
-                if (new_obj.exist_certainty > 0.25 && inConsideredObjectList(new_obj.name)){
-                    for (auto &val2 : filtered_map.getObjectList()){
-                        SemanticObject &ref_obj = val2.second;
-                        double overlap = iou(ref_obj.obb, new_obj.obb);
-                        //if((new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name)) && overlap > overlap_threshold){
-                        if(new_obj.name == ref_obj.name && overlap > overlap_threshold){
-                            addedToFilteredMap = true;
-                            isOverlapping = true;
-                            SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj, filtered_map);
-                            filtered_map.removeObject(val2.first);
-                            filtered_map.addObject(fused_obj);
-                        }   
-                    }
-                    if(!addedToFilteredMap){
-                        for (auto &val2 : filtered_map.getObjectList()){
-                            SemanticObject &ref_obj = val2.second;
-                            double overlap = iou(ref_obj.obb, new_obj.obb);
-                            bool possible_overlap = checkTheAbilityOfObjectsToOverlap(new_obj.name, ref_obj.name);
-                            if(overlap > overlap_threshold && !addedToFilteredMap){
-                                isOverlapping = true;
-                                //Overlap between objects is possible
-                                if(possible_overlap){
-                                    //if (!(new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name))){
-                                    if (new_obj.name != ref_obj.name){
-                                        new_obj.point_cloud = nullptr;
-                                        filtered_map.addObject(new_obj);
-                                        addedToFilteredMap = true;
-                                    }
-                                }
-                                //Overlap between objects is not possible 
-                                else{
-                                    bool shape_obj1_is_valid = validObjectSurface(new_obj.name, new_obj.obb);
-                                    bool shape_obj2_is_valid = validObjectSurface(ref_obj.name, ref_obj.obb);
-                                    if(shape_obj1_is_valid && (!shape_obj2_is_valid || (bg::area(new_obj.obb) > bg::area(ref_obj.obb)))){
-                                        filtered_map.removeObject(val2.first);
-                                        new_obj.point_cloud = nullptr;
-                                        filtered_map.addObject(new_obj);
-                                        addedToFilteredMap = true;
-                                    }
-                                }
-                            }   
-                        }
-                    }
-                    
-                    //There is no overlap with other objects
-                    if(!isOverlapping){
-                        new_obj.point_cloud = nullptr;
-                        filtered_map.addObject(new_obj);
-                    }
-                }  
+        if (map.getObjectList().empty())
+            cout<< "Map is empty, no filtering needed." <<endl;
+
+        filtered_map.clearAll();
+
+        for (auto &val : map.getObjectList()){
+            SemanticObject &new_obj = val.second;
+
+            if (new_obj.exist_certainty <= 0.25 || !inConsideredObjectList(new_obj.name)){
+                continue; // Skip objects with low certainty or not in the considered list
             }
+            
+            bool addedToFilteredMap = false;
+            bool isOverlapping = false;
+
+            for (auto &val2 : filtered_map.getObjectList()){
+                SemanticObject &ref_obj = val2.second;
+                double overlap = iou(ref_obj.obb, new_obj.obb);
+                
+                if((new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name)) && overlap > overlap_threshold){
+                    addedToFilteredMap = true;
+                    isOverlapping = true;
+                    SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj, filtered_map);
+                    filtered_map.removeObject(val2.first);
+                    filtered_map.addObject(fused_obj);
+                    break; // Exit the loop as we have already added the fused object
+                }   
+            }
+
+            if(!addedToFilteredMap){
+                for (auto &val2 : filtered_map.getObjectList()){
+                    SemanticObject &ref_obj = val2.second;
+                    double overlap = iou(ref_obj.obb, new_obj.obb);
+                    bool possible_overlap = checkTheAbilityOfObjectsToOverlap(new_obj.name, ref_obj.name);
+
+                    if(overlap > overlap_threshold && !addedToFilteredMap){
+                        isOverlapping = true;
+
+                        if(possible_overlap){ //Overlap between objects is possible
+                            if (!(new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name))){
+                                new_obj.point_cloud = nullptr;
+                                filtered_map.addObject(new_obj);
+                                addedToFilteredMap = true;
+                                break; // Exit the loop as we have already added the fused object
+                            }
+                        }
+                        else //Overlap between objects is not possible 
+                        {
+                            bool shape_obj1_is_valid = validObjectSurface(new_obj.name, new_obj.obb);
+                            bool shape_obj2_is_valid = validObjectSurface(ref_obj.name, ref_obj.obb);
+                            if(shape_obj1_is_valid && (!shape_obj2_is_valid || (bg::area(new_obj.obb) > bg::area(ref_obj.obb)))){
+                                filtered_map.removeObject(val2.first);
+                                new_obj.point_cloud = nullptr;
+                                filtered_map.addObject(new_obj);
+                                addedToFilteredMap = true;
+                                break; // Exit the loop as we have already added the fused object
+                            }
+                        }
+                    }   
+                }
+            }
+            if(!isOverlapping && !addedToFilteredMap){ //Add objects that do not overlap with other objects to the map
+                new_obj.point_cloud = nullptr;
+                filtered_map.addObject(new_obj);
+            }
+            
         }
-        else
-            cout<< "Map is not filtered because it is empty !!!" <<endl;
     }
 
     void SemanticFusion::semfusion(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold){
@@ -361,6 +433,41 @@ namespace semmapping
                 }
                 // Add objects existing only in the received map with a certainty of existence > 0.5
                 if (!isOverlapping && new_obj.exist_certainty > 0.5){
+                    new_obj.point_cloud = nullptr;
+                    global_map.addObject(new_obj);
+                }
+            }
+        }
+    }
+
+    void SemanticFusion::semfusion_updated(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold){
+        global_map.clearAll();
+        for (auto &value : reference_map.getObjectList()){
+            SemanticObject &obj = value.second;
+            global_map.addObject(obj);
+        }
+
+        for (auto &val : received_map.getObjectList()){
+            SemanticObject &new_obj = val.second;
+            bool addedToGlobalMap = false;
+            bool isOverlapping = false;
+            if (new_obj.exist_certainty > 0.25){
+                // Object is already in global map: update object in global map
+                for (auto &val2 : global_map.getObjectList()){
+                    SemanticObject &ref_obj = val2.second;
+                    double overlap = iou(ref_obj.obb, new_obj.obb);
+                    if(overlap && (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name)))
+                        isOverlapping = true; //parameter indicating that the object's polygon overlaps another instance of the object or another object.
+                    if(overlap > overlap_threshold && (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name))){
+                        SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj, global_map);
+                        //SemanticObject fused_obj= nmsFusionOfSemanticObject(ref_obj, new_obj);
+                        global_map.removeObject(val2.first);
+                        global_map.addObject(fused_obj);
+                        addedToGlobalMap = true; //parameter used to determine whether or not the object is already in the global map
+                    }   
+                }
+                // Add objects existing only in the received map with a certainty of existence > 0.5
+                if (!isOverlapping && !addedToGlobalMap && new_obj.exist_certainty > 0.5 && new_obj.obb_score > 0){
                     new_obj.point_cloud = nullptr;
                     global_map.addObject(new_obj);
                 }
@@ -461,7 +568,7 @@ namespace semmapping
             for (auto &val2 : objectList){
                 SemanticObject &obj = val2.second;
                 double overlap= iou(obj.obb, gtObj.obb);
-                if(obj.exist_certainty > 0.25 && obj.name == gtObj.name && overlap)
+                if(obj.exist_certainty > 0.25 && obj.name == gtObj.name && overlap >= 0.5)
                     object_detected= true;
             }
             if(!object_detected)
@@ -481,13 +588,11 @@ namespace semmapping
                 for (auto &val2 : groundTruthObjectList){
                     SemanticObject &gtObj = val2.second;
                     double overlap= iou(obj.obb, gtObj.obb);
-                    if((obj.name == gtObj.name) && overlap){
+                    if((obj.name == gtObj.name) && overlap >= 0.5)
                         exist_in_ground_truth = true;
-                    }
                 }
-                if(!exist_in_ground_truth){
+                if(!exist_in_ground_truth)
                     n_false_positive++;
-                }
                 else
                     n_true_positive++;
             }

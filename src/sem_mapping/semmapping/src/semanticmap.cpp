@@ -1379,6 +1379,7 @@ namespace semmapping
     }
 
     void SemanticMap::setObjectList(std::map<size_t, SemanticObject> object_List){
+        clearAll();
         objectList= object_List;
     }
 
@@ -1395,6 +1396,7 @@ namespace semmapping
     }
 
     void SemanticMap::setGroundTruthObjectList(std::map<size_t, SemanticObject> object_List){
+        groundTruthObjectList.clear();
         groundTruthObjectList= object_List;
     }
 }
