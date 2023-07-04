@@ -518,8 +518,6 @@ namespace semmapping
                             + (obj.oriented_box_cen.y() - truth_centroid.y())*(obj.oriented_box_cen.y() - truth_centroid.y()));
                             double overlap= iou(obj.obb, gtObj.obb);
                             if(overlap){
-                                //cout<< obj.name << val.first <<" represents object " << gtObj.name << val2.first << " with IOU: " << overlap << " and CoM Offset: " 
-                                //<< com_offset << endl;
                                 object_not_in_ground_truth_map= false;
                                 std::vector<std::pair<std::string, double*>>::iterator it;
                                 for(it = all_classes_stats.begin(); it != all_classes_stats.end(); it++){
@@ -533,7 +531,6 @@ namespace semmapping
                     }
 
                     if(object_not_in_ground_truth_map){
-                        //cout << obj.name << val.first << " dont exist in the truth map!" << endl;
                         std::vector<std::pair<std::string, double*>>::iterator it;
                         for(it = all_classes_stats.begin(); it != all_classes_stats.end(); it++){
                             std::pair<std::string, double*> class_data = *it;
@@ -553,7 +550,7 @@ namespace semmapping
                 cout << std::left << setw(20)<< class_data.first << setw(20) << class_data.second[0] << setw(20)<< class_data.second[3]
                 << setw(20) << class_data.second[1] << setw(20) << class_data.second[2]<< endl;
             }
-            //saveMapStats(all_classes_stats, backup_file_name);
+            saveMapStats(all_classes_stats, backup_file_name);
         }
         else
             ROS_INFO_STREAM("The Fused Map is empty, so it can't be evaluated!");

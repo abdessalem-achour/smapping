@@ -10,14 +10,18 @@ ros::Publisher unfilteredReceivedSemanticMapPub;
 ros::Publisher fusedSemanticMapPub;
 
 //Testing parameters
-std::string ground_truth_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/ground_truth_maps/truth_map_well_arranged_world.yaml";
+std::string algorithm="our_solution"; //or nms
+double fusion_overlap_threshold=0.8; std::string buffer="0.8";
 std::string reference_map_name="ref_map2"; //ref_map2 very bad_map & ref_map3 good map
-std::string reference_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/reference_maps/"+reference_map_name+".yaml";
+
+std::string ground_truth_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/ground_truth_maps/truth_map_well_arranged_world.yaml";
+std::string reference_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/reference_maps/" + reference_map_name + ".yaml";
 std::string single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/single_robot_maps";
-std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/"+reference_map_name; //+"_nms";
-std::string backup_file_name= "src/sem_mapping/col_semmapping/statistical_data/"+reference_map_name+".csv"; //"_nms"+".csv";
+//std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/"+reference_map_name; //+"_nms";
+std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/threshold_" + buffer; //+"_nms";
+std::string backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/fusion evaluation/" + algorithm + "/threshold_" + buffer + ".csv"; //"_nms"+".csv";
 //Parameters for manual testing
-std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/test9.yaml";
+std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/test1.yaml";
 std::string fused_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/fused_maps/test_fusion.yaml";
 
 void printAvailableCommands(){
@@ -168,7 +172,7 @@ int main(int argc, char **argv){
         case 1: //fuse_maps
             {
             // Fuse and save the two maps
-            fusion_node.semfusion_updated(cleared_ref_map, cleared_received_map, global_map, 0.1); //fusion_node.semfusion(ref_map, received_map, global_map);
+            fusion_node.semfusion_updated(cleared_ref_map, cleared_received_map, global_map, fusion_overlap_threshold); //fusion_node.semfusion(ref_map, received_map, global_map);
             global_map.writeMapData(fusion_file); 
             fusion_file.close();
             // Create and publish fused map message
@@ -232,7 +236,7 @@ int main(int argc, char **argv){
               fusion_node.removeMapInconsistencies(received_map, cleared_received_map);
               // Fuse the two maps
               global_map.clearAll();
-              fusion_node.semfusion_updated(cleared_ref_map, cleared_received_map, global_map); //fusion_node.semfusion(ref_map, received_map, global_map);
+              fusion_node.semfusion_updated(cleared_ref_map, cleared_received_map, global_map, fusion_overlap_threshold); //fusion_node.semfusion(ref_map, received_map, global_map);
               // Save the fused map
               std::stringstream filename;
               filename << fused_maps_directory +"/map_" << std::setw(4) << std::setfill('0') << filecount << ".yaml";
@@ -290,28 +294,59 @@ int main(int argc, char **argv){
             }
         case 9: //f1Score_all_cleared_maps
             {
-            int index=0; double meanF1Score=0;
+            int index=0; double meanF1Score=0; double meanF1ScoreBefore=0;
+            std::ofstream myfile;
+            double overlap_threshold = 0.0;
+            std::ostringstream s; s << overlap_threshold;
+            std::string filteringStastsFilename= "src/sem_mapping/col_semmapping/statistical_data/filtering evaluation/filtering_threshold_"+ s.str() +".csv";
+            myfile.open(filteringStastsFilename, ios::out | ios::app);
             for (const auto & dir_entry: boost::filesystem::directory_iterator(single_robot_maps_directory)){
               std::ifstream map_file(dir_entry.path().string());
               received_map.readMapData(map_file); map_file.close();
               cleared_received_map.clearAll();
-              fusion_node.removeMapInconsistencies(received_map, cleared_received_map);
-              int fn= fusion_node.numberFalseNegativeInMap(cleared_received_map.getObjectList(), groundTruthObjectList);
-              std::pair<int,int> positive_detection2= fusion_node.numberTrueFalseDetectionInMap(cleared_received_map.getObjectList(), groundTruthObjectList);
-              int tp= positive_detection2.first;
-              int fp= positive_detection2.second;
+              int tp, fp, fn;
+              std::pair<int,int> positive_detection2;
               double precision, recall, f1Score;
               std::array<double,3> indicators2;
+
+              fn= fusion_node.numberFalseNegativeInMap(received_map.getObjectList(), groundTruthObjectList);
+              positive_detection2= fusion_node.numberTrueFalseDetectionInMap(received_map.getObjectList(), groundTruthObjectList);
+              tp= positive_detection2.first;
+              fp= positive_detection2.second;
               indicators2 = fusion_node.computeMapF1Score(tp, fp, fn);
               precision= indicators2[0]; recall= indicators2[1]; f1Score= indicators2[2];
+
+              meanF1ScoreBefore+= f1Score;
+
+              cout<<"Map "<< index <<endl;
+              cout<<"FN= "<< fn <<" TP= "<< tp <<" FP= "<< fp <<endl;
+              cout<<"precision= "<< precision <<" recall= "<< recall <<" f1Score= "<< f1Score <<endl;
+
+              myfile << "MAP "<< index << "\n";
+              myfile << tp << ","<< fp << ","<< fn << ","<< precision << ","<< recall << ","<< f1Score << "\n";
+
+              fusion_node.removeMapInconsistencies(received_map, cleared_received_map, overlap_threshold);
+
+              fn= fusion_node.numberFalseNegativeInMap(cleared_received_map.getObjectList(), groundTruthObjectList);
+              positive_detection2= fusion_node.numberTrueFalseDetectionInMap(cleared_received_map.getObjectList(), groundTruthObjectList);
+              tp= positive_detection2.first;
+              fp= positive_detection2.second;
+              indicators2 = fusion_node.computeMapF1Score(tp, fp, fn);
+              precision= indicators2[0]; recall= indicators2[1]; f1Score= indicators2[2];
+
               index++;
               meanF1Score+= f1Score;
               cout<<"Map "<< index <<endl;
               cout<<"FN= "<< fn <<" TP= "<< tp <<" FP= "<< fp <<endl;
               cout<<"precision= "<< precision <<" recall= "<< recall <<" f1Score= "<< f1Score <<endl;
+              
+              myfile << tp << ","<< fp << ","<< fn << ","<< precision << ","<< recall << ","<< f1Score << "\n";
               }
             meanF1Score/=index;
-            cout<<"meanF1Score= "<< meanF1Score << endl;
+            meanF1ScoreBefore/=index;
+            cout<<"meanF1ScoreBefore= "<< meanF1ScoreBefore << "meanF1ScoreAfter= "<< meanF1Score << endl;
+            myfile << meanF1ScoreBefore << "," <<meanF1Score << "\n";
+            myfile.close();
             break;
             }
         case 10: //evaluate_cleared_received_map
