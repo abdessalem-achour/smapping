@@ -116,7 +116,8 @@ ros::Publisher position_pub;
 //ros::Publisher ObbMapPub;
 
 //Testing files paths
-std::string ground_truth_map_file_name= "src/sem_mapping/semmapping/maps/truth_map_well_arranged_world.yaml";
+//std::string ground_truth_map_file_name= "src/sem_mapping/semmapping/maps/truth_map_well_arranged_world.yaml";
+std::string ground_truth_map_file_name= "src/sem_mapping/semmapping/maps/truth_map_cluttered_world_2.yaml";
 
 //pcl::visualization::CloudViewer *viewer;
 pcl::visualization::PCLVisualizer *viewer;
@@ -555,7 +556,7 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data)
                 ROS_WARN_STREAM("Polygon in map could not be reconstructed for obj: " << box.Class);
                 continue;
             }
-            cout<<"area= "<<semmapping::bg::area(res_pg)<<endl;
+
             if (semmapping::bg::area(res_pg) > 0.03) {             
                 map.addEvidence(box.Class, res_pg, calculateMeanHight(res_cloud), res_cloud);
             } else

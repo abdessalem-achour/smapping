@@ -11,18 +11,31 @@ ros::Publisher fusedSemanticMapPub;
 
 //Testing parameters
 std::string algorithm="our_solution"; //or nms
-double fusion_overlap_threshold=0.8; std::string buffer="0.8";
-std::string reference_map_name="ref_map2"; //ref_map2 very bad_map & ref_map3 good map
-
-std::string ground_truth_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/ground_truth_maps/truth_map_well_arranged_world.yaml";
+double fusion_overlap_threshold=0.1; std::string buffer="0.1";
+std::string reference_map_name="ref_cluttered"; //ref_map2 very bad_map & ref_map3 good map
 std::string reference_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/reference_maps/" + reference_map_name + ".yaml";
-std::string single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/single_robot_maps";
-//std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/"+reference_map_name; //+"_nms";
-std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/threshold_" + buffer; //+"_nms";
-std::string backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/fusion evaluation/" + algorithm + "/threshold_" + buffer + ".csv"; //"_nms"+".csv";
-//Parameters for manual testing
-std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/test1.yaml";
+
+/*std::string ground_truth_map_file_name;
+std::string single_robot_maps_directory;
+std::string fused_maps_directory;
+std::string backup_file_name;
+std::string received_map_file_name;*/
 std::string fused_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/fused_maps/test_fusion.yaml";
+
+//testing
+/*ground_truth_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/ground_truth_maps/truth_map_well_arranged_world.yaml"; //testing environment
+single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/testing_maps";
+fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/testing_maps/threshold_" + buffer; //+"_nms";
+backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/testing_data/fusion evaluation/" + algorithm + "/threshold_" + buffer + ".csv"; //"_nms"+".csv";
+received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/testing_maps/test1.yaml";*/
+
+//validation
+std::string ground_truth_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/ground_truth_maps/truth_map_cluttered_world_2.yaml"; //validation environment
+std::string single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/validation_maps";
+std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/validation_maps/threshold_" + buffer; //+"_nms";
+std::string backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/validation_data/fusion evaluation/" + algorithm + "/threshold_" + buffer + ".csv"; //"_nms"+".csv";
+std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/validation_maps/val1.yaml";
+
 
 void printAvailableCommands(){
   cout << "--------- Available commands -------------"<< endl;
