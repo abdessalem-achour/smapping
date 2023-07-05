@@ -34,7 +34,7 @@ std::string ground_truth_map_file_name= "src/sem_mapping/col_semmapping/fused_ma
 std::string single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/validation_maps";
 std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/validation_maps/threshold_" + buffer; //+"_nms";
 std::string backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/validation_data/fusion evaluation/" + algorithm + "/threshold_" + buffer + ".csv"; //"_nms"+".csv";
-std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/validation_maps/val1.yaml";
+std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/validation_maps/val2.yaml";
 
 
 void printAvailableCommands(){
