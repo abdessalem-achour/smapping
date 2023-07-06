@@ -63,8 +63,11 @@ namespace semmapping
             point getNearestPoint(point p, polygon poly);
             polygon fuse_bounding_boxes(polygon obb1, polygon obb2);
             void removeMapInconsistencies(semmapping::SemanticMap map, semmapping::SemanticMap &map_cleared, double overlap_threshold = 0.0);
-            void semfusion(semmapping::SemanticMap previous_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.0);
+            void semfusion(semmapping::SemanticMap previous_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map,
+                double overlap_threshold = 0.0, std::string algorithm="our_solution");
             void semfusion_updated(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.0);
+            void semfusion_nms(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.5);
+            void semfusion_modified_nms(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.5);
             // Methods for evaluating merged maps
             void updateClassStats(std::pair<std::string, double*> &class_data, double mapping_factor, double com_offset);
             void saveMapStats(std::vector<std::pair<std::string, double*>> all_classes_data, std::string filename);

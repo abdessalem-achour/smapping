@@ -10,16 +10,10 @@ ros::Publisher unfilteredReceivedSemanticMapPub;
 ros::Publisher fusedSemanticMapPub;
 
 //Testing parameters
-std::string algorithm="our_solution"; //or nms
+std::string algorithm="our_solution"; // our_solution or modified_nms
 double fusion_overlap_threshold=0.1; std::string buffer="0.1";
 std::string reference_map_name="ref_cluttered"; //ref_map2 very bad_map & ref_map3 good map
 std::string reference_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/reference_maps/" + reference_map_name + ".yaml";
-
-/*std::string ground_truth_map_file_name;
-std::string single_robot_maps_directory;
-std::string fused_maps_directory;
-std::string backup_file_name;
-std::string received_map_file_name;*/
 std::string fused_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/fused_maps/test_fusion.yaml";
 
 //testing
@@ -33,8 +27,10 @@ received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_
 std::string ground_truth_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/ground_truth_maps/truth_map_cluttered_world_2.yaml"; //validation environment
 std::string single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/validation_maps";
 std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/validation_maps/threshold_" + buffer; //+"_nms";
-std::string backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/validation_data/fusion evaluation/" + algorithm + "/threshold_" + buffer + ".csv"; //"_nms"+".csv";
-std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/validation_maps/val2.yaml";
+std::string nms_fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/nms_maps";
+std::string modified_nms_fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/modified_nms_maps";
+std::string backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/validation_data/fusion evaluation/" + algorithm + "/threshold_0.5.csv"; //"_nms"+".csv";
+std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/validation_maps/val8.yaml";
 
 
 void printAvailableCommands(){
@@ -49,6 +45,10 @@ void printAvailableCommands(){
   cout << "8) f1Score_all_maps_in_directory" << endl;
   cout << "9) f1Score_all_cleared_maps" << endl;
   cout << "10) evaluate_cleared_received_map" << endl;
+  cout << "11) nms_fuse_maps" << endl;
+  cout << "12) nms_fuse_all_maps_in_directory" << endl;
+  cout << "13) modified_nms_fuse_maps" << endl;
+  cout << "14) modified_nms_fuse_all_maps_in_directory" << endl;
 }
 
 int get_command_number(std::string command){
@@ -72,8 +72,16 @@ int get_command_number(std::string command){
     return 9;
   else if(command == "evaluate_cleared_received_map")
     return 10;
-  else
+  else if(command == "nms_fuse_maps")
     return 11;
+  else if(command == "nms_fuse_all_maps_in_directory")
+    return 12;
+  else if(command == "modified_nms_fuse_maps")
+    return 13;
+  else if(command == "modified_nms_fuse_all_maps_in_directory")
+    return 14;
+  else
+    return 20;
 }
 
 std::string readNext(const std::string &str, std::string::const_iterator &begin){
@@ -378,6 +386,71 @@ int main(int argc, char **argv){
             cout<<"FN= "<< false_negative <<" TP= "<< true_positive <<" FP= "<< false_positive <<endl;
             cout<<"precision= "<< precision <<" recall= "<< recall <<" f1Score= "<< f1Score <<endl;
             file.close();
+            break;
+            }
+        case 11: //nms_fuse_maps
+            {
+            // Fuse and save the two maps
+            fusion_node.semfusion_nms(cleared_ref_map, received_map, global_map, 0.5); //fusion_node.semfusion(ref_map, received_map, global_map);
+            global_map.writeMapData(fusion_file); 
+            fusion_file.close();
+            // Create and publish fused map message
+            mapping_msgs::SemanticMap::Ptr fused_map_msg= global_map.createMapMessage(robot, true);
+            fusedSemanticMapPub.publish(fused_map_msg);
+            cout << "-- NMS Fused map is published --" << endl;
+            break;
+            }
+        case 12: //nms_fuse_all_maps_in_directory
+            {
+            int filecount = 0;
+            for (const auto & dir_entry: boost::filesystem::directory_iterator(single_robot_maps_directory)){
+              filecount++;
+              std::ifstream received_map_file(dir_entry.path().string());
+              received_map.readMapData(received_map_file); received_map_file.close();
+              // Fuse the two maps
+              global_map.clearAll();
+              fusion_node.semfusion_nms(cleared_ref_map, received_map, global_map, 0.5);
+              // Save the fused map
+              std::stringstream filename;
+              filename << nms_fused_maps_directory +"/map_" << std::setw(4) << std::setfill('0') << filecount << ".yaml";
+              std::ofstream fusion_file(filename.str().c_str());
+              global_map.writeMapData(fusion_file); 
+              fusion_file.close();
+              }
+            break;
+            }
+        case 13: //modified_nms_fuse_maps
+            {
+            // Fuse and save the two maps
+            fusion_node.semfusion_modified_nms(cleared_ref_map, received_map, global_map, 0.5); //fusion_node.semfusion(ref_map, received_map, global_map);
+            global_map.writeMapData(fusion_file); 
+            fusion_file.close();
+            // Create and publish fused map message
+            mapping_msgs::SemanticMap::Ptr fused_map_msg= global_map.createMapMessage(robot, true);
+            fusedSemanticMapPub.publish(fused_map_msg);
+            cout << "-- Modified NMS Fused map is published --" << endl;
+            break;
+            }
+        case 14: //modified_nms_fuse_all_maps_in_directory
+            {
+            int filecount = 0;
+            for (const auto & dir_entry: boost::filesystem::directory_iterator(single_robot_maps_directory)){
+              filecount++;
+              std::ifstream received_map_file(dir_entry.path().string());
+              received_map.readMapData(received_map_file); received_map_file.close();
+              // Filter the map
+              cleared_received_map.clearAll();
+              fusion_node.removeMapInconsistencies(received_map, cleared_received_map);
+              // Fuse the two maps
+              global_map.clearAll();
+              fusion_node.semfusion_modified_nms(cleared_ref_map, cleared_received_map, global_map, 0.5);
+              // Save the fused map
+              std::stringstream filename;
+              filename << modified_nms_fused_maps_directory +"/map_" << std::setw(4) << std::setfill('0') << filecount << ".yaml";
+              std::ofstream fusion_file(filename.str().c_str());
+              global_map.writeMapData(fusion_file); 
+              fusion_file.close();
+              }
             break;
             }
         default:

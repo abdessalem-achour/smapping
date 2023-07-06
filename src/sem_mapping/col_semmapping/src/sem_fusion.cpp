@@ -391,7 +391,7 @@ namespace semmapping
         }
     }
 
-    void SemanticFusion::semfusion(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold){
+    void SemanticFusion::semfusion(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold, std::string algorithm){
         if (received_map.getObjectList().empty()){
             cout << "Received Map is empty!" << endl;
             global_map.setObjectList(reference_map.getObjectList());
@@ -411,8 +411,11 @@ namespace semmapping
                     double overlap = iou(ref_obj.obb, new_obj.obb);
                     if(overlap > overlap_threshold && (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name))){
                         isOverlapping = true; //parameter indicating that the object's polygon overlaps another instance of the object or another object.
-                        SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj, global_map);
-                        //SemanticObject fused_obj= nmsFusionOfSemanticObject(ref_obj, new_obj);
+                        SemanticObject fused_obj;
+                        if(algorithm == "our_solution")
+                            fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj, global_map);
+                        else
+                            fused_obj= nmsFusionOfSemanticObject(ref_obj, new_obj);
                         global_map.removeObject(val2.first);
                         global_map.addObject(fused_obj);
                         addedToGlobalMap = true; //parameter used to determine whether or not the object is already in the global map
@@ -425,8 +428,11 @@ namespace semmapping
                         double overlap = iou(new_obj.obb, ref_obj.obb);
                         if (overlap > overlap_threshold && (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name))){
                             isOverlapping = true;
-                            SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj, global_map); 
-                            //SemanticObject fused_obj= nmsFusionOfSemanticObject(ref_obj, new_obj);
+                            SemanticObject fused_obj;
+                            if(algorithm == "our_solution")
+                                fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj, global_map);
+                            else
+                                fused_obj= nmsFusionOfSemanticObject(ref_obj, new_obj);
                             global_map.addObject(fused_obj);
                         }
                     }
@@ -459,8 +465,8 @@ namespace semmapping
                     if(overlap && (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name)))
                         isOverlapping = true; //parameter indicating that the object's polygon overlaps another instance of the object or another object.
                     if(overlap > overlap_threshold && (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name))){
-                        SemanticObject fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj, global_map);
-                        //SemanticObject fused_obj= nmsFusionOfSemanticObject(ref_obj, new_obj);
+                        SemanticObject fused_obj;
+                        fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj, global_map);
                         global_map.removeObject(val2.first);
                         global_map.addObject(fused_obj);
                         addedToGlobalMap = true; //parameter used to determine whether or not the object is already in the global map
@@ -470,6 +476,68 @@ namespace semmapping
                 if (!isOverlapping && !addedToGlobalMap && new_obj.exist_certainty > 0.5 && new_obj.obb_score > 0){
                     new_obj.point_cloud = nullptr;
                     global_map.addObject(new_obj);
+                }
+            }
+        }
+    }
+
+    void SemanticFusion::semfusion_modified_nms(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold){
+        global_map.clearAll();
+        for (auto &value : reference_map.getObjectList()){
+            SemanticObject &obj = value.second;
+            global_map.addObject(obj);
+        }
+
+        for (auto &val : received_map.getObjectList()){
+            SemanticObject &new_obj = val.second;
+            bool addedToGlobalMap = false;
+            bool isOverlapping = false;
+            if (new_obj.exist_certainty > 0.25){
+                // Object is already in global map: update object in global map
+                for (auto &val2 : global_map.getObjectList()){
+                    SemanticObject &ref_obj = val2.second;
+                    double overlap = iou(ref_obj.obb, new_obj.obb);
+                    if(overlap && new_obj.name == ref_obj.name)
+                        isOverlapping = true; //parameter indicating that the object's polygon overlaps another instance of the object or another object.
+                    if(overlap > overlap_threshold && new_obj.name == ref_obj.name){
+                        SemanticObject fused_obj;
+                        fused_obj= nmsFusionOfSemanticObject(ref_obj, new_obj);
+                        global_map.removeObject(val2.first);
+                        global_map.addObject(fused_obj);
+                        addedToGlobalMap = true; //parameter used to determine whether or not the object is already in the global map
+                    }   
+                }
+                // Add objects existing only in the received map with a certainty of existence > 0.5
+                if (!isOverlapping && !addedToGlobalMap && new_obj.exist_certainty > 0.5 && new_obj.obb_score > 0){
+                    new_obj.point_cloud = nullptr;
+                    global_map.addObject(new_obj);
+                }
+            }
+        }
+    }
+
+    void SemanticFusion::semfusion_nms(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold){
+        global_map.clearAll();
+        for (auto &value : reference_map.getObjectList()){
+            SemanticObject &obj = value.second;
+            global_map.addObject(obj);
+        }
+
+        for (auto &val : received_map.getObjectList()){
+            SemanticObject &new_obj = val.second;
+            if (new_obj.exist_certainty > 0.25){
+                // Object is already in global map: update object in global map
+                for (auto &val2 : global_map.getObjectList()){
+                    SemanticObject &ref_obj = val2.second;
+                    double overlap = iou(ref_obj.obb, new_obj.obb);
+
+                    if(overlap > overlap_threshold && new_obj.name == ref_obj.name){
+                        SemanticObject fused_obj;
+                        fused_obj= nmsFusionOfSemanticObject(ref_obj, new_obj);
+                        global_map.removeObject(val2.first);
+                        global_map.addObject(fused_obj);
+                        break;
+                    }   
                 }
             }
         }
