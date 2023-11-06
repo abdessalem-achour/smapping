@@ -2,7 +2,9 @@
 #define SEM_FUSION_H
 
 #include <semanticmap.h>
+#include <Eigen/Dense>
 
+using namespace Eigen;
 
 namespace semmapping
 {
@@ -50,9 +52,11 @@ namespace semmapping
             SemanticObject copySemanticObject(SemanticObject obj);
             SemanticObject nmsFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject recieved_obj);
             double calculateOBBscore(const SemanticObject& obj1, const SemanticObject& obj2);
+            SemanticObject geometricFusionRectangular(const SemanticObject& initial_obj, const SemanticObject& received_obj, MatrixXd& P, MatrixXd& Q, MatrixXd& R);
             SemanticObject geometricFusionRectangular(const SemanticObject& initial_obj, const SemanticObject& received_obj);
             SemanticObject geometricFusionNonRectangular(const SemanticObject& initial_obj, const SemanticObject& received_obj, semmapping::SemanticMap map);
             SemanticObject GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj, semmapping::SemanticMap global_map);
+            SemanticObject GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj, semmapping::SemanticMap global_map, MatrixXd& P, MatrixXd& Q, MatrixXd& R);
             bool similarClasses(std::string object1_name, std::string object_name2);
             bool checkTheAbilityOfObjectsToOverlap(std::string object1_name, std::string object_name2);
             bool inConsideredObjectList(std::string object_name);
@@ -61,11 +65,15 @@ namespace semmapping
             point obbLeftTop(polygon obb);
             point obbRightTop(polygon obb);
             point getNearestPoint(point p, polygon poly);
+            int getNearestPointIndex(point p, polygon poly);
+            polygon reorderObbVertices(polygon to_reorder, polygon to_reorder_like);
             polygon fuse_bounding_boxes(polygon obb1, polygon obb2);
+            polygon ekfRectangularBoxesFusion(polygon initial_obb, polygon new_obb, MatrixXd& P, MatrixXd& Q, MatrixXd& R);
             void removeMapInconsistencies(semmapping::SemanticMap map, semmapping::SemanticMap &map_cleared, double overlap_threshold = 0.0);
             void semfusion(semmapping::SemanticMap previous_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map,
                 double overlap_threshold = 0.0, std::string algorithm="our_solution");
             void semfusion_updated(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.0);
+            void semfusion_updated(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, MatrixXd& P, MatrixXd& Q, MatrixXd& R, double overlap_threshold = 0.0);
             void semfusion_nms(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.5);
             void semfusion_modified_nms(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.5);
             // Methods for evaluating merged maps

@@ -558,7 +558,7 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data)
             }
 
             if (semmapping::bg::area(res_pg) > 0.03) {             
-                map.addEvidence(box.Class, res_pg, calculateMeanHight(res_cloud), res_cloud);
+                map.addEvidence(box.Class, box.probability, res_pg, calculateMeanHight(res_cloud), res_cloud);
             } else
                 ROS_WARN_STREAM(
                         "Area is to small for Object " << box.Class << " wit AREA: " << semmapping::bg::area(res_pg));

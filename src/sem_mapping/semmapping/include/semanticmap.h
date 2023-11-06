@@ -60,6 +60,7 @@ namespace semmapping
     bool isCombined = false;
     bool isOverlapping = false;
     double obb_score = 0;
+    float class_confidence = 0;
     //std::vector<std::string> tags;
     //std::vector<double> confidence;
     };
@@ -240,13 +241,13 @@ namespace semmapping
             void setGroundTruthObjectList(std::map<size_t, SemanticObject> object_List);
 
             //Semantic Mapping Methods
-            void addEvidence(const std::string &name, const polygon &pg, double mean_height,  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+            void addEvidence(const std::string &name, const float &confidence, const polygon &pg, double mean_height,  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
             void removeEvidence(const polygon &visibilityArea, const point &robot);
             void deleteLeastConsistentShape(size_t id);
             void updateUnion(size_t id);
             void filterIntersectionThresh(std::set<size_t> &object_list, const polygon &pg);
             int findFittingExistingShape(std::vector<UncertainShape> &shapes, const polygon &pg);
-            void addNewObject(const std::string &name, const polygon &initial_shape, double &mean_height, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+            void addNewObject(const std::string &name, const float &confidence, const polygon &initial_shape, double &mean_height, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
             void addObject(const SemanticObject &obj);
             void removeObject(size_t id);
             void clearAll();

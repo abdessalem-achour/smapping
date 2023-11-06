@@ -534,6 +534,7 @@ namespace semmapping
             SemanticObject &toMerge = objectList.at(*it);
             *combinedObj.point_cloud += *toMerge.point_cloud;
             combinedObj.mean_height = double(combinedObj.mean_height+toMerge.mean_height)/2.0;
+            combinedObj.class_confidence = double(combinedObj.class_confidence+toMerge.class_confidence)/2.0;
             if (toMerge.counting_queue.size() > combinedObj.counting_queue.size())
                 combinedObj.counting_queue = toMerge.counting_queue;
 
@@ -544,7 +545,7 @@ namespace semmapping
     }
 
     // V1 - add new object or update existing object
-    void SemanticMap::addEvidence(const std::string &name, const polygon &pg, double mean_height, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+    void SemanticMap::addEvidence(const std::string &name, const float &confidence, const polygon &pg, double mean_height, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
     {
         //check if polygon lies on table and filter table plan
         std::set<size_t> existingObjects = getObjectsByNameInRange(name, pg);
@@ -556,7 +557,7 @@ namespace semmapping
         {
             // no object evidence exists yet, create new
             ROS_INFO("No Neighbors fitting, Create new object");
-            addNewObject(name, pg, mean_height, cloud);
+            addNewObject(name,confidence, pg, mean_height, cloud);
         } 
         else 
         {
@@ -570,7 +571,7 @@ namespace semmapping
 
             // combine combinedShape with new one
             SemanticObject &obj = objectList.at(objectId);
-            point shape_centroid;
+            obj.class_confidence = (obj.class_confidence + confidence)/ 2;
             obj.mean_height = (obj.mean_height + mean_height) / 2;
             *obj.point_cloud += *cloud;
 
@@ -667,10 +668,11 @@ namespace semmapping
         }
     }
 
-    void SemanticMap::addNewObject(const std::string &name, const polygon &initial_shape, double &mean_height,  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+    void SemanticMap::addNewObject(const std::string &name, const float &confidence, const polygon &initial_shape, double &mean_height,  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
     {
         SemanticObject obj;
         obj.name = name;
+        obj.class_confidence = confidence;
         point shape_centroid;
         bg::centroid(initial_shape, shape_centroid);
         obj.shapes.push_back({initial_shape, shape_centroid, 1});
@@ -686,9 +688,10 @@ namespace semmapping
         obj.point_cloud = cloud;
         bg::centroid(obj.shape_union, obj.shape_union_cen);
 
-        //double angle;
-        //obj.oriented_box = create_oriented_box(obj.shape_union, angle);
-        //obj.rotation_angle = angle;
+        double angle;
+        obj.oriented_box = create_oriented_box(obj.shape_union, angle);
+        obj.rotation_angle = angle;
+        ROS_INFO_STREAM("Object rotation angle = " << obj.rotation_angle);
         //obj.obb = polygonFromBox(obj.oriented_box, obj.rotation_angle);
         //obj.obb = create_object_box_using_prior_knowledge(obj.shape_union, obj.name);
         std::pair<polygon, double> selected_obb;

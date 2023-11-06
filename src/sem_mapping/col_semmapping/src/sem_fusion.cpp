@@ -3,6 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <col_semmapping/sem_fusion.h>
+#include <Eigen/Dense>
+
+using namespace Eigen;
 
 namespace semmapping
 {
@@ -63,6 +66,21 @@ namespace semmapping
         }
         return n_point;
     }
+
+    int SemanticFusion::getNearestPointIndex(point p, polygon poly){
+        double min_distance = sqrt((poly.outer()[0].x() - p.x()) * (poly.outer()[0].x() - p.x()) 
+                                + (poly.outer()[0].y() - p.y()) * (poly.outer()[0].y() - p.y()));
+        int n_index = 0;
+        for (int i=0; i < poly.outer().size()-1; i++){
+            double distance = sqrt((poly.outer()[i].x() - p.x()) * (poly.outer()[i].x() - p.x()) 
+                                + (poly.outer()[i].y() - p.y()) * (poly.outer()[i].y() - p.y()));
+            if (distance < min_distance) {
+                min_distance = distance;
+                n_index = i;
+            }
+        }
+        return n_index;
+    }
     
     polygon SemanticFusion::fuse_bounding_boxes(polygon obb1, polygon obb2){
         point obb1_cen, obb2_cen, fused_obb_cen;
@@ -90,7 +108,7 @@ namespace semmapping
         double magn2=sqrt((f.y() - origin.y()) * (f.y() - origin.y()) + (f.x() - origin.x()) * (f.x() - origin.x()));
         double cos_angle= dot_product / (magn1 * magn2);
         double rot_angle;
-        if( cos_angle>= -1 && cos_angle<=1){
+        if(cos_angle>= -1 && cos_angle<=1){
             if(b.x() < f.x())
                 rot_angle = std::acos(cos_angle)/2;
             else
@@ -108,7 +126,72 @@ namespace semmapping
         bg::transform(rot_obb1, fused_obb, final_translate);
         return fused_obb;
     }
+
+    polygon SemanticFusion::reorderObbVertices(polygon to_reorder, polygon to_reorder_like){
+        // Find the vertice of the polygon to_reorder associated to the first point in the polygon to_reorder_like
+        int index = getNearestPointIndex(to_reorder_like.outer()[0], to_reorder);
+        polygon poly_reodered;
+        int j=0;
+        for (int i= index; i < 4; i++)
+            bg::append(poly_reodered.outer(), to_reorder.outer()[i]);
+        
+        for (int i= 0; i <= index; i++)
+            bg::append(poly_reodered.outer(), to_reorder.outer()[i]);
+           
+        return poly_reodered;
+    }
     
+    polygon SemanticFusion::ekfRectangularBoxesFusion(polygon initial_obb, polygon new_obb, MatrixXd& P, MatrixXd& Q, MatrixXd& R){
+        VectorXd x(8);
+        // Initialize the state vector
+        x << initial_obb.outer()[0].x(), initial_obb.outer()[0].y(),
+            initial_obb.outer()[1].x(), initial_obb.outer()[1].y(),
+            initial_obb.outer()[2].x(), initial_obb.outer()[2].y(),
+            initial_obb.outer()[3].x(), initial_obb.outer()[3].y();
+
+        new_obb = reorderObbVertices(new_obb, initial_obb);
+        VectorXd z(8);
+        // Initialize the state vector and covariance matrix
+        z << new_obb.outer()[0].x(), new_obb.outer()[0].y(),
+            new_obb.outer()[1].x(), new_obb.outer()[1].y(),
+            new_obb.outer()[2].x(), new_obb.outer()[2].y(),
+            new_obb.outer()[3].x(), new_obb.outer()[3].y();
+
+        // Theorotical and meserment models
+        MatrixXd A = MatrixXd::Identity(8, 8);  
+        MatrixXd H = MatrixXd::Identity(8, 8);
+
+        // Prediction step
+        x = A * x;
+        P = A * P * A.transpose() + Q;
+
+        // Update step
+        VectorXd y = z - H * x;
+        MatrixXd S = H * P * H.transpose() + R;
+        MatrixXd K = P * H.transpose() * S.inverse();
+        x = x + K * y;
+        P = (MatrixXd::Identity(8, 8) - K * H) * P;
+
+        polygon fused_obb;
+        point p1, p2, p3, p4;
+        p1.x(x(0)); p1.y(x(1));
+        p2.x(x(2)); p2.y(x(3));
+        p3.x(x(4)); p3.y(x(5));
+        p4.x(x(6)); p4.y(x(7));
+
+        bg::append(fused_obb.outer(), p1);
+        bg::append(fused_obb.outer(), p2);
+        bg::append(fused_obb.outer(), p3);
+        bg::append(fused_obb.outer(), p4);
+        bg::append(fused_obb.outer(), p1);
+
+        cout<<"P= "<<P(0,0)<<", "<<P(1,1)<<", "<<P(2,2)<<", "<<P(3,3)<<", ... , "<<P(7,7)<<endl;
+
+        ROS_INFO_STREAM("FINISHED EKF PROCESS");
+        
+        return fused_obb;
+    }
+
     // Semantic Object fusion function: returns object OBB with the best score
     SemanticObject SemanticFusion::nmsFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj)
     {
@@ -213,6 +296,33 @@ namespace semmapping
         return obj;
     }
 
+    // Perform geometric fusion for two rectangular objects.
+    SemanticObject SemanticFusion::geometricFusionRectangular(const SemanticObject& initial_obj, const SemanticObject& received_obj, MatrixXd& P, MatrixXd& Q, MatrixXd& R) {
+        double initial_obb_score = calculateOBBscore(initial_obj, received_obj);
+        double received_obb_score = calculateOBBscore(received_obj, initial_obj);    
+
+        SemanticObject obj;
+        if (iou(initial_obj.obb, received_obj.obb) < 0.7) {
+            if (initial_obb_score > received_obb_score)
+                obj = initial_obj;
+            else
+                obj = received_obj;
+        } else {
+            obj = initial_obj;
+            obj.isCombined = true;
+            obj.exist_certainty = (initial_obj.exist_certainty + received_obj.exist_certainty) / 2;
+            //obj.obb = fuse_bounding_boxes(initial_obj.obb, received_obj.obb);
+            obj.obb = ekfRectangularBoxesFusion(initial_obj.obb, received_obj.obb, P, Q, R);
+            obj.shape_union = obj.obb;
+            obj.obb_score = (initial_obj.obb_score + received_obj.obb_score) / 2;
+            obj.bounding_box = bg::return_envelope<box>(obj.obb);
+            bg::centroid(obj.shape_union, obj.shape_union_cen);
+            bg::centroid(obj.obb, obj.oriented_box_cen);
+            obj.point_cloud = nullptr;
+        }
+        return obj;
+    }
+
     // Perform geometric fusion for two non-rectangular objects.
     SemanticObject SemanticFusion::geometricFusionNonRectangular(const SemanticObject& initial_obj, const SemanticObject& received_obj, semmapping::SemanticMap map) {
         SemanticObject obj;
@@ -238,6 +348,19 @@ namespace semmapping
     SemanticObject SemanticFusion::GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj, semmapping::SemanticMap map) {
         if (isRectangular(initial_obj.obb) && isRectangular(received_obj.obb)) {
             return geometricFusionRectangular(initial_obj, received_obj);
+        } else if (isRectangular(initial_obj.obb)) {
+            return initial_obj;
+        } else if (isRectangular(received_obj.obb)) {
+            return received_obj;
+        } else {
+            return geometricFusionNonRectangular(initial_obj, received_obj, map);
+        }
+    }
+
+    SemanticObject SemanticFusion::GeometricFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject received_obj, semmapping::SemanticMap map, 
+        MatrixXd& P, MatrixXd& Q, MatrixXd& R) {
+        if (isRectangular(initial_obj.obb) && isRectangular(received_obj.obb)) {
+            return geometricFusionRectangular(initial_obj, received_obj, P, Q, R);
         } else if (isRectangular(initial_obj.obb)) {
             return initial_obj;
         } else if (isRectangular(received_obj.obb)) {
@@ -467,6 +590,42 @@ namespace semmapping
                     if(overlap > overlap_threshold && (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name))){
                         SemanticObject fused_obj;
                         fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj, global_map);
+                        global_map.removeObject(val2.first);
+                        global_map.addObject(fused_obj);
+                        addedToGlobalMap = true; //parameter used to determine whether or not the object is already in the global map
+                    }   
+                }
+                // Add objects existing only in the received map with a certainty of existence > 0.5
+                if (!isOverlapping && !addedToGlobalMap && new_obj.exist_certainty > 0.5 && new_obj.obb_score > 0){
+                    new_obj.point_cloud = nullptr;
+                    global_map.addObject(new_obj);
+                }
+            }
+        }
+    }
+    
+    void SemanticFusion::semfusion_updated(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, MatrixXd& P, MatrixXd& Q, 
+    MatrixXd& R, double overlap_threshold){
+        global_map.clearAll();
+        for (auto &value : reference_map.getObjectList()){
+            SemanticObject &obj = value.second;
+            global_map.addObject(obj);
+        }
+
+        for (auto &val : received_map.getObjectList()){
+            SemanticObject &new_obj = val.second;
+            bool addedToGlobalMap = false;
+            bool isOverlapping = false;
+            if (new_obj.exist_certainty > 0.25){
+                // Object is already in global map: update object in global map
+                for (auto &val2 : global_map.getObjectList()){
+                    SemanticObject &ref_obj = val2.second;
+                    double overlap = iou(ref_obj.obb, new_obj.obb);
+                    if(overlap && (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name)))
+                        isOverlapping = true; //parameter indicating that the object's polygon overlaps another instance of the object or another object.
+                    if(overlap > overlap_threshold && (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name))){
+                        SemanticObject fused_obj;
+                        fused_obj = GeometricFusionOfSemanticObject(ref_obj, new_obj, global_map, P, Q, R);
                         global_map.removeObject(val2.first);
                         global_map.addObject(fused_obj);
                         addedToGlobalMap = true; //parameter used to determine whether or not the object is already in the global map
