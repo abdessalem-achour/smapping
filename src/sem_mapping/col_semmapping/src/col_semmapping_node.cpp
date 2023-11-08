@@ -465,7 +465,7 @@ int main(int argc, char **argv){
             }
         case 15: //progressive_fusion
             {
-            MatrixXd P = 0.1*MatrixXd::Identity(8, 8);  // Adjust the initial uncertainty as needed  
+            MatrixXd P = MatrixXd::Identity(8, 8);  // Adjust the initial uncertainty as needed  
             std::cout<<"P= "<<P(0,0)<<", "<<P(1,1)<<", "<<P(2,2)<<", "<<P(3,3)<<", ... , "<<P(7,7)<<endl;
 
             // Define process noise covariance matrix
@@ -519,7 +519,7 @@ int main(int argc, char **argv){
 
               // Fuse the two maps
               global_map.clearAll();
-              fusion_node.semfusion_updated(filtered_ref_map, filtered_received_map, global_map, P, Q, R, fusion_overlap_threshold); //fusion_node.semfusion(ref_map, received_map, global_map);
+              fusion_node.globalMapUpdate(filtered_ref_map, filtered_received_map, global_map, P, Q, R, fusion_overlap_threshold);
 
               // Update the fused map
               mapping_msgs::SemanticMap::Ptr fused_map_msg= global_map.createMapMessage(robot, true);
