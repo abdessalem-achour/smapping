@@ -132,6 +132,7 @@ semmapping::ParamsConfig param_config;
 semmapping::SemanticMap map(tfBuffer, viewer, viewer_mtx, semmap_vport0, semmap_vport1, param_config);
 int viewer_index = 0;
 bool static_map;
+std::list<std::string> consideredCategories{"Chair","Table","Couch","Shelf"};
 
 inline bool operator==(const geometry_msgs::Vector3 &lhs, const geometry_msgs::Vector3 &rhs) {
     return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z;
@@ -143,6 +144,11 @@ inline bool operator==(const geometry_msgs::Quaternion &lhs, const geometry_msgs
 
 inline bool operator==(const geometry_msgs::Transform &lhs, const geometry_msgs::Transform &rhs) {
     return lhs.translation == rhs.translation && lhs.rotation == rhs.rotation;
+}
+
+bool inConsideredObjectList(std::string object_name){
+    bool found = (std::find(consideredCategories.begin(), consideredCategories.end(), object_name) != consideredCategories.end());
+    return found;
 }
 
 void visualizeCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, double vport) {
@@ -413,8 +419,7 @@ void mapUpdateAndPublish(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclCloud, semm
     return;
 }
 
-void processBoxes(const mapping_msgs::BoxesAndClouds &data)
-{
+void processBoxes(const mapping_msgs::BoxesAndClouds &data){   
     if (static_map == false) {
         const sensor_msgs::PointCloud2::Ptr cloud(new sensor_msgs::PointCloud2(data.point_cloud));
         const mapping_msgs::BoundingBoxes::ConstPtr boxes(new mapping_msgs::BoundingBoxes(data.bounding_boxes));
@@ -525,6 +530,11 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data)
             box_inds = dsBoxPoints(box.ymin, box.xmin, box.ymax - box.ymin, box.xmax - box.xmin, orig_cloud, sor);
             std::string Class = box.Class;
 
+            if(!inConsideredObjectList(Class)){
+                ROS_WARN_STREAM("Object "<< box.Class<<" is not in considered object list.");
+                continue;
+            }
+
             /*Associate clusters to detection boxes*/
             if (box.Class == "Table") {
                 if (table_clusters.size() > 0)
@@ -554,6 +564,17 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data)
 
             if (res_pg.outer().empty()) {
                 ROS_WARN_STREAM("Polygon in map could not be reconstructed for obj: " << box.Class);
+                continue;
+            }
+
+            semmapping::point res_pg_cen;
+            semmapping::bg::centroid(res_pg, res_pg_cen);
+            double distance_from_robot = sqrt((res_pg_cen.x() - robot_position.x())*(res_pg_cen.x() - robot_position.x()) 
+                                + (res_pg_cen.y() - robot_position.y())*(res_pg_cen.y() - robot_position.y()));
+            std::cout<<"distance_from_robot= "<< distance_from_robot<<std::endl;
+
+            if(distance_from_robot < 1.7 || distance_from_robot > 3.0){ //distance_from_robot < 2.2
+                ROS_WARN_STREAM("Polygon in not in good perception zone: " << box.Class);
                 continue;
             }
 
@@ -647,7 +668,7 @@ int main(int argc, char **argv) {
     
     //ObbMapPub = nh.advertise<mapping_msgs::ObbMap>("/obb_map", 1, true);
 
-    ros::AsyncSpinner spinner(16);
+    ros::AsyncSpinner spinner(16); //16
     spinner.start();
 
     /*Load saved Map*/

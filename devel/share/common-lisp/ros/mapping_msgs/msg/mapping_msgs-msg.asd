@@ -16,8 +16,6 @@
     (:file "_package_BoxesAndClouds" :depends-on ("_package"))
     (:file "FindObjects" :depends-on ("_package_FindObjects"))
     (:file "_package_FindObjects" :depends-on ("_package"))
-    (:file "ObbMap" :depends-on ("_package_ObbMap"))
-    (:file "_package_ObbMap" :depends-on ("_package"))
     (:file "ObjectCount" :depends-on ("_package_ObjectCount"))
     (:file "_package_ObjectCount" :depends-on ("_package"))
     (:file "ObjectPositions" :depends-on ("_package_ObjectPositions"))

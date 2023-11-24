@@ -3,11 +3,21 @@
 
 #include <semanticmap.h>
 #include <Eigen/Dense>
+#include <yaml-cpp/yaml.h>
+
 
 using namespace Eigen;
 
 namespace semmapping
 {
+    struct CategoryPriorKnowledge
+    {
+    std::string name;
+    double length;
+    double width;
+    int objectNumber;
+    };
+
     class SemanticFusion
     {
         inline static double ref_fit(const polygon &newpg, const polygon &refpg)
@@ -30,25 +40,36 @@ namespace semmapping
             else
                 return 0;
         }
+        
+        std::list<CategoryPriorKnowledge> CategoriesPriorKnowledge={};
+
+        std::list<std::string> consideredCategories{"Chair","Table","Sofa bed","Shelf", "Couch"};
+
+        std::list<std::pair<std::string, int>> ObjectNumberInCategory{};
 
         std::pair<double, double> get_real_object_length_width(const std::string &name)
         {
             std::pair<double, double> dimensions;
-            if(name=="Chair") {dimensions.first= 0.6; dimensions.second= 0.57;} // Chair model in world well arranged
-            //if(name=="Chair") {dimensions.first= 0.57; dimensions.second= 0.57;}  // Chair model in world cluttered
-            else if (name== "Table") {dimensions.first= 1.782; dimensions.second= 0.8;}
-            else if (name=="Shelf") {dimensions.first= 0.9; dimensions.second= 0.4;}
-            else if (name=="Sofa bed" || name=="Couch"){dimensions.first= 0.97; dimensions.second= 2.009;}
-            else if (name=="Ball"){dimensions.first= 0.2; dimensions.second= 0.2;}
-            else {dimensions.first= 0.0; dimensions.second= 0.0;}
+            for (auto &val : CategoriesPriorKnowledge){
+                if(val.name == name){
+                    dimensions.first= val.length; 
+                    dimensions.second= val.width;
+                }
+            }
             return dimensions;
-        }
-
-        std::list<std::string> map_considered_objects{"Chair","Table","Sofa bed","Shelf", "Couch"}; //"Couch"
+        } 
 
         public:
             SemanticFusion();
             void show_map_id();
+            bool setPriorKnowledge(std::istream &input);
+            bool updatePriorKnowledge(std::istream &input);
+            std::list<CategoryPriorKnowledge> getPriorKnowledge();
+            CategoryPriorKnowledge getCategoryPriorKnowledge(std::string category);
+            bool initializeCategoryObjectNumber();
+            int getCategoryObjectNumber(std::string category);
+            bool updateCategoryObjectNumber(std::string category, std::string incrementDecrement);
+            void countObjectNumberPerCategoryInMap(semmapping::SemanticMap map);
             SemanticObject copySemanticObject(SemanticObject obj);
             SemanticObject nmsFusionOfSemanticObject(SemanticObject initial_obj, SemanticObject recieved_obj);
             double calculateOBBscore(const SemanticObject& obj1, const SemanticObject& obj2);
@@ -73,7 +94,7 @@ namespace semmapping
             void semfusion(semmapping::SemanticMap previous_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map,
                 double overlap_threshold = 0.0, std::string algorithm="our_solution");
             void semfusion_updated(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.0);
-            void globalMapUpdate(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, MatrixXd& P, MatrixXd& Q, MatrixXd& R, double overlap_threshold = 0.0);
+            void globalMapUpdate(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, semmapping::SemanticMap &waiting_objects, MatrixXd& P, MatrixXd& Q, MatrixXd& R, double overlap_threshold = 0.0);
             void semfusion_nms(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.5);
             void semfusion_modified_nms(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.5);
             // Methods for evaluating merged maps

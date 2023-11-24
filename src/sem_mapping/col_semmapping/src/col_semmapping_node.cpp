@@ -11,6 +11,7 @@ ros::Publisher filteredRefMapPub;
 ros::Publisher recMapPub;
 ros::Publisher filteredRecMapPub;
 ros::Publisher globalMapPub;
+ros::Publisher waitingObjPub;
 
 //Testing parameters
 std::string algorithm = "our_solution"; // our_solution or modified_nms
@@ -36,6 +37,7 @@ std::string modified_nms_fused_maps_directory = "/home/abdessalem/smapping/src/s
 std::string backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/validation_data/fusion evaluation/" + algorithm + "/threshold_0.1.csv"; //"_nms"+".csv";
 std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/validation_maps/val7.yaml";
 
+std::string prior_knowledge_file_name = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/cfg/prior knowledge.yaml";
 
 void printAvailableCommands(){
   cout << "--------- Available commands -------------"<< endl;
@@ -134,10 +136,16 @@ int main(int argc, char **argv){
   filteredRecMapPub = n.advertise<mapping_msgs::SemanticMap>("/filtered_received_map", 1, true);
   recMapPub = n.advertise<mapping_msgs::SemanticMap>("/original_received_map", 1, true);
   globalMapPub = n.advertise<mapping_msgs::SemanticMap>("/fused_map", 1, true);
+  waitingObjPub = n.advertise<mapping_msgs::SemanticMap>("/waiting_objects", 1, true);
 
 
   semmapping::SemanticFusion fusion_node;
   fusion_node.show_map_id();
+
+  // Acquisition of prior knowledge
+  std::ifstream prior_knowledge_file(prior_knowledge_file_name);
+  fusion_node.setPriorKnowledge(prior_knowledge_file);
+  prior_knowledge_file.close();
 
   // Definition of input/output maps
   std::ifstream ref_map_file(reference_map_file_name);
@@ -161,6 +169,7 @@ int main(int argc, char **argv){
   semmapping::SemanticMap received_map(tfBuffer, viewer, viewer_mtx, semmap_vport0, semmap_vport1, param_config);
   semmapping::SemanticMap filtered_received_map(tfBuffer, viewer, viewer_mtx, semmap_vport0, semmap_vport1, param_config);
   semmapping::SemanticMap global_map(tfBuffer, viewer, viewer_mtx, semmap_vport0, semmap_vport1, param_config);
+  semmapping::SemanticMap waiting_objects(tfBuffer, viewer, viewer_mtx, semmap_vport0, semmap_vport1, param_config);
 
   signal(SIGINT, sigintHandler);
 
@@ -466,7 +475,7 @@ int main(int argc, char **argv){
         case 15: //progressive_fusion
             {
             MatrixXd P = MatrixXd::Identity(8, 8);  // Adjust the initial uncertainty as needed  
-            std::cout<<"P= "<<P(0,0)<<", "<<P(1,1)<<", "<<P(2,2)<<", "<<P(3,3)<<", ... , "<<P(7,7)<<endl;
+            //std::cout << "P= " << P(0,0) << ", " << P(1,1) << ", " << P(2,2) << ", " << P(3,3) << ", ... , " << P(7,7) << endl;
 
             // Define process noise covariance matrix
             float a = 0.01;
@@ -492,17 +501,38 @@ int main(int argc, char **argv){
                 0, 0, 0, 0, 0, 0, b, 0,
                 0, 0, 0, 0, 0, 0, 0, b;
 
-            int filecount = 0;
+            fusion_node.initializeCategoryObjectNumber();
+            fusion_node.countObjectNumberPerCategoryInMap(filtered_ref_map);
+
+            waiting_objects.clearAll();
+
+            int maps_number = 0;
             for (const auto & dir_entry: boost::filesystem::directory_iterator(single_robot_maps_directory)){
+              maps_number++;
+            }
+
+            std::cout << "The folder contain " << maps_number << " maps to integrate in the global map" << endl;
+            
+            //for (const auto & dir_entry: boost::filesystem::directory_iterator(single_robot_maps_directory)){
+            for (int filecount = 1; filecount <= maps_number; filecount++){
               std::cin.get();
-              filecount++;
+
+              // Acquisition of prior knowledge
+              std::ifstream prior_knowledge_file(prior_knowledge_file_name);
+              fusion_node.updatePriorKnowledge(prior_knowledge_file);
+              prior_knowledge_file.close();
+
+              std::ostringstream map_index;
+              map_index << filecount;
+              std::string new_map_path = single_robot_maps_directory + "/val"+ map_index.str()+".yaml";
+              std::cout<<new_map_path<<endl;
 
               //Publish the last cleared refernce map
               mapping_msgs::SemanticMap::Ptr filteredRefMapMsg= filtered_ref_map.createMapMessage(robot, true);
               filteredRefMapPub.publish(filteredRefMapMsg);
 
               // Get and publish new received map before processing
-              std::ifstream received_map_file(dir_entry.path().string());
+              std::ifstream received_map_file(new_map_path);
               received_map.clearAll();
               received_map.readMapData(received_map_file); 
               received_map_file.close();
@@ -519,12 +549,15 @@ int main(int argc, char **argv){
 
               // Fuse the two maps
               global_map.clearAll();
-              fusion_node.globalMapUpdate(filtered_ref_map, filtered_received_map, global_map, P, Q, R, fusion_overlap_threshold);
+              fusion_node.globalMapUpdate(filtered_ref_map, filtered_received_map, global_map, waiting_objects, P, Q, R, fusion_overlap_threshold);
 
-              // Update the fused map
+              // Visualize the global map and waiting objects map
               mapping_msgs::SemanticMap::Ptr fused_map_msg= global_map.createMapMessage(robot, true);
               globalMapPub.publish(fused_map_msg);
               cout << "Global map updated "<< filecount <<" time(s)"<< endl;
+              mapping_msgs::SemanticMap::Ptr waiting_objects_msg= waiting_objects.createMapMessage(robot, true);
+              waitingObjPub.publish(waiting_objects_msg);
+              cout << "Waiting objects updated "<< filecount <<" time(s)"<< endl;
 
               // Update the cleared reference map
               filtered_ref_map.clearAll();

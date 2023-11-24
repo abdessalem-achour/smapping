@@ -16,6 +16,81 @@ namespace semmapping
         ROS_INFO_STREAM("Semantic Fusion Node");
     }
 
+    bool SemanticFusion::setPriorKnowledge(std::istream &input)
+    {
+        YAML::Node map = YAML::Load(input);
+        for (const YAML::Node &entry : map)
+        {
+            CategoryPriorKnowledge newCategory;
+            newCategory.name = entry["name"].as<std::string>();
+            newCategory.length = entry["length"].as<double>();
+            newCategory.width = entry["width"].as<double>();
+            newCategory.objectNumber = entry["objectNumber"].as<int>();
+            if(inConsideredObjectList(newCategory.name)){
+                CategoriesPriorKnowledge.push_back(newCategory);
+                cout << "name: "<<newCategory.name << " - length: " << newCategory.length << " - width: " <<newCategory.width<< " - number: " <<newCategory.objectNumber<<endl;
+            }
+        }
+        cout << "Prior Knowledge loaded !" << endl;
+        return true;
+    }
+
+    bool SemanticFusion::updatePriorKnowledge(std::istream &input)
+    {
+        CategoriesPriorKnowledge.clear();
+        setPriorKnowledge(input);
+        return true;
+    }
+
+    std::list<CategoryPriorKnowledge> SemanticFusion::getPriorKnowledge(){
+        return CategoriesPriorKnowledge;
+    }
+
+    CategoryPriorKnowledge SemanticFusion::getCategoryPriorKnowledge(std::string category){
+        CategoryPriorKnowledge cat;
+        for(auto val : CategoriesPriorKnowledge){
+            if(val.name == category)
+                cat = val;
+        }
+        return cat;
+    }
+
+    bool SemanticFusion::initializeCategoryObjectNumber(){
+        for(auto val : consideredCategories){
+            std::pair<std::string, int> CategoryAndNumber = { val, 0 };
+            ObjectNumberInCategory.push_back(CategoryAndNumber);
+        }
+        return 1;
+    }
+
+    int SemanticFusion::getCategoryObjectNumber(std::string category){
+        for(auto val : ObjectNumberInCategory){
+            if(val.first == category)
+                return val.second;
+        }
+        return 0;
+    }
+    
+    bool SemanticFusion::updateCategoryObjectNumber(std::string category, std::string incrementDecrement){
+        for(auto &val : ObjectNumberInCategory){
+            if(val.first == category){
+                if(incrementDecrement == "increment")
+                    val.second ++;
+                else
+                    val.second --;
+                return 1;
+            }
+        }
+        return 1;
+    }
+    
+    void SemanticFusion::countObjectNumberPerCategoryInMap(semmapping::SemanticMap map){
+        for (auto &value : map.getObjectList()){
+            SemanticObject &obj = value.second;
+            updateCategoryObjectNumber(obj.name, "increment");
+        }
+    }
+    
     SemanticObject SemanticFusion::copySemanticObject(SemanticObject obj)
     {
         SemanticObject c_obj;
@@ -185,9 +260,8 @@ namespace semmapping
         bg::append(fused_obb.outer(), p4);
         bg::append(fused_obb.outer(), p1);
 
-        cout<<"P= "<<P(0,0)<<", "<<P(1,1)<<", "<<P(2,2)<<", "<<P(3,3)<<", ... , "<<P(7,7)<<endl;
-
-        ROS_INFO_STREAM("FINISHED EKF PROCESS");
+        //cout << "P= " << P(0,0) << ", " << P(1,1) << ", " << P(2,2) << ", " << P(3,3) << ", ... , " << P(7,7) << endl;
+        //ROS_INFO_STREAM("FINISHED EKF PROCESS");
         
         return fused_obb;
     }
@@ -209,61 +283,6 @@ namespace semmapping
         obj.isCombined = true;
         return obj;
     }
-
-    /*SemanticObject SemanticFusion::objectUpdate(SemanticObject initial_obj, SemanticObject received_obj, semmapping::SemanticMap map)
-    {
-        SemanticObject obj;
-        double initial_obb_score = (ref_fit(initial_obj.obb, received_obj.shape_union) + ref_fit(initial_obj.obb, initial_obj.shape_union))/2;
-        double received_obb_score = (ref_fit(received_obj.obb, initial_obj.shape_union) + ref_fit(received_obj.obb, received_obj.shape_union))/2;
-        if(isRectangular(initial_obj.obb) && isRectangular(received_obj.obb)){
-            if(iou(initial_obj.obb, received_obj.obb) < 0.6){
-                if (initial_obb_score > received_obb_score)
-                    obj = copySemanticObject(initial_obj);
-                else
-                    obj = copySemanticObject(received_obj);
-            }
-            else{
-                obj.name = initial_obj.name;
-                obj.rotation_angle = 0;
-                obj.isCombined = true;
-                obj.exist_certainty = (initial_obj.exist_certainty + received_obj.exist_certainty)/2;
-                obj.obb = computeMeanBox(initial_obj.obb, received_obj.obb);
-                obj.shape_union = obj.obb;
-                obj.obb_score = (initial_obj.obb_score + received_obj.obb_score)/2;
-                obj.bounding_box = bg::return_envelope<box>(obj.obb);
-                bg::centroid(obj.shape_union, obj.shape_union_cen);
-                bg::centroid(obj.obb, obj.oriented_box_cen);
-                obj.point_cloud = nullptr;
-            }
-        }
-        else if(isRectangular(initial_obj.obb))
-            obj = copySemanticObject(initial_obj);
-        else if(isRectangular(received_obj.obb))
-            obj = copySemanticObject(received_obj);
-        else{
-            obj.name = initial_obj.name;
-            obj.rotation_angle = 0;
-            multi_polygon sect;
-            bg::intersection(initial_obj.obb, received_obj.obb, sect);
-            obj.exist_certainty = (initial_obj.exist_certainty + received_obj.exist_certainty)/2;
-            obj.shape_union = sect[0];
-            // Regenerate a new OBB representation for the resulting polygon
-            std::pair<polygon, double> selected_obb = map.create_object_box_using_prior_knowledge(obj.shape_union, obj.name, false); //use_first_plan_edges=false
-            obj.obb = selected_obb.first;
-            obj.obb_score = 1-selected_obb.second;
-            obj.bounding_box = bg::return_envelope<box>(obj.obb);
-            bg::centroid(obj.shape_union, obj.shape_union_cen);
-            bg::centroid(obj.obb, obj.oriented_box_cen);
-            obj.point_cloud = nullptr;
-        }
-        // Partial polygons of fused object are stored in obj.shapes
-        point initial_obj_centroid, received_obj_centroid;
-        bg::centroid(initial_obj.shape_union, initial_obj_centroid); bg::centroid(received_obj.shape_union, received_obj_centroid);
-        obj.shapes.push_back({initial_obj.shape_union, initial_obj_centroid, initial_obj.exist_certainty});
-        obj.shapes.push_back({received_obj.shape_union, received_obj_centroid, received_obj.exist_certainty});
-        obj.isCombined = true;
-        return obj;
-    }*/
 
     // Calculate the oriented bounding box (OBB) score between two shapes.
     double SemanticFusion::calculateOBBscore(const SemanticObject& obj1, const SemanticObject& obj2) {
@@ -307,9 +326,9 @@ namespace semmapping
                 obj = initial_obj;
             else
                 obj = received_obj;
-        } else {
+        } 
+        else {
             obj = initial_obj;
-            obj.isCombined = true;
             obj.exist_certainty = (initial_obj.exist_certainty + received_obj.exist_certainty) / 2;
             obj.obb = ekfRectangularBoxesFusion(initial_obj.obb, received_obj.obb, P, Q, R);
             obj.shape_union = obj.obb;
@@ -319,6 +338,8 @@ namespace semmapping
             bg::centroid(obj.obb, obj.oriented_box_cen);
             obj.point_cloud = nullptr;
         }
+
+        obj.isCombined = true;
         return obj;
     }
 
@@ -340,6 +361,7 @@ namespace semmapping
         bg::centroid(obj.shape_union, obj.shape_union_cen);
         bg::centroid(obj.obb, obj.oriented_box_cen);
         obj.point_cloud = nullptr;
+        obj.isCombined = true;
         return obj;
     }
 
@@ -357,15 +379,18 @@ namespace semmapping
     }
 
     SemanticObject SemanticFusion::objectUpdate(SemanticObject initial_obj, SemanticObject received_obj, semmapping::SemanticMap map, MatrixXd& P, MatrixXd& Q, MatrixXd& R) {
+        SemanticObject updatedObj;
         if (isRectangular(initial_obj.obb) && isRectangular(received_obj.obb)) {
-            return objectWithObbUpdate(initial_obj, received_obj, P, Q, R);
+            updatedObj = objectWithObbUpdate(initial_obj, received_obj, P, Q, R);
         } else if (isRectangular(initial_obj.obb)) {
-            return initial_obj;
+            updatedObj = copySemanticObject(initial_obj);
         } else if (isRectangular(received_obj.obb)) {
-            return received_obj;
+            updatedObj = copySemanticObject(received_obj);
         } else {
-            return objectWithoutObbUpdate(initial_obj, received_obj, map);
+            updatedObj = objectWithoutObbUpdate(initial_obj, received_obj, map);
         }
+        updatedObj.isCombined = true;
+        return updatedObj;
     }
     
     bool SemanticFusion::similarClasses(std::string object1_name, std::string object2_name)
@@ -388,7 +413,7 @@ namespace semmapping
     }
 
     bool SemanticFusion::inConsideredObjectList(std::string object_name){
-        bool found = (std::find(map_considered_objects.begin(), map_considered_objects.end(), object_name) != map_considered_objects.end());
+        bool found = (std::find(consideredCategories.begin(), consideredCategories.end(), object_name) != consideredCategories.end());
         return found;
     }
 
@@ -602,40 +627,114 @@ namespace semmapping
         }
     }
     
-    void SemanticFusion::globalMapUpdate(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, MatrixXd& P, MatrixXd& Q, 
-    MatrixXd& R, double overlap_threshold){
+    void SemanticFusion::globalMapUpdate(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, semmapping::SemanticMap &waiting_objects,
+        MatrixXd& P, MatrixXd& Q, MatrixXd& R, double overlap_threshold){
         global_map.clearAll();
+        
+        // Initiliaze the global map with objects of the reference map (isCombined must be initialized to false)
         for (auto &value : reference_map.getObjectList()){
             SemanticObject &obj = value.second;
+            obj.isCombined = false;
             global_map.addObject(obj);
         }
 
+        // This step initializes the parameter isCombined to False for objects in the waiting list
+        // This parameter will be changed to True for re-observed Objects (used to reduce existence probability for un-observed objects)
+        for (auto &wObj2 : waiting_objects.getObjectList()){
+            SemanticObject &w_obj = wObj2.second;
+            w_obj.isCombined = false;
+            waiting_objects.removeObject(wObj2.first);
+            waiting_objects.addObject(w_obj);
+        }
+
+        // Global map & waiting list updating process
         for (auto &val : received_map.getObjectList()){
             SemanticObject &new_obj = val.second;
             bool addedToGlobalMap = false;
-            bool isOverlapping = false;
+
             if (new_obj.exist_certainty > 0.25){
-                // Object is already in global map: update object in global map
+                // Updating objects already in the global map
                 for (auto &val2 : global_map.getObjectList()){
                     SemanticObject &ref_obj = val2.second;
                     double overlap = iou(ref_obj.obb, new_obj.obb);
-                    if(overlap && (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name)))
-                        isOverlapping = true; //parameter indicating that the object's polygon overlaps another instance of the object or another object.
-                    if(overlap > overlap_threshold && (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name))){
-                        SemanticObject fused_obj;
-                        fused_obj = objectUpdate(ref_obj, new_obj, global_map, P, Q, R);
-                        global_map.removeObject(val2.first);
-                        global_map.addObject(fused_obj);
-                        addedToGlobalMap = true; //parameter used to determine whether or not the object is already in the global map
-                    }   
+                    // Ignore new detections of objects existing in the map with overlap < overlap_threshold
+                    if(overlap && (new_obj.name == ref_obj.name || similarClasses(new_obj.name, ref_obj.name))){
+                        addedToGlobalMap = true; 
+                        if(overlap > overlap_threshold){
+                            SemanticObject fused_obj = objectUpdate(ref_obj, new_obj, global_map, P, Q, R);
+                            global_map.removeObject(val2.first);
+                            global_map.addObject(fused_obj);
+                        }   
+                    }
                 }
-                // Add objects existing only in the received map with a certainty of existence > 0.5
-                if (!isOverlapping && !addedToGlobalMap && new_obj.exist_certainty > 0.5 && new_obj.obb_score > 0){
-                    new_obj.point_cloud = nullptr;
-                    global_map.addObject(new_obj);
+
+                // Adding new object when an OBB is created and the number of mapped objects from that category is still less then the category total number of objects
+                // Otherwise, adding the object to the waiting list
+                CategoryPriorKnowledge classKnowledge = getCategoryPriorKnowledge(new_obj.name);
+                if (!addedToGlobalMap && new_obj.obb_score > 0){
+                    if(getCategoryObjectNumber(new_obj.name)< classKnowledge.objectNumber){
+                        new_obj.point_cloud = nullptr;
+                        new_obj.isCombined = true;
+                        global_map.addObject(new_obj);
+                        updateCategoryObjectNumber(new_obj.name, "increment");
+                    }
+                    else
+                    {
+                        bool inWaitingObjects = false;
+                        for (auto &wObj : waiting_objects.getObjectList()){
+                            SemanticObject &wRefObj = wObj.second;
+                            double overlap = iou(wRefObj.obb, new_obj.obb);
+
+                            if(overlap && (new_obj.name == wRefObj.name || similarClasses(new_obj.name, wRefObj.name))){
+                                inWaitingObjects = true; 
+                                if(overlap > overlap_threshold){
+                                    SemanticObject fused_obj = objectUpdate(wRefObj, new_obj, waiting_objects, P, Q, R);
+                                    waiting_objects.removeObject(wObj.first);
+                                    waiting_objects.addObject(fused_obj);
+                                }   
+                            }
+                        }
+
+                        if (!inWaitingObjects){
+                            new_obj.point_cloud = nullptr;
+                            new_obj.isCombined = true;
+                            waiting_objects.addObject(new_obj);
+                        }
+                    }
                 }
             }
         }
+
+        cout<<"I am her 1: "<<endl;
+
+        for (auto &val3 : global_map.getObjectList()){
+            SemanticObject &map_obj = val3.second;
+            if(!map_obj.isCombined){
+                std::cout << map_obj.name << " "<< val3.first<<" exitence prob is "<<map_obj.exist_certainty << endl;
+                map_obj.exist_certainty = map_obj.exist_certainty - 0.25;
+                std::cout << map_obj.name << " "<< val3.first<<" updated exitence prob is "<<map_obj.exist_certainty << endl;
+            }
+
+            if(map_obj.exist_certainty < 0.25){
+                updateCategoryObjectNumber(map_obj.name, "decrement");
+                global_map.removeObject(val3.first);
+            }
+        }
+
+        cout<<"I am her 2: "<<endl;
+
+        for (auto &wObj2 : waiting_objects.getObjectList()){
+            SemanticObject &waiting_obj = wObj2.second;
+            if(!waiting_obj.isCombined){
+                std::cout << waiting_obj.name << " "<< wObj2.first<<" exitence prob is "<<waiting_obj.exist_certainty << endl;
+                waiting_obj.exist_certainty = waiting_obj.exist_certainty - 0.25;
+                std::cout << waiting_obj.name << " "<< wObj2.first<<" exitence prob is "<<waiting_obj.exist_certainty << endl;
+            }
+            if(waiting_obj.exist_certainty < 0.25)
+                waiting_objects.removeObject(wObj2.first);
+        }
+
+        
     }
 
     void SemanticFusion::semfusion_modified_nms(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold){
@@ -727,7 +826,7 @@ namespace semmapping
         all_classes_stats.push_back(std::make_pair("Chair", class1_stats));
         all_classes_stats.push_back(std::make_pair("Table", class2_stats));
         all_classes_stats.push_back(std::make_pair("Shelf", class3_stats));
-        all_classes_stats.push_back(std::make_pair("Sofa bed", class4_stats));
+        all_classes_stats.push_back(std::make_pair("Couch", class4_stats));
 
         if(!objectList.empty()){
             int number_of_false_detections=0;

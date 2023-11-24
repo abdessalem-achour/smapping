@@ -1,128 +1,120 @@
-- name: Chair
-  exist_certainty: 0.9766536964980546
-  oriented_box_rot: 0
-  shape_union: POLYGON((1.73101 -0.317668,2.33062 -0.335663,2.31353 -0.905293,1.71392 -0.887298,1.73101 -0.317668))
-  shape_union_cen: POINT(2.02227 -0.61148)
-  oriented_box: POLYGON((1.73101 -0.317668,2.33062 -0.335663,2.31353 -0.905293,1.71392 -0.887298,1.73101 -0.317668))
-  oriented_box_cen: POINT(2.02227 -0.61148)
-  oriented_box_score: 0.6555349629075571
 - name: Shelf
-  exist_certainty: 0.9649805447470817
-  oriented_box_rot: 0
-  shape_union: POLYGON((4.41936 0.679981,4.3964 1.57969,4.79627 1.58989,4.81922 0.690182,4.41936 0.679981))
-  shape_union_cen: POINT(4.60781 1.13493)
-  oriented_box: POLYGON((4.41936 0.679981,4.3964 1.57969,4.79627 1.58989,4.81922 0.690182,4.41936 0.679981))
-  oriented_box_cen: POINT(4.60781 1.13493)
-  oriented_box_score: 0.9420276099910603
-- name: Table
-  exist_certainty: 0.9323890344195226
-  oriented_box_rot: 0
-  shape_union: POLYGON((-0.611579 4.12756,-2.39317 4.10687,-2.40246 4.90668,-0.62087 4.92738,-0.611579 4.12756))
-  shape_union_cen: POINT(-1.50702 4.51712)
-  oriented_box: POLYGON((-0.611579 4.12756,-2.39317 4.10687,-2.40246 4.90668,-0.62087 4.92738,-0.611579 4.12756))
-  oriented_box_cen: POINT(-1.50702 4.51712)
-  oriented_box_score: 0.9369508741478501
-- name: Chair
-  exist_certainty: 0.9708171206225681
-  oriented_box_rot: 0
-  shape_union: POLYGON((-1.28662 3.76783,-1.85478 3.75805,-1.86217 4.3467,-1.29401 4.35649,-1.28662 3.76783))
-  shape_union_cen: POINT(-1.5744 4.05727)
-  oriented_box: POLYGON((-1.28662 3.76783,-1.85478 3.75805,-1.86217 4.3467,-1.29401 4.35649,-1.28662 3.76783))
-  oriented_box_cen: POINT(-1.5744 4.05727)
-  oriented_box_score: 0.9427330950995549
-- name: Chair
   exist_certainty: 0.9805447470817121
   oriented_box_rot: 0
-  shape_union: POLYGON((-2.01227 -1.61772,-1.4731 -1.866,-1.71281 -2.3869,-2.25197 -2.13862,-2.01227 -1.61772))
-  shape_union_cen: POINT(-1.86254 -2.00231)
-  oriented_box: POLYGON((-2.01227 -1.61772,-1.4731 -1.866,-1.71281 -2.3869,-2.25197 -2.13862,-2.01227 -1.61772))
-  oriented_box_cen: POINT(-1.86254 -2.00231)
-  oriented_box_score: 0.9203198835362331
+  shape_union: POLYGON((4.4094 0.64786,4.3957 1.54773,4.79564 1.55382,4.80935 0.65395,4.4094 0.64786))
+  shape_union_cen: POINT(4.60252 1.10084)
+  oriented_box: POLYGON((4.4094 0.64786,4.3957 1.54773,4.79564 1.55382,4.80935 0.65395,4.4094 0.64786))
+  oriented_box_cen: POINT(4.60252 1.10084)
+  oriented_box_score: 0.9419502054510965
+- name: Sofa bed
+  exist_certainty: 0.5578014007270559
+  oriented_box_rot: 0
+  shape_union: POLYGON((3.88596 1.8344,3.72849 3.83511,4.69448 3.91114,4.85196 1.91044,3.88596 1.8344))
+  shape_union_cen: POINT(4.29022 2.87277)
+  oriented_box: POLYGON((3.88596 1.8344,3.72849 3.83511,4.69448 3.91114,4.85196 1.91044,3.88596 1.8344))
+  oriented_box_cen: POINT(4.29022 2.87277)
+  oriented_box_score: 0.921896234182754
+- name: Sofa bed
+  exist_certainty: 0.431074029880573
+  oriented_box_rot: 0
+  shape_union: POLYGON((3.75084 3.96966,1.74791 3.8775,1.70342 4.84457,3.70634 4.93673,3.75084 3.96966))
+  shape_union_cen: POINT(2.72713 4.40711)
+  oriented_box: POLYGON((3.75084 3.96966,1.74791 3.8775,1.70342 4.84457,3.70634 4.93673,3.75084 3.96966))
+  oriented_box_cen: POINT(2.72713 4.40711)
+  oriented_box_score: 0.9294099636275852
+- name: Table
+  exist_certainty: 0.8861778555904372
+  oriented_box_rot: 0
+  shape_union: POLYGON((-0.598957 4.12451,-2.38049 4.09563,-2.39346 4.89542,-0.611922 4.9243,-0.598957 4.12451))
+  shape_union_cen: POINT(-1.49621 4.50997)
+  oriented_box: POLYGON((-0.598957 4.12451,-2.38049 4.09563,-2.39346 4.89542,-0.611922 4.9243,-0.598957 4.12451))
+  oriented_box_cen: POINT(-1.49621 4.50997)
+  oriented_box_score: 0.9382112428529561
 - name: Chair
-  exist_certainty: 0.9416342412451362
+  exist_certainty: 0.953170463740918
   oriented_box_rot: 0
-  shape_union: POLYGON((-3.74058 3.06648,-4.28884 3.20791,-4.14546 3.77399,-3.5972 3.63257,-3.74058 3.06648))
-  shape_union_cen: POINT(-3.94302 3.42024)
-  oriented_box: POLYGON((-3.74058 3.06648,-4.28884 3.20791,-4.14546 3.77399,-3.5972 3.63257,-3.74058 3.06648))
-  oriented_box_cen: POINT(-3.94302 3.42024)
-  oriented_box_score: 0.8322814421987476
-- name: Table
-  exist_certainty: 0.5233463035019456
+  shape_union: POLYGON((-1.2879 3.76163,-1.85496 3.776,-1.83984 4.37291,-1.27277 4.35855,-1.2879 3.76163))
+  shape_union_cen: POINT(-1.56387 4.06727)
+  oriented_box: POLYGON((-1.2879 3.76163,-1.85496 3.776,-1.83984 4.37291,-1.27277 4.35855,-1.2879 3.76163))
+  oriented_box_cen: POINT(-1.56387 4.06727)
+  oriented_box_score: 0.8622256293138154
+- name: Chair
+  exist_certainty: 0.9571984435797666
   oriented_box_rot: 0
-  shape_union: POLYGON((4.02325 -2.15119,4.82285 -2.16654,4.78865 -3.94765,3.98905 -3.9323,4.02325 -2.15119))
-  shape_union_cen: POINT(4.40595 -3.04942)
-  oriented_box: POLYGON((4.02325 -2.15119,4.82285 -2.16654,4.78865 -3.94765,3.98905 -3.9323,4.02325 -2.15119))
-  oriented_box_cen: POINT(4.40595 -3.04942)
-  oriented_box_score: 0.9697069653290045
-- name: Table
-  exist_certainty: 0.8287867547892345
-  oriented_box_rot: 0
-  shape_union: POLYGON((1.09063 -3.2277,2.87246 -3.24196,2.86606 -4.04188,1.08423 -4.02762,1.09063 -3.2277))
-  shape_union_cen: POINT(1.97835 -3.63479)
-  oriented_box: POLYGON((1.09063 -3.2277,2.87246 -3.24196,2.86606 -4.04188,1.08423 -4.02762,1.09063 -3.2277))
-  oriented_box_cen: POINT(1.97835 -3.63479)
-  oriented_box_score: 0.9853817149712885
+  shape_union: POLYGON((-3.75353 3.05536,-4.29761 3.19154,-4.15426 3.76426,-3.61018 3.62808,-3.75353 3.05536))
+  shape_union_cen: POINT(-3.9539 3.40981)
+  oriented_box: POLYGON((-3.75353 3.05536,-4.29761 3.19154,-4.15426 3.76426,-3.61018 3.62808,-3.75353 3.05536))
+  oriented_box_cen: POINT(-3.9539 3.40981)
+  oriented_box_score: 0.9570712768422989
 - name: Shelf
-  exist_certainty: 0.9953829715978302
+  exist_certainty: 0.7346153846153846
   oriented_box_rot: 0
-  shape_union: POLYGON((-2.34317 -4.34865,-1.44338 -4.35742,-1.44728 -4.75733,-2.34707 -4.74856,-2.34317 -4.34865))
-  shape_union_cen: POINT(-1.89522 -4.55299)
-  oriented_box: POLYGON((-2.34317 -4.34865,-1.44338 -4.35742,-1.44728 -4.75733,-2.34707 -4.74856,-2.34317 -4.34865))
-  oriented_box_cen: POINT(-1.89522 -4.55299)
-  oriented_box_score: 0.9483425303525026
+  shape_union: POLYGON((-2.86357 4.50362,-3.7628 4.4679,-3.77867 4.86756,-2.87944 4.90327,-2.86357 4.50362))
+  shape_union_cen: POINT(-3.32112 4.68559)
+  oriented_box: POLYGON((-2.86357 4.50362,-3.7628 4.4679,-3.77867 4.86756,-2.87944 4.90327,-2.86357 4.50362))
+  oriented_box_cen: POINT(-3.32112 4.68559)
+  oriented_box_score: 0.9722415301457425
 - name: Table
-  exist_certainty: 0.7946510232379622
+  exist_certainty: 0.9961089494163424
   oriented_box_rot: 0
-  shape_union: POLYGON((-3.9799 4.26895,-4.03192 2.48894,-4.83104 2.51229,-4.779 4.29231,-3.9799 4.26895))
-  shape_union_cen: POINT(-4.40546 3.39062)
-  oriented_box: POLYGON((-3.9799 4.26895,-4.03192 2.48894,-4.83104 2.51229,-4.779 4.29231,-3.9799 4.26895))
-  oriented_box_cen: POINT(-4.40546 3.39062)
-  oriented_box_score: 0.882440790518466
+  shape_union: POLYGON((-4.88903 3.31028,-4.88903 3.33009,-4.88902 3.41193,-4.88901 3.65123,-4.54302 3.92228,-4.16488 3.60571,-4.00487 3.44302,-3.9999 2.60441,-4.01015 2.59647,-4.07397 2.57524,-4.81318 2.47009,-4.88745 2.50925,-4.88791 2.53031,-4.88872 2.58051,-4.88903 3.31028))
+  shape_union_cen: POINT(-4.46943 3.13284)
+  oriented_box: POLYGON((-3.99986 4.24705,-4.01097 2.46509,-4.81096 2.47008,-4.79984 4.25204,-3.99986 4.24705))
+  oriented_box_cen: POINT(-4.40541 3.35856)
+  oriented_box_score: 0.8936048754189538
+- name: Chair
+  exist_certainty: 0.9649805447470817
+  oriented_box_rot: 0
+  shape_union: POLYGON((-2.00027 -1.626,-1.46551 -1.88132,-1.71157 -2.40045,-2.24632 -2.14513,-2.00027 -1.626))
+  shape_union_cen: POINT(-1.85592 -2.01323)
+  oriented_box: POLYGON((-2.00027 -1.626,-1.46551 -1.88132,-1.71157 -2.40045,-2.24632 -2.14513,-2.00027 -1.626))
+  oriented_box_cen: POINT(-1.85592 -2.01323)
+  oriented_box_score: 0.9064198157454595
+- name: Chair
+  exist_certainty: 0.8404669260700389
+  oriented_box_rot: 0
+  shape_union: POLYGON((1.72946 -0.325888,2.32908 -0.342826,2.31299 -0.912462,1.71338 -0.895525,1.72946 -0.325888))
+  shape_union_cen: POINT(2.02123 -0.619175)
+  oriented_box: POLYGON((1.72946 -0.325888,2.32908 -0.342826,2.31299 -0.912462,1.71338 -0.895525,1.72946 -0.325888))
+  oriented_box_cen: POINT(2.02123 -0.619175)
+  oriented_box_score: 0.6451040089288113
+- name: Table
+  exist_certainty: 0.5995612692330483
+  oriented_box_rot: 0
+  shape_union: POLYGON((4.02589 -2.15785,4.82582 -2.16203,4.81651 -3.94388,4.01658 -3.9397,4.02589 -2.15785))
+  shape_union_cen: POINT(4.4212 -3.05087)
+  oriented_box: POLYGON((4.02589 -2.15785,4.82582 -2.16203,4.81651 -3.94388,4.01658 -3.9397,4.02589 -2.15785))
+  oriented_box_cen: POINT(4.4212 -3.05087)
+  oriented_box_score: 0.9638977915699133
+- name: Table
+  exist_certainty: 0.8815068359040379
+  oriented_box_rot: 0
+  shape_union: POLYGON((1.09023 -3.23011,2.87219 -3.2374,2.86891 -4.03738,1.08696 -4.03009,1.09023 -3.23011))
+  shape_union_cen: POINT(1.97957 -3.63375)
+  oriented_box: POLYGON((1.09023 -3.23011,2.87219 -3.2374,2.86891 -4.03738,1.08696 -4.03009,1.09023 -3.23011))
+  oriented_box_cen: POINT(1.97957 -3.63375)
+  oriented_box_score: 0.9895119934325325
 - name: Shelf
-  exist_certainty: 0.8826698593235558
+  exist_certainty: 0.9955605168397488
   oriented_box_rot: 0
-  shape_union: POLYGON((-2.86022 4.50921,-3.75941 4.47704,-3.7737 4.87668,-2.87451 4.90884,-2.86022 4.50921))
-  shape_union_cen: POINT(-3.31696 4.69294)
-  oriented_box: POLYGON((-2.86022 4.50921,-3.75941 4.47704,-3.7737 4.87668,-2.87451 4.90884,-2.86022 4.50921))
-  oriented_box_cen: POINT(-3.31696 4.69294)
-  oriented_box_score: 0.9687294805980228
+  shape_union: POLYGON((-2.34289 -4.34948,-1.44316 -4.36246,-1.44893 -4.76235,-2.34866 -4.74936,-2.34289 -4.34948))
+  shape_union_cen: POINT(-1.89591 -4.55591)
+  oriented_box: POLYGON((-2.34289 -4.34948,-1.44316 -4.36246,-1.44893 -4.76235,-2.34866 -4.74936,-2.34289 -4.34948))
+  oriented_box_cen: POINT(-1.89591 -4.55591)
+  oriented_box_score: 0.9524079391690814
 - name: Sofa bed
-  exist_certainty: 0.5573455987872307
+  exist_certainty: 0.466502513123732
   oriented_box_rot: 0
-  shape_union: POLYGON((3.87258 1.85557,3.77643 3.85996,4.7442 3.90639,4.84035 1.902,3.87258 1.85557))
-  shape_union_cen: POINT(4.30839 2.88098)
-  oriented_box: POLYGON((3.87258 1.85557,3.77643 3.85996,4.7442 3.90639,4.84035 1.902,3.87258 1.85557))
-  oriented_box_cen: POINT(4.30839 2.88098)
-  oriented_box_score: 0.8998502966085397
-- name: Sofa bed
-  exist_certainty: 0.4170170200059719
-  oriented_box_rot: 0
-  shape_union: POLYGON((3.72145 3.9961,1.71282 3.98549,1.7077 4.95532,3.71632 4.96592,3.72145 3.9961))
-  shape_union_cen: POINT(2.71457 4.47571)
-  oriented_box: POLYGON((3.72145 3.9961,1.71282 3.98549,1.7077 4.95532,3.71632 4.96592,3.72145 3.9961))
-  oriented_box_cen: POINT(2.71457 4.47571)
-  oriented_box_score: 0.9011914450611714
+  shape_union: POLYGON((-3.93854 1.30935,-3.89724 -0.697251,-4.86608 -0.717194,-4.90739 1.2894,-3.93854 1.30935))
+  shape_union_cen: POINT(-4.40231 0.296076)
+  oriented_box: POLYGON((-3.93854 1.30935,-3.89724 -0.697251,-4.86608 -0.717194,-4.90739 1.2894,-3.93854 1.30935))
+  oriented_box_cen: POINT(-4.40231 0.296076)
+  oriented_box_score: 0.9092438080069873
 - name: Table
-  exist_certainty: 0.5454657477007523
+  exist_certainty: 0.9961089494163424
   oriented_box_rot: 0
-  shape_union: POLYGON((-3.95277 -2.77356,-4.1406 -4.53649,-4.93204 -4.45216,-4.74421 -2.68924,-3.95277 -2.77356))
-  shape_union_cen: POINT(-4.4424 -3.61286)
-  oriented_box: POLYGON((-3.95277 -2.77356,-4.1406 -4.53649,-4.93204 -4.45216,-4.74421 -2.68924,-3.95277 -2.77356))
-  oriented_box_cen: POINT(-4.4424 -3.61286)
-  oriented_box_score: 0.9605786595652629
-- name: Table
-  exist_certainty: 0.9493422741906812
-  oriented_box_rot: 0
-  shape_union: POLYGON((1.09565 -0.659112,2.87744 -0.683845,2.86634 -1.48375,1.08455 -1.45902,1.09565 -0.659112))
-  shape_union_cen: POINT(1.98099 -1.07143)
-  oriented_box: POLYGON((1.09565 -0.659112,2.87744 -0.683845,2.86634 -1.48375,1.08455 -1.45902,1.09565 -0.659112))
-  oriented_box_cen: POINT(1.98099 -1.07143)
-  oriented_box_score: 0.969982568255213
-- name: Sofa bed
-  exist_certainty: 0.8549712442986617
-  oriented_box_rot: 0
-  shape_union: POLYGON((-3.92679 1.27544,-3.90092 -0.732075,-4.8702 -0.744565,-4.89607 1.26295,-3.92679 1.27544))
-  shape_union_cen: POINT(-4.39849 0.265439)
-  oriented_box: POLYGON((-3.92679 1.27544,-3.90092 -0.732075,-4.8702 -0.744565,-4.89607 1.26295,-3.92679 1.27544))
-  oriented_box_cen: POINT(-4.39849 0.265439)
-  oriented_box_score: 0.8929519892583415
+  shape_union: POLYGON((1.12629 -0.672819,2.90815 -0.694517,2.89841 -1.49446,1.11654 -1.47276,1.12629 -0.672819))
+  shape_union_cen: POINT(2.01235 -1.08364)
+  oriented_box: POLYGON((1.12629 -0.672819,2.90815 -0.694517,2.89841 -1.49446,1.11654 -1.47276,1.12629 -0.672819))
+  oriented_box_cen: POINT(2.01235 -1.08364)
+  oriented_box_score: 0.9779626616779079

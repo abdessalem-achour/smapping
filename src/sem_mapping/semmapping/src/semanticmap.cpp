@@ -75,7 +75,7 @@ namespace semmapping
         //if(name=="Chair") {dimensions.first= 0.57; dimensions.second= 0.57;}  // Chair model in world cluttered
         else if (name== "Table") {dimensions.first= 1.782; dimensions.second= 0.8;}
         else if (name=="Shelf") {dimensions.first= 0.9; dimensions.second= 0.4;}
-        else if (name=="Sofa bed"){dimensions.first= 0.97; dimensions.second= 2.009;}
+        else if (name=="Couch"){dimensions.first= 0.97; dimensions.second= 2.009;}
         else if (name=="Ball"){dimensions.first= 0.2; dimensions.second= 0.2;}
         else {dimensions.first= 0.0; dimensions.second= 0.0;}
 
@@ -649,7 +649,7 @@ namespace semmapping
             point cen_point;
             bg::centroid(obj.shape_union, cen_point);
             double dist_to_obj = bg::distance(robot, cen_point);
-            if(dist_to_obj >=  2.8 && obj.isCombined == false) continue;
+            if(dist_to_obj >=  3.0 && obj.isCombined == false) continue;
             if (obj.isCombined == true) {
                 obj.exist_certainty = calculateCertainty(obj.counting_queue);
                 }
@@ -660,7 +660,7 @@ namespace semmapping
                 obj.exist_certainty = calculateCertainty(obj.counting_queue);
             }
             obj.isCombined = false;
-            if((dist_to_obj >=  0.2 && dist_to_obj <=  2.8) && obj.counting_queue.size() >= param_config.queue_thresh && obj.exist_certainty < 0.25) {
+            if((dist_to_obj >=  1.7 && dist_to_obj <= 3.0) && obj.counting_queue.size() >= param_config.queue_thresh && obj.exist_certainty < 0.25) {
                 //if (obj.exist_certainty < 0.1){//} param_config.certainty_thresh) {
                 removeObject(id);
                 ROS_INFO_STREAM("Object " << obj.name << " removed");
@@ -1306,13 +1306,13 @@ namespace semmapping
     }
 
     void SemanticMap::evaluteMap(std::string filename){
-        std::vector<std::string> evaluted_classes{"Chair", "Table", "Shelf", "Sofa bed"};
+        std::vector<std::string> evaluted_classes{"Chair", "Table", "Shelf", "Couch"};
         std::vector<std::pair<std::string, double*>> all_classes_data;
         double initial_data1[6]={0,0,0,0,0,0}; double initial_data2[6]={0,0,0,0,0,0}; double initial_data3[6]={0,0,0,0,0,0}; double initial_data4[6]={0,0,0,0,0,0};
         all_classes_data.push_back(std::make_pair("Chair", initial_data1));
         all_classes_data.push_back(std::make_pair("Table", initial_data2));
         all_classes_data.push_back(std::make_pair("Shelf", initial_data3));
-        all_classes_data.push_back(std::make_pair("Sofa bed", initial_data4));
+        all_classes_data.push_back(std::make_pair("Couch", initial_data4));
 
         if(!objectList.empty()){
             // first: number of instances, second: our solution factor, third: dengler factor 
