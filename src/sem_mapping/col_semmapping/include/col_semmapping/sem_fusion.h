@@ -43,7 +43,7 @@ namespace semmapping
         
         std::list<CategoryPriorKnowledge> CategoriesPriorKnowledge={};
 
-        std::list<std::string> consideredCategories{"Chair","Table","Sofa bed","Shelf", "Couch"};
+        std::list<std::string> consideredCategories{"Chair","Table","Shelf", "Couch"}; //"Sofa bed"
 
         std::list<std::pair<std::string, int>> ObjectNumberInCategory{};
 

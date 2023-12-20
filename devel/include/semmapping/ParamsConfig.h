@@ -693,7 +693,7 @@ ParamsConfig::GroupDescription<ParamsConfig::DEFAULT::QUEUE, ParamsConfig::DEFAU
 //#line 25 "/home/abdessalem/smapping/src/sem_mapping/semmapping/cfg/Params.cfg"
       __max__.queue_size = 100;
 //#line 25 "/home/abdessalem/smapping/src/sem_mapping/semmapping/cfg/Params.cfg"
-      __default__.queue_size = 15;
+      __default__.queue_size = 40;
 //#line 25 "/home/abdessalem/smapping/src/sem_mapping/semmapping/cfg/Params.cfg"
       Queue.abstract_parameters.push_back(ParamsConfig::AbstractParamDescriptionConstPtr(new ParamsConfig::ParamDescription<int>("queue_size", "int", 0, "size of Queue", "", &ParamsConfig::queue_size)));
 //#line 25 "/home/abdessalem/smapping/src/sem_mapping/semmapping/cfg/Params.cfg"
@@ -713,7 +713,7 @@ ParamsConfig::GroupDescription<ParamsConfig::DEFAULT::QUEUE, ParamsConfig::DEFAU
 //#line 27 "/home/abdessalem/smapping/src/sem_mapping/semmapping/cfg/Params.cfg"
       __max__.queue_thresh = 100;
 //#line 27 "/home/abdessalem/smapping/src/sem_mapping/semmapping/cfg/Params.cfg"
-      __default__.queue_thresh = 10;
+      __default__.queue_thresh = 30;
 //#line 27 "/home/abdessalem/smapping/src/sem_mapping/semmapping/cfg/Params.cfg"
       Queue.abstract_parameters.push_back(ParamsConfig::AbstractParamDescriptionConstPtr(new ParamsConfig::ParamDescription<int>("queue_thresh", "int", 0, "queue threshold of min queue len", "", &ParamsConfig::queue_thresh)));
 //#line 27 "/home/abdessalem/smapping/src/sem_mapping/semmapping/cfg/Params.cfg"

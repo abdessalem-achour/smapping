@@ -10,9 +10,9 @@
   <param name="ne_smoothing_size" type="double" value="20.0" />
   <param name="eapc_distance_threshold" type="double" value="0.01" />
   <param name="vog_leaf_size" type="double" value="0.02" />
-  <param name="queue_size" type="int" value="15" />
+  <param name="queue_size" type="int" value="40" />
   <param name="certainty_thresh" type="double" value="0.25" />
-  <param name="queue_thresh" type="int" value="10" />
+  <param name="queue_thresh" type="int" value="30" />
   <param name="view_min" type="double" value="0.4" />
   <param name="view_max" type="double" value="1.8" />
 </node>

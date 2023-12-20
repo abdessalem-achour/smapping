@@ -321,7 +321,7 @@ namespace semmapping
         double received_obb_score = calculateOBBscore(received_obj, initial_obj);    
 
         SemanticObject obj;
-        if (iou(initial_obj.obb, received_obj.obb) < 0.7) {
+        if (iou(initial_obj.obb, received_obj.obb) < 0.7) { //0.7
             if (initial_obb_score > received_obb_score)
                 obj = initial_obj;
             else
@@ -662,6 +662,8 @@ namespace semmapping
                         addedToGlobalMap = true; 
                         if(overlap > overlap_threshold){
                             SemanticObject fused_obj = objectUpdate(ref_obj, new_obj, global_map, P, Q, R);
+                            if(fused_obj.name=="Couch")
+                                cout<<"Couch is updated"<<endl;
                             global_map.removeObject(val2.first);
                             global_map.addObject(fused_obj);
                         }   
@@ -705,36 +707,43 @@ namespace semmapping
             }
         }
 
-        cout<<"I am her 1: "<<endl;
-
+        // Reducing the existence probability of not re-observed objects in the main map
         for (auto &val3 : global_map.getObjectList()){
             SemanticObject &map_obj = val3.second;
             if(!map_obj.isCombined){
-                std::cout << map_obj.name << " "<< val3.first<<" exitence prob is "<<map_obj.exist_certainty << endl;
                 map_obj.exist_certainty = map_obj.exist_certainty - 0.25;
-                std::cout << map_obj.name << " "<< val3.first<<" updated exitence prob is "<<map_obj.exist_certainty << endl;
-            }
-
-            if(map_obj.exist_certainty < 0.25){
-                updateCategoryObjectNumber(map_obj.name, "decrement");
                 global_map.removeObject(val3.first);
+
+                if(map_obj.exist_certainty >= 0.25)
+                    global_map.addObject(map_obj);
+                else
+                    updateCategoryObjectNumber(map_obj.name, "decrement");
             }
         }
 
-        cout<<"I am her 2: "<<endl;
-
+        // Reducing the existence probability of not re-observed objects in the waiting list
         for (auto &wObj2 : waiting_objects.getObjectList()){
             SemanticObject &waiting_obj = wObj2.second;
             if(!waiting_obj.isCombined){
-                std::cout << waiting_obj.name << " "<< wObj2.first<<" exitence prob is "<<waiting_obj.exist_certainty << endl;
                 waiting_obj.exist_certainty = waiting_obj.exist_certainty - 0.25;
-                std::cout << waiting_obj.name << " "<< wObj2.first<<" exitence prob is "<<waiting_obj.exist_certainty << endl;
-            }
-            if(waiting_obj.exist_certainty < 0.25)
                 waiting_objects.removeObject(wObj2.first);
+                if(waiting_obj.exist_certainty >= 0.25)
+                    waiting_objects.addObject(waiting_obj);
+            }
         }
 
-        
+        // Moving objects from waiting list to the main map if valid condition
+        for(const std::string category: consideredCategories){
+            CategoryPriorKnowledge classKnowledge = getCategoryPriorKnowledge(category);
+            for (auto &wObj2 : waiting_objects.getObjectList()){
+                SemanticObject &waiting_obj = wObj2.second;
+                if(waiting_obj.name == category && getCategoryObjectNumber(waiting_obj.name)< classKnowledge.objectNumber){
+                    waiting_objects.removeObject(wObj2.first);
+                    global_map.addObject(waiting_obj);
+                    updateCategoryObjectNumber(waiting_obj.name, "increment");
+                }
+            }
+        }
     }
 
     void SemanticFusion::semfusion_modified_nms(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold){

@@ -525,7 +525,7 @@ int main(int argc, char **argv){
               std::ostringstream map_index;
               map_index << filecount;
               std::string new_map_path = single_robot_maps_directory + "/val"+ map_index.str()+".yaml";
-              std::cout<<new_map_path<<endl;
+              //std::cout<<new_map_path<<endl;
 
               //Publish the last cleared refernce map
               mapping_msgs::SemanticMap::Ptr filteredRefMapMsg= filtered_ref_map.createMapMessage(robot, true);
@@ -539,14 +539,12 @@ int main(int argc, char **argv){
               mapping_msgs::SemanticMap::Ptr recMapMsg= received_map.createMapMessage(robot, true);
               recMapPub.publish(recMapMsg);
              
-              
               // Filter and publish the received map after the filtering process
               filtered_received_map.clearAll();
               fusion_node.removeMapInconsistencies(received_map, filtered_received_map);
               mapping_msgs::SemanticMap::Ptr filteredRecMapMsg= filtered_received_map.createMapMessage(robot, true);
               filteredRecMapPub.publish(filteredRecMapMsg);
               
-
               // Fuse the two maps
               global_map.clearAll();
               fusion_node.globalMapUpdate(filtered_ref_map, filtered_received_map, global_map, waiting_objects, P, Q, R, fusion_overlap_threshold);

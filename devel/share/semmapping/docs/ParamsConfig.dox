@@ -11,9 +11,9 @@ Reads and maintains the following parameters on the ROS server
 - \b "~ne_smoothing_size" : \b [double] smoothing size for ne min: 0.0, default: 20.0, max: 180.0
 - \b "~eapc_distance_threshold" : \b [double] distance threshold for eapc min: 0.0, default: 0.01, max: 1.0
 - \b "~vog_leaf_size" : \b [double] links min min: 0.0, default: 0.02, max: 1.0
-- \b "~queue_size" : \b [int] size of Queue min: 0, default: 15, max: 100
+- \b "~queue_size" : \b [int] size of Queue min: 0, default: 40, max: 100
 - \b "~certainty_thresh" : \b [double] threshold of when to delete obj min: 0.0, default: 0.25, max: 1.0
-- \b "~queue_thresh" : \b [int] queue threshold of min queue len min: 0, default: 10, max: 100
+- \b "~queue_thresh" : \b [int] queue threshold of min queue len min: 0, default: 30, max: 100
 - \b "~view_min" : \b [double] min value of visibility polygon min: 0.0, default: 0.4, max: 1.0
 - \b "~view_max" : \b [double] max value of visibility polygon min: 0.0, default: 1.8, max: 5.0
 
