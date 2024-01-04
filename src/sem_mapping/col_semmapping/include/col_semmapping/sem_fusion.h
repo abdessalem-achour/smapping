@@ -18,6 +18,30 @@ namespace semmapping
     int objectNumber;
     };
 
+    struct ObjectState
+    {
+    
+    bool wasMapped = false;
+    bool wasAdded = false;
+    bool wasUpdated = false;
+    bool wasRemoved = false;
+
+    bool isInGlobalMap = false;
+    bool isInWaitingList = false;
+    bool notInMap = false;
+
+    double existenceProbability = 0;
+    };
+
+    struct ClassStats {
+    double true_positive = 0;
+    double mean_iou = 0;
+    double mean_com_offset = 0;
+    double false_positive = 0;
+    double false_negative = 0;
+    double mean_orientation_offset = 0;
+    };
+
     class SemanticFusion
     {
         inline static double ref_fit(const polygon &newpg, const polygon &refpg)
@@ -98,9 +122,14 @@ namespace semmapping
             void semfusion_nms(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.5);
             void semfusion_modified_nms(semmapping::SemanticMap reference_map, semmapping::SemanticMap received_map, semmapping::SemanticMap &global_map, double overlap_threshold = 0.5);
             // Methods for evaluating merged maps
-            void updateClassStats(std::pair<std::string, double*> &class_data, double mapping_factor, double com_offset);
-            void saveMapStats(std::vector<std::pair<std::string, double*>> all_classes_data, std::string filename);
-            void evaluteFusedMap(std::map<size_t, SemanticObject> objectList, std::map<size_t, SemanticObject> groundTruthObjectList, std::string backup_file_name);
+            bool isCloseDistance(double distance1, double distance2);
+            double objectOrientation(polygon poly);
+            void updateClassStats(ClassStats& stats, double overlap, double comOffset, double orientationOffset);
+            void saveMapStats(const std::map<std::string, ClassStats>& all_classes_stats, const std::string& filename);
+            void evaluateFusedMap(const std::map<size_t, SemanticObject>& objectList, const std::map<size_t, SemanticObject>& groundTruthObjectList, const std::string& backup_file_name);
+            void trackGtObjectState(std::map<size_t, SemanticObject> groundTruthObjectList, std::map<size_t, SemanticObject> recievedObjectList, 
+                std::map<size_t, SemanticObject> ObjectList, std::map<size_t, SemanticObject> waitingObjectList, ObjectState& state);
+            
             // Methods to compute F1 score of a map
             int numberFalseNegativeInMap(std::map<size_t, SemanticObject> objectList, std::map<size_t, SemanticObject> groundTruthObjectList);
             std::pair<int,int> numberTrueFalseDetectionInMap(std::map<size_t, SemanticObject> objectList, std::map<size_t, SemanticObject> groundTruthObjectList);

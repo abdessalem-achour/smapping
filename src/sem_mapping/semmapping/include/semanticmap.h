@@ -40,6 +40,7 @@ namespace semmapping
     struct SemanticObject
     {
     std::string name;
+    int id;
     std::vector<UncertainShape> shapes;
     double exist_certainty = 0;
     double mean_height;

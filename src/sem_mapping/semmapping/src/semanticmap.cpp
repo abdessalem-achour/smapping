@@ -1086,6 +1086,7 @@ namespace semmapping
         {
             SemanticObject obj;
             obj.name = entry["name"].as<std::string>();
+            obj.id = entry["id"].as<int>();
             obj.exist_certainty = 1;
             try
             {

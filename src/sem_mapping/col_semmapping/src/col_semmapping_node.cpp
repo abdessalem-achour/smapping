@@ -31,10 +31,11 @@ received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_
 std::string ground_truth_map_file_name = "src/sem_mapping/col_semmapping/fused_maps/ground_truth_maps/truth_map_cluttered_world_2.yaml"; //validation environment
 std::string single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/validation_maps";
 std::string global_map_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/global_map";
-std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/validation_maps/threshold_" + buffer; //+"_nms";
+std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/global_map";
 std::string nms_fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/nms_maps";
 std::string modified_nms_fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/modified_nms_maps";
-std::string backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/validation_data/fusion evaluation/" + algorithm + "/threshold_0.1.csv"; //"_nms"+".csv";
+//std::string backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/validation_data/fusion evaluation/" + algorithm + "/threshold_0.1.csv"; //"_nms"+".csv";
+std::string backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/progressive_fusion.csv"; 
 std::string received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/validation_maps/val7.yaml";
 
 std::string prior_knowledge_file_name = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/cfg/prior knowledge.yaml";
@@ -261,7 +262,7 @@ int main(int argc, char **argv){
             {
             std::ifstream ground_truth_map_file(ground_truth_map_file_name);
             global_map.loadGroundTruthMap(ground_truth_map_file);
-            fusion_node.evaluteFusedMap(global_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);
+            fusion_node.evaluateFusedMap(global_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);
             break;
             }
         case 5: //fuse_all_maps_in_directory
@@ -293,7 +294,7 @@ int main(int argc, char **argv){
             for (const auto & dir_entry: boost::filesystem::directory_iterator(fused_maps_directory)){
               std::ifstream fused_map_file(dir_entry.path().string());
               global_map.readMapData(fused_map_file); fused_map_file.close();
-              fusion_node.evaluteFusedMap(global_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);
+              fusion_node.evaluateFusedMap(global_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);
               }
             break;
             }
@@ -511,7 +512,12 @@ int main(int argc, char **argv){
               maps_number++;
             }
 
-            std::cout << "The folder contain " << maps_number << " maps to integrate in the global map" << endl;
+            // Object to track intial state
+            semmapping::ObjectState state = {false, false, false, false, false, false, true, 0};
+            cout<< "Object initial state : wasMapped = "<<state.wasMapped<<" wasAdded = "<<state.wasAdded<<" wasUpdated = "<<state.wasUpdated<<" wasRemoved = "<<state.wasRemoved<<
+            " isInGlobalMap = "<<state.isInGlobalMap<<" isInWaitingList = "<<state.isInWaitingList<<" notInMap = "<<state.notInMap<<" existenceProbability = "<<state.existenceProbability<<endl;
+
+            cout << "The folder contain " << maps_number << " maps to integrate in the global map" << endl;
             
             //for (const auto & dir_entry: boost::filesystem::directory_iterator(single_robot_maps_directory)){
             for (int filecount = 1; filecount <= maps_number; filecount++){
@@ -557,6 +563,17 @@ int main(int argc, char **argv){
               waitingObjPub.publish(waiting_objects_msg);
               cout << "Waiting objects updated "<< filecount <<" time(s)"<< endl;
 
+              // Evaluate Global map
+              std::ifstream ground_truth_map_file(ground_truth_map_file_name);
+              global_map.loadGroundTruthMap(ground_truth_map_file);
+              fusion_node.evaluateFusedMap(global_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);
+
+              // Track object state
+              fusion_node.trackGtObjectState(global_map.getGroundTruthObjectList(), filtered_received_map.getObjectList(), global_map.getObjectList(), waiting_objects.getObjectList(), state);
+
+              cout<< "Object state at iteration" << filecount <<" : wasMapped = "<<state.wasMapped<<" wasAdded = "<<state.wasAdded<<" wasUpdated = "<<state.wasUpdated<<" wasRemoved = "<<state.wasRemoved<<
+              " isInGlobalMap = "<<state.isInGlobalMap<<" isInWaitingList = "<<state.isInWaitingList<<" notInMap = "<<state.notInMap<<" existenceProbability = "<<state.existenceProbability<<endl;
+              
               // Update the cleared reference map
               filtered_ref_map.clearAll();
               for (auto &value : global_map.getObjectList()){
