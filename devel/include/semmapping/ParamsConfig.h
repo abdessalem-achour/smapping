@@ -713,7 +713,7 @@ ParamsConfig::GroupDescription<ParamsConfig::DEFAULT::QUEUE, ParamsConfig::DEFAU
 //#line 27 "/home/abdessalem/smapping/src/sem_mapping/semmapping/cfg/Params.cfg"
       __max__.queue_thresh = 100;
 //#line 27 "/home/abdessalem/smapping/src/sem_mapping/semmapping/cfg/Params.cfg"
-      __default__.queue_thresh = 30;
+      __default__.queue_thresh = 20;
 //#line 27 "/home/abdessalem/smapping/src/sem_mapping/semmapping/cfg/Params.cfg"
       Queue.abstract_parameters.push_back(ParamsConfig::AbstractParamDescriptionConstPtr(new ParamsConfig::ParamDescription<int>("queue_thresh", "int", 0, "queue threshold of min queue len", "", &ParamsConfig::queue_thresh)));
 //#line 27 "/home/abdessalem/smapping/src/sem_mapping/semmapping/cfg/Params.cfg"

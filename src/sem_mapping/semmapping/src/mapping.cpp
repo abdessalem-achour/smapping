@@ -132,6 +132,7 @@ semmapping::ParamsConfig param_config;
 semmapping::SemanticMap map(tfBuffer, viewer, viewer_mtx, semmap_vport0, semmap_vport1, param_config);
 int viewer_index = 0;
 bool static_map;
+
 std::list<std::string> consideredCategories{"Chair","Table","Couch","Shelf"};
 
 inline bool operator==(const geometry_msgs::Vector3 &lhs, const geometry_msgs::Vector3 &rhs) {
@@ -181,6 +182,21 @@ void visualizeColorCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, const s
                                          vport);
     viewer_mtx.unlock();
 }
+
+std::pair<double, double> get_real_object_length_width(const std::string &name)
+    {
+        std::pair<double, double> dimensions;
+
+        if(name=="Chair") {dimensions.first= 0.6; dimensions.second= 0.57;} // Chair model in world well arranged
+        //if(name=="Chair") {dimensions.first= 0.57; dimensions.second= 0.57;}  // Chair model in world cluttered
+        else if (name== "Table") {dimensions.first= 1.782; dimensions.second= 0.8;}
+        else if (name=="Shelf") {dimensions.first= 0.9; dimensions.second= 0.4;}
+        else if (name=="Couch"){dimensions.first= 0.97; dimensions.second= 2.009;}
+        else if (name=="Ball"){dimensions.first= 0.2; dimensions.second= 0.2;}
+        else {dimensions.first= 0.0; dimensions.second= 0.0;}
+
+        return dimensions;
+    }
 
 semmapping::polygon getPolygonInMap(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud) {
     if (cloud->size() == 0) {
@@ -554,11 +570,6 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data){
                 continue;
             }
 
-            if (res_cloud->points.size() < 5) {
-                ROS_WARN_STREAM("res cloud size <5 for obj: " << box.Class);
-                continue;
-            }
-
             /*Create the polygon convex from the 3D model (res_cloud) and save it in res_pg*/
             semmapping::polygon res_pg = getPolygonInMap(res_cloud);
 
@@ -567,22 +578,29 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data){
                 continue;
             }
 
+            /*Verify that the polygon is in robot good perception zone*/
             semmapping::point res_pg_cen;
             semmapping::bg::centroid(res_pg, res_pg_cen);
             double distance_from_robot = sqrt((res_pg_cen.x() - robot_position.x())*(res_pg_cen.x() - robot_position.x()) 
                                 + (res_pg_cen.y() - robot_position.y())*(res_pg_cen.y() - robot_position.y()));
-            std::cout<<"distance_from_robot= "<< distance_from_robot<<std::endl;
 
             if(distance_from_robot < 1.7 || distance_from_robot > 3.0){ //distance_from_robot < 2.2
-                ROS_WARN_STREAM("Polygon in not in good perception zone: " << box.Class);
+                ROS_WARN_STREAM(box.Class <<" object is not in the robot good perception zone.");
+                cout << box.Class <<" object is not in the robot good perception zone."<< endl;
                 continue;
             }
+            
+            /*Verify that the polygon area is good enough to be added to the map ( >= 0.3*realArea and <= realArea).*/
+            std::pair<double, double> dimensions = get_real_object_length_width(box.Class);
+            double realArea = dimensions.first * dimensions.second;
 
-            if (semmapping::bg::area(res_pg) > 0.03) {             
+            if (semmapping::bg::area(res_pg) >= 0.3 * realArea && semmapping::bg::area(res_pg) <= realArea) {      
                 map.addEvidence(box.Class, box.probability, res_pg, calculateMeanHight(res_cloud), res_cloud);
-            } else
-                ROS_WARN_STREAM(
-                        "Area is to small for Object " << box.Class << " wit AREA: " << semmapping::bg::area(res_pg));
+            } else {
+                map.updateEvidenceCertainty(box.Class, res_pg);
+                ROS_WARN_STREAM("Object "<< box.Class << " area is not good enough to update object shape.");
+                cout << "Object "<< box.Class << " area is not good enough to update object shape." << endl;
+            }
         }
         mapUpdateAndPublish(orig_cloud, robot_position, cloud);
     }

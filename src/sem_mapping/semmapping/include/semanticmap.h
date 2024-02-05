@@ -243,6 +243,7 @@ namespace semmapping
 
             //Semantic Mapping Methods
             void addEvidence(const std::string &name, const float &confidence, const polygon &pg, double mean_height,  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+            void updateEvidenceCertainty(const std::string &name, const polygon &pg);
             void removeEvidence(const polygon &visibilityArea, const point &robot);
             void deleteLeastConsistentShape(size_t id);
             void updateUnion(size_t id);
@@ -253,7 +254,6 @@ namespace semmapping
             void removeObject(size_t id);
             void clearAll();
             point getRobotPosition();
-            float robotIsToClose(point object);
             pcl::PointCloud<pcl::PointXYZ>::Ptr removeOutliers(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
             pcl::PointCloud<pcl::PointXYZ>::Ptr removeRadiusOutliers(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
             pcl::PointCloud<pcl::PointXYZ>::Ptr calculateIcp(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud1, pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud2);

@@ -5,7 +5,8 @@
   <arg name="tf_prefix" default="" doc="tf_prefix to be used by gazebo plugins and in the robot's urdf etc." />
   <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_small.world" />-->
   <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_small_well_arranged.world" />-->
-  <arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered.world" />
+  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered.world" />-->
+  <arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_groundTruth.world" />
   <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_added_chair.world" />-->
   <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_deplaced_chair.world" />-->
   <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_deplaced_chair_added_couch.world" />-->

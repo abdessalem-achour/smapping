@@ -347,7 +347,6 @@ namespace semmapping
     // Perform geometric fusion for two non-rectangular objects.
     SemanticObject SemanticFusion::objectWithoutObbUpdate(const SemanticObject& initial_obj, const SemanticObject& received_obj, semmapping::SemanticMap map) {
         SemanticObject obj;
-        cout<<"objectWithoutObbUpdate"<<endl;
         obj.name = initial_obj.name;
         obj.rotation_angle = 0;
         multi_polygon sect;
@@ -855,18 +854,18 @@ namespace semmapping
     void SemanticFusion::saveMapStats(const std::map<std::string, ClassStats>& all_classes_stats, const std::string& filename) {
         std::ofstream myfile;
         myfile.open(filename, std::ios::out | std::ios::app);
-        myfile << "Fused map data" << "\n";
+        myfile << "Map data" << "\n";
         
         for (const auto& classData : all_classes_stats) {
             const std::string& className = classData.first;
             const ClassStats& stats = classData.second;
-            myfile << className << "," << stats.true_positive << "," << stats.false_positive << "," << stats.false_negative << "," << stats.mean_iou << "," << stats.mean_com_offset << "," << stats.mean_orientation_offset << "\n";
+            myfile << className << "," << stats.true_positive << "," << stats.false_positive << "," << stats.false_negative << "," << stats.mean_iou << "," << stats.mean_com_offset << "," << stats.mean_orientation_offset << "," << stats.F1_score << "\n";
         }
         
         myfile.close();
     }
 
-    void SemanticFusion::evaluateFusedMap(const std::map<size_t, SemanticObject>& objectList, const std::map<size_t, SemanticObject>& groundTruthObjectList, const std::string& backup_file_name) {
+    void SemanticFusion::evaluateSemanticMap(const std::map<size_t, SemanticObject>& objectList, const std::map<size_t, SemanticObject>& groundTruthObjectList, const std::string& backup_file_name) {
 
         std::map<std::string, ClassStats> all_classes_stats;
         // Populate all_classes_stats with class names and initialize to zero
@@ -887,6 +886,11 @@ namespace semmapping
                             point truth_centroid; bg::centroid(gtObj.obb, truth_centroid);
                             double com_offset= sqrt((obj.oriented_box_cen.x() - truth_centroid.x())*(obj.oriented_box_cen.x() - truth_centroid.x())
                             + (obj.oriented_box_cen.y() - truth_centroid.y())*(obj.oriented_box_cen.y() - truth_centroid.y()));
+                            
+                            // Used to verify overlap
+                            double overlap_with_polygon= iou(obj.shape_union, gtObj.obb);
+
+                            // Used to compute the mean overlap indicator
                             double overlap= iou(obj.obb, gtObj.obb);
 
                             double orientation_offset= abs(objectOrientation(gtObj.obb)-objectOrientation(obj.obb));
@@ -897,7 +901,7 @@ namespace semmapping
                             if (orientation_offset > 170)
                                 orientation_offset = abs(orientation_offset-180);
 
-                            if (overlap) {
+                            if (overlap_with_polygon) {
                                 std::cout<<"obj "<< obj.name << " gt orientation = "<<objectOrientation(gtObj.obb)<<" | obj orientation = "<<objectOrientation(obj.obb)
                                     <<" | orientation error = "<< orientation_offset << endl;
 
@@ -918,37 +922,39 @@ namespace semmapping
 
                     CategoryPriorKnowledge classKnowledge = getCategoryPriorKnowledge(obj.name);
                     auto it = all_classes_stats.find(obj.name);
-                        if (it != all_classes_stats.end())
+                        if (it != all_classes_stats.end()){
                             it->second.false_negative= classKnowledge.objectNumber - it->second.true_positive;
+                            std::array<double,3> F1_score_parameters;
+                            F1_score_parameters = computeMapF1Score(it->second.true_positive, it->second.false_positive, it->second.false_negative);
+                            it->second.F1_score= F1_score_parameters[2];
+                        }
                 }
             }
 
             // ... Output and save statistics ...
 
-            std::cout << "--- Fused Map Evaluation ---" << std::endl;
-            std::cout << std::left << std::setw(20) << "class name" << std::setw(20) << "TP" << std::setw(20) << "FP" << std::setw(40) << "FN - Missing objects " << std::setw(20) << "Mean IOU" << std::setw(20) << "Mean CoM offset" << std::setw(20) << "Mean orientation offset" << std::endl;
+            std::cout << "--- Map Evaluation ---" << std::endl;
+            std::cout << std::left << std::setw(20) << "class name" << std::setw(20) << "TP" << std::setw(20) << "FP" << std::setw(30) << "FN - Missing objects " << std::setw(20) << "Mean IOU" 
+            << std::setw(20) << "Mean CoM offset" << std::setw(40) << "Mean orientation offset"<< std::setw(20) << "F1 score" << std::endl;
 
             for (const auto& classData : all_classes_stats) {
                 const ClassStats& stats = classData.second;
-                std::cout << std::left << std::setw(20) << classData.first << std::setw(20) << stats.true_positive << std::setw(20) << stats.false_positive << std::setw(40) << stats.false_negative
-                    << std::setw(20) << stats.mean_iou << std::setw(20) << stats.mean_com_offset << std::setw(20) << stats.mean_orientation_offset << std::endl;
+                std::cout << std::left << std::setw(20) << classData.first << std::setw(20) << stats.true_positive << std::setw(20) << stats.false_positive << std::setw(30) << stats.false_negative
+                    << std::setw(20) << stats.mean_iou << std::setw(20) << stats.mean_com_offset << std::setw(40) << stats.mean_orientation_offset << std::setw(20) << stats.F1_score << std::endl;
             }
             saveMapStats(all_classes_stats, backup_file_name);
 
         } else {
-            ROS_INFO_STREAM("The Fused Map is empty, so it can't be evaluated!");
+            ROS_INFO_STREAM("Map is empty, so it can't be evaluated!");
         }
     }
 
-    void SemanticFusion::trackGtObjectState(std::map<size_t, SemanticObject> groundTruthObjectList, std::map<size_t, SemanticObject> recievedObjectList, 
-    std::map<size_t, SemanticObject> ObjectList, std::map<size_t, SemanticObject> waitingObjectList, ObjectState& state) {
-
-        /*std::map<size_t, SemanticObject>::const_iterator it = groundTruthObjectList.begin();
-        const SemanticObject& gtObj = it->second;*/
+    void SemanticFusion::trackGtObjectState(std::string objectName, int objectId, std::map<size_t, SemanticObject> groundTruthObjectList, std::map<size_t, SemanticObject> recievedObjectList, 
+    std::map<size_t, SemanticObject> ObjectList, std::map<size_t, SemanticObject> waitingObjectList, ObjectState& state, std::string trackBackupFileName) {
 
         SemanticObject gtObj;
         for (const auto& val : groundTruthObjectList) {
-            if(val.second.name =="Table" && val.second.id == 6)
+            if(val.second.name == objectName && val.second.id == objectId)
                 gtObj = val.second;
         }
 
@@ -1038,6 +1044,12 @@ namespace semmapping
             state.wasUpdated = false;
             state.wasRemoved = true;
         }
+
+        std::ofstream newfile;
+        newfile.open(trackBackupFileName, std::ios::out | std::ios::app);
+        newfile <<objectName<<","<<objectId<<","<<state.wasMapped<<","<<state.wasAdded<<","<<state.wasUpdated<<","<<state.wasRemoved<<","<<state.isInGlobalMap<<","<<state.isInWaitingList<<","<<state.notInMap<<","<<state.existenceProbability<<"\n";
+
+        newfile.close();
     }
 
     int SemanticFusion::numberFalseNegativeInMap(std::map<size_t, SemanticObject> objectList, std::map<size_t, SemanticObject> groundTruthObjectList)

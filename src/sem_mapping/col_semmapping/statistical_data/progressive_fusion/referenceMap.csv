@@ -1,0 +1,6 @@
+Class name,TP, FP, FN - Missing objects, Mean IOU, Mean CoM offset, Mean orientation offset, F1score
+Map data
+Chair,4,0,1,0.739296,0.0673849,2.36382,0.888889
+Couch,3,0,0,0.804084,0.104222,5.75453,1
+Shelf,3,0,0,0.725853,0.0664988,1.06711,1
+Table,6,0,0,0.78791,0.157583,26.7788,1

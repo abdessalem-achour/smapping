@@ -149,9 +149,19 @@ namespace semmapping
                 bg::append(from_reference_to_edge_area.outer(), reference);
                 bg::append(from_reference_to_edge_area.outer(), poly.outer()[i]);
                 bg::append(from_reference_to_edge_area.outer(), poly.outer()[i+1]);
+                bg::append(from_reference_to_edge_area.outer(), reference);
+                
+                if (!bg::is_valid(from_reference_to_edge_area)){
+                    from_reference_to_edge_area.clear();
+                    bg::append(from_reference_to_edge_area.outer(), reference);
+                    bg::append(from_reference_to_edge_area.outer(), poly.outer()[i+1]);
+                    bg::append(from_reference_to_edge_area.outer(), poly.outer()[i]);
+                    bg::append(from_reference_to_edge_area.outer(), reference);
+                }
+
                 multi_polygon intersection;
                 bg::intersection(from_reference_to_edge_area, poly, intersection);
-                if(bg::area(intersection)==0){
+                if(bg::area(intersection)== 0){
                     std::pair<point, point> edge;
                     edge.first= poly.outer()[i];
                     edge.second= poly.outer()[i+1];
@@ -478,25 +488,33 @@ namespace semmapping
             ROS_ERROR("Semantic object has no shape");
             return;
         }
-        if (obj.times_merged > 5){
+
+        if (obj.times_merged > 10){
             std::vector<pcl::PointCloud<pcl::PointXYZ>> point_cloud_cluster;
             if (!obj.point_cloud->empty()){
-        //            obj.point_cloud = removeOutliers(obj.point_cloud);
+                  obj.point_cloud = removeOutliers(obj.point_cloud);
                     obj.times_merged = 0;
                     point_cloud_cluster = getObjectPointsEuc(obj.point_cloud);
-                    *obj.point_cloud = point_cloud_cluster[0];
-        //            if(point_cloud_cluster.size()==1){
-        //                *obj.point_cloud = point_cloud_cluster[0];
-        //            }
-        //            else if (point_cloud_cluster.size()>1){
-        //                *obj.point_cloud = point_cloud_cluster[0];
-        //                for(int i=1;i<point_cloud_cluster.size();i++){
-        //                    pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
-        //                    *temp_cloud = point_cloud_cluster[i];
-        //                    double height = calculateMeanHight(temp_cloud);
-        //                    addNewObject(obj.name,computeConvexHullPcl(temp_cloud),height,temp_cloud);
-        //                }
-        //            }
+                    //*obj.point_cloud = point_cloud_cluster[0];
+                    if(point_cloud_cluster.size() == 1){
+                        *obj.point_cloud = point_cloud_cluster[0];
+                    }
+                    else if (point_cloud_cluster.size() > 1){
+                        *obj.point_cloud = point_cloud_cluster[0];
+                        for(int i=1;i<point_cloud_cluster.size();i++){
+                            pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+                            *temp_cloud = point_cloud_cluster[i];
+                            double height = calculateMeanHight(temp_cloud);
+                            polygon poly = computeConvexHullPcl(temp_cloud);
+
+                            std::pair<double, double> dimensions = get_real_object_length_width(obj.name);
+                            double realArea = dimensions.first * dimensions.second;
+
+                            if (bg::area(poly) >= 0.3 * realArea && bg::area(poly) <= realArea) { 
+                                addNewObject(obj.name,obj.class_confidence, poly,height,temp_cloud);
+                            }
+                        }
+                    }
             }
         }
         //multi_point obj_cloud;
@@ -509,11 +527,11 @@ namespace semmapping
         //obj.obb = polygonFromBox(obj.oriented_box, obj.rotation_angle);
         //obj.obb = create_object_box_using_prior_knowledge(obj.shape_union, obj.name);
         std::pair<polygon, double> selected_obb;
-        selected_obb= create_object_box_using_prior_knowledge(obj.shape_union, obj.name);
+        selected_obb = create_object_box_using_prior_knowledge(obj.shape_union, obj.name);
         obj.obb = selected_obb.first;
-        obj.obb_score = 1-selected_obb.second;
+        obj.obb_score = 1 - selected_obb.second;
         bg::centroid(obj.obb, obj.oriented_box_cen);
-        bg::centroid( obj.shape_union, obj.shape_union_cen);
+        bg::centroid(obj.shape_union, obj.shape_union_cen);
 
         objectRtree.remove(std::make_pair(obj.bounding_box, id));
         obj.bounding_box = bg::return_envelope<box>(obj.shape_union);
@@ -608,6 +626,7 @@ namespace semmapping
                 if(tableObj.point_cloud->points.size() < 5)
                 {
                     ROS_INFO_STREAM("Object " << tableObj.name << " removed beacause it was in table points");
+                    cout << "Object " << tableObj.name << " removed beacause it was in table points"<< endl;
                     removeObject(id);
                 }
                 else
@@ -627,6 +646,27 @@ namespace semmapping
         }
     }
 
+    void SemanticMap::updateEvidenceCertainty(const std::string &name, const polygon &pg)
+    {
+        std::set<size_t> existingObjects = getObjectsByNameInRange(name, pg);
+        if (!existingObjects.empty()) 
+        {
+            size_t objectId = *existingObjects.begin();
+
+            if (existingObjects.size() > 1) {
+                objectId = combineObjects(existingObjects);
+            }
+
+            SemanticObject &obj = objectList.at(objectId);
+
+            //if queue size is > 30 pop first entry and push 1
+            if (obj.counting_queue.size() > param_config.queue_size) obj.counting_queue.pop();
+            obj.counting_queue.push(1);
+
+            obj.isCombined = true;
+        }
+    }
+    
     double calculateCertainty(std::queue<int> counting_queue){
         int hit = 0;
         int miss = 0;
@@ -643,25 +683,83 @@ namespace semmapping
     void SemanticMap::removeEvidence(const polygon &visibilityArea, const point &robot)
     {
         std::set<size_t> existingObjects = getObjectsWithinRange(visibilityArea);
+
         for (size_t id : existingObjects)
         {
             SemanticObject &obj = objectList.at(id);
             point cen_point;
             bg::centroid(obj.shape_union, cen_point);
             double dist_to_obj = bg::distance(robot, cen_point);
-            if(dist_to_obj >=  3.0 && obj.isCombined == false) continue;
+
+            multi_polygon ObjectPartInVisibilityArea;
+            bg::intersection(visibilityArea, obj.shape_union, ObjectPartInVisibilityArea);
+            double objectCoveredArea = bg::area(ObjectPartInVisibilityArea)/ bg::area(obj.shape_union);
+
+            if((dist_to_obj > 3.0 || dist_to_obj < 1.7 || objectCoveredArea < 0.8 ) && obj.isCombined == false){
+                cout << obj.name << " is not in range ! Its prob is not updated." << endl;
+                continue;
+            }
+
             if (obj.isCombined == true) {
                 obj.exist_certainty = calculateCertainty(obj.counting_queue);
-                }
+                cout << obj.name << " is combined ! Its prob is updated." << endl;
+            } 
+            
             else {
-                //if(obj.counting_queue.size() >=  param_config.queue_thresh) {
-                if (obj.counting_queue.size() > param_config.queue_size) obj.counting_queue.pop();
-                obj.counting_queue.push(0);
-                obj.exist_certainty = calculateCertainty(obj.counting_queue);
+                // Verify if object is visible or not to decide either to reduce its certainty or not
+                int numberVisibleEdeges = 0;
+                for(int i=0; i< obj.obb.outer().size()-1; i++){
+                    int edgeIsVisible = 1 ;
+
+                    // Define Area from robot to edge in clockwise direction to get a valid intersection
+                    polygon area_from_robot_to_edge;
+                    bg::append(area_from_robot_to_edge.outer(), robot);
+                    bg::append(area_from_robot_to_edge.outer(), obj.obb.outer()[i]);
+                    bg::append(area_from_robot_to_edge.outer(), obj.obb.outer()[i+1]);
+                    bg::append(area_from_robot_to_edge.outer(), robot);
+
+                    if (!bg::is_valid(area_from_robot_to_edge)){
+                        area_from_robot_to_edge.clear();
+                        bg::append(area_from_robot_to_edge.outer(), robot);
+                        bg::append(area_from_robot_to_edge.outer(), obj.obb.outer()[i+1]);
+                        bg::append(area_from_robot_to_edge.outer(), obj.obb.outer()[i]);
+                        bg::append(area_from_robot_to_edge.outer(), robot);
+                    }
+
+                    multi_polygon intersection;
+                    bg::intersection(area_from_robot_to_edge, obj.obb, intersection);
+
+                    if(bg::area(intersection))
+                        edgeIsVisible = 0;
+                    else {  
+                        for (size_t id : existingObjects){
+                            SemanticObject &obj2 = objectList.at(id);
+                            multi_polygon intersection2;
+                            bg::intersection(area_from_robot_to_edge, obj2.obb, intersection2);
+
+                            if (bg::area(intersection2))
+                                edgeIsVisible = 0;
+                        }
+                    }
+
+                    if(edgeIsVisible){
+                        numberVisibleEdeges++; 
+                    } 
+                }
+
+                if (numberVisibleEdeges > 0){
+                    if (obj.counting_queue.size() > param_config.queue_size) obj.counting_queue.pop();
+                    obj.counting_queue.push(0);
+                    obj.exist_certainty = calculateCertainty(obj.counting_queue);
+                    cout << obj.name << " can be clearly seen ! It prob is updated." << endl;
+                } 
+                else
+                    cout << obj.name << " can not be clearly seen ! It prob is not updated." << endl; 
             }
+
             obj.isCombined = false;
-            if((dist_to_obj >=  1.7 && dist_to_obj <= 3.0) && obj.counting_queue.size() >= param_config.queue_thresh && obj.exist_certainty < 0.25) {
-                //if (obj.exist_certainty < 0.1){//} param_config.certainty_thresh) {
+
+            if((dist_to_obj >=  1.7 && dist_to_obj <= 3.0 && objectCoveredArea >= 0.8) && obj.counting_queue.size() >= param_config.queue_thresh && obj.exist_certainty < 0.25) {
                 removeObject(id);
                 ROS_INFO_STREAM("Object " << obj.name << " removed");
             }
@@ -735,6 +833,22 @@ namespace semmapping
         next_index = 0;
     }
 
+    point SemanticMap::getRobotPosition(){
+        tf2_ros::TransformListener tfListener(tfBuffer);
+        geometry_msgs::TransformStamped transform;
+        try{
+            transform = tfBuffer.lookupTransform("map", "base_link", ros::Time(0));
+        }
+        catch (tf2::TransformException ex){
+            ROS_ERROR("%s",ex.what());
+            ros::Duration(1.0).sleep();
+        }
+        point robot;
+        robot.x(transform.transform.translation.x);
+        robot.y(transform.transform.translation.y);
+        return robot;
+    }
+    
     std::set<size_t> SemanticMap::getObjectsWithinRange(const polygon &pg)
     {
         double coveredAreaPercentage;
@@ -761,34 +875,13 @@ namespace semmapping
         for (rtree_entry val : result_obj)
         {
             const SemanticObject &foundObject = objectList.at(val.second);
-            if (name == "Couch"){
-                if ((foundObject.name == name || foundObject.name == "Chair") && (bg::intersects(pg, foundObject.shape_union)
-                || bg::within(pg, foundObject.shape_union) || bg::touches(pg, foundObject.shape_union)))
-                    result.insert(val.second);
-            }
-            else{
-                if (foundObject.name == name && (bg::intersects(pg, foundObject.shape_union)
-                || bg::within(pg, foundObject.shape_union) || bg::touches(pg, foundObject.shape_union)))
-                    result.insert(val.second);
-            }
+        
+            if (foundObject.name == name && (bg::intersects(pg, foundObject.shape_union)
+            || bg::within(pg, foundObject.shape_union) || bg::touches(pg, foundObject.shape_union)))
+                result.insert(val.second);
+            
         }
         return result;
-    }
-
-    point SemanticMap::getRobotPosition(){
-        tf2_ros::TransformListener tfListener(tfBuffer);
-        geometry_msgs::TransformStamped transform;
-        try{
-            transform = tfBuffer.lookupTransform("map", "base_link", ros::Time(0));
-        }
-        catch (tf2::TransformException ex){
-            ROS_ERROR("%s",ex.what());
-            ros::Duration(1.0).sleep();
-        }
-        point robot;
-        robot.x(transform.transform.translation.x);
-        robot.y(transform.transform.translation.y);
-        return robot;
     }
 
     std::set<size_t> SemanticMap::getObjectsInRange(const polygon &pg)

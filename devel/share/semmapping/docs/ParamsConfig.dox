@@ -13,7 +13,7 @@ Reads and maintains the following parameters on the ROS server
 - \b "~vog_leaf_size" : \b [double] links min min: 0.0, default: 0.02, max: 1.0
 - \b "~queue_size" : \b [int] size of Queue min: 0, default: 40, max: 100
 - \b "~certainty_thresh" : \b [double] threshold of when to delete obj min: 0.0, default: 0.25, max: 1.0
-- \b "~queue_thresh" : \b [int] queue threshold of min queue len min: 0, default: 30, max: 100
+- \b "~queue_thresh" : \b [int] queue threshold of min queue len min: 0, default: 20, max: 100
 - \b "~view_min" : \b [double] min value of visibility polygon min: 0.0, default: 0.4, max: 1.0
 - \b "~view_max" : \b [double] max value of visibility polygon min: 0.0, default: 1.8, max: 5.0
 

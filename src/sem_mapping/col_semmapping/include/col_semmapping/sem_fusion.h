@@ -40,6 +40,7 @@ namespace semmapping
     double false_positive = 0;
     double false_negative = 0;
     double mean_orientation_offset = 0;
+    double F1_score = 0;
     };
 
     class SemanticFusion
@@ -126,9 +127,9 @@ namespace semmapping
             double objectOrientation(polygon poly);
             void updateClassStats(ClassStats& stats, double overlap, double comOffset, double orientationOffset);
             void saveMapStats(const std::map<std::string, ClassStats>& all_classes_stats, const std::string& filename);
-            void evaluateFusedMap(const std::map<size_t, SemanticObject>& objectList, const std::map<size_t, SemanticObject>& groundTruthObjectList, const std::string& backup_file_name);
-            void trackGtObjectState(std::map<size_t, SemanticObject> groundTruthObjectList, std::map<size_t, SemanticObject> recievedObjectList, 
-                std::map<size_t, SemanticObject> ObjectList, std::map<size_t, SemanticObject> waitingObjectList, ObjectState& state);
+            void evaluateSemanticMap(const std::map<size_t, SemanticObject>& objectList, const std::map<size_t, SemanticObject>& groundTruthObjectList, const std::string& backup_file_name);
+            void trackGtObjectState(std::string objectName, int objectId, std::map<size_t, SemanticObject> groundTruthObjectList, std::map<size_t, SemanticObject> recievedObjectList, 
+                std::map<size_t, SemanticObject> ObjectList, std::map<size_t, SemanticObject> waitingObjectList, ObjectState& state, std::string trackBackupFileName);
             
             // Methods to compute F1 score of a map
             int numberFalseNegativeInMap(std::map<size_t, SemanticObject> objectList, std::map<size_t, SemanticObject> groundTruthObjectList);
