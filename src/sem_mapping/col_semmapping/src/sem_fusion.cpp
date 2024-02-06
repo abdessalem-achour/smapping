@@ -447,7 +447,7 @@ namespace semmapping
                             + (object_obb.outer()[2].y() - object_obb.outer()[0].y())*(object_obb.outer()[2].y() - object_obb.outer()[0].y()));
         double diag2_distance= sqrt((object_obb.outer()[3].x() - object_obb.outer()[1].x())*(object_obb.outer()[3].x() - object_obb.outer()[1].x()) 
                             + (object_obb.outer()[3].y() - object_obb.outer()[1].y())*(object_obb.outer()[3].y() - object_obb.outer()[1].y()));
-        double error = 0.05;
+        double error = 0.02;
         bool condition1= std::abs(diag1_distance - diag2_distance) < error;
         if(!condition1)
             return false;
@@ -884,24 +884,30 @@ namespace semmapping
                         const SemanticObject& gtObj = val2.second;
                         if (obj.name == gtObj.name || similarClasses(obj.name, gtObj.name)) {
                             point truth_centroid; bg::centroid(gtObj.obb, truth_centroid);
-                            double com_offset= sqrt((obj.oriented_box_cen.x() - truth_centroid.x())*(obj.oriented_box_cen.x() - truth_centroid.x())
-                            + (obj.oriented_box_cen.y() - truth_centroid.y())*(obj.oriented_box_cen.y() - truth_centroid.y()));
+                            double com_offset = bg::distance(obj.oriented_box_cen, truth_centroid);
                             
                             // Used to verify overlap
                             double overlap_with_polygon= iou(obj.shape_union, gtObj.obb);
 
-                            // Used to compute the mean overlap indicator
+                            // Compute the mean overlap indicator
                             double overlap= iou(obj.obb, gtObj.obb);
 
-                            double orientation_offset= abs(objectOrientation(gtObj.obb)-objectOrientation(obj.obb));
-                            std::pair<double, double> dimensions= get_real_object_length_width(obj.name);
-                            if (isCloseDistance(dimensions.first, dimensions.second) && orientation_offset > 70)
-                                orientation_offset = abs(orientation_offset-90);
+                            // Verify that object OBB is rectangular
+                            bool obbIsRectangular = isRectangular(obj.obb);
 
-                            if (orientation_offset > 170)
-                                orientation_offset = abs(orientation_offset-180);
+                            // Compute the orientation offset indicator if the OBB is rectangular
+                            double orientation_offset;
+                            if (obbIsRectangular){
+                                orientation_offset= abs(objectOrientation(gtObj.obb)-objectOrientation(obj.obb));
+                                std::pair<double, double> dimensions= get_real_object_length_width(obj.name);
 
-                            if (overlap_with_polygon) {
+                                if (isCloseDistance(dimensions.first, dimensions.second) && orientation_offset > 70)
+                                    orientation_offset = abs(orientation_offset-90);
+                                if (orientation_offset > 170)
+                                    orientation_offset = abs(orientation_offset-180);
+                            }
+
+                            if (overlap_with_polygon && obbIsRectangular){
                                 std::cout<<"obj "<< obj.name << " gt orientation = "<<objectOrientation(gtObj.obb)<<" | obj orientation = "<<objectOrientation(obj.obb)
                                     <<" | orientation error = "<< orientation_offset << endl;
 
@@ -910,6 +916,12 @@ namespace semmapping
                                 if (it != all_classes_stats.end()) {
                                     updateClassStats(it->second, overlap, com_offset, orientation_offset);
                                 }
+                            } else if(overlap_with_polygon){
+                                std::cout<<"obj "<< obj.name << " is not rectangular, considered in number of f1 score but not the other metrics."<< endl;
+                                object_not_in_ground_truth_map = false;
+                                auto it = all_classes_stats.find(obj.name);
+                                if (it != all_classes_stats.end())
+                                    it->second.true_positive++;
                             }
                         }
                     }
@@ -924,9 +936,9 @@ namespace semmapping
                     auto it = all_classes_stats.find(obj.name);
                         if (it != all_classes_stats.end()){
                             it->second.false_negative= classKnowledge.objectNumber - it->second.true_positive;
-                            std::array<double,3> F1_score_parameters;
-                            F1_score_parameters = computeMapF1Score(it->second.true_positive, it->second.false_positive, it->second.false_negative);
-                            it->second.F1_score= F1_score_parameters[2];
+                            std::array<double,3> F1_score_metrics;
+                            F1_score_metrics = computeMapF1Score(it->second.true_positive, it->second.false_positive, it->second.false_negative);
+                            it->second.F1_score= F1_score_metrics[2];
                         }
                 }
             }

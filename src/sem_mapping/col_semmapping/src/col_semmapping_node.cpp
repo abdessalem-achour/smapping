@@ -17,7 +17,7 @@ ros::Publisher waitingObjPub;
 std::string algorithm = "our_solution"; // our_solution or modified_nms
 double fusion_overlap_threshold = 0.1;
 std::string buffer = "0.1";
-std::string reference_map_name = "val6"; // ref_cluttered good map with false orientations & ref_map2 very bad_map & ref_map3 good map
+std::string reference_map_name = "ref_map_test2"; // ref_cluttered good map with false orientations & ref_map2 very bad_map & ref_map3 good map
 std::string reference_map_file_name = "src/sem_mapping/col_semmapping/fused_maps/reference_maps/" + reference_map_name + ".yaml";
 std::string fused_map_file_name = "src/sem_mapping/col_semmapping/fused_maps/fused_maps/test_fusion.yaml";
 
