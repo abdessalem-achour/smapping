@@ -746,7 +746,7 @@ int main(int argc, char **argv) {
             file.close();
         } 
         else if (command == "load_ground_truth_map") {
-            //std::string fname = "src/sem_mapping/semmapping/maps/truth_map_cluttered_world_2.yaml";
+            //std::string fname = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/ground_truth_maps/truth_map_cluttered_world_2.yaml";
             std::cout << "Loading ground truth map file: " << ground_truth_map_file_name << std::endl;
             std::ifstream file(ground_truth_map_file_name);
             if (!file) {
