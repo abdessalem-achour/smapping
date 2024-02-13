@@ -17,7 +17,7 @@ ros::Publisher waitingObjPub;
 std::string algorithm = "our_solution"; // our_solution or modified_nms
 double fusion_overlap_threshold = 0.1;
 std::string buffer = "0.1";
-std::string reference_map_name = "ref_map_test2"; // ref_cluttered good map with false orientations & ref_map2 very bad_map & ref_map3 good map
+std::string reference_map_name = "ref_map_test1"; // ref_cluttered good map with false orientations & ref_map2 very bad_map & ref_map3 good map
 std::string reference_map_file_name = "src/sem_mapping/col_semmapping/fused_maps/reference_maps/" + reference_map_name + ".yaml";
 std::string fused_map_file_name = "src/sem_mapping/col_semmapping/fused_maps/fused_maps/test_fusion.yaml";
 
@@ -29,8 +29,8 @@ backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/stat
 received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/testing_maps/test1.yaml";*/
 
 // validation
-std::string ground_truth_map_file_name = "src/sem_mapping/col_semmapping/fused_maps/ground_truth_maps/truth_map_cluttered_world_2.yaml"; // validation environment
-std::string single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/last_version_maps";
+std::string ground_truth_map_file_name = "src/sem_mapping/col_semmapping/fused_maps/ground_truth_maps/truth_map_cluttered_addedChair.yaml"; // validation environment
+std::string single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/last_version_maps_moved_chair";
 std::string global_map_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/global_map";
 std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/global_map";
 std::string nms_fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/nms_maps";
@@ -552,9 +552,10 @@ int main(int argc, char **argv)
 
       // Object to track intial state
       std::string trackBackupFileName = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/objectTracking.csv";
-      std::string objectToTrackName = "Table";
-      int objectId = 5;
-      semmapping::ObjectState state = {false, false, false, false, false, false, true, 0};
+      std::string objectToTrackName = "Chair";
+      int objectId = 4;
+      // wasMapped, wasAdded, wasUpdated, wasRemoved, isInGlobalMap, isInWaitingList, notInMap, existenceProbability
+      semmapping::ObjectState state = {false, false, false, false, true, false, false, 0.0};
       cout << "Object initial state : wasMapped = " << state.wasMapped << " wasAdded = " << state.wasAdded << " wasUpdated = " << state.wasUpdated << " wasRemoved = " << state.wasRemoved << " isInGlobalMap = " << state.isInGlobalMap << " isInWaitingList = " << state.isInWaitingList << " notInMap = " << state.notInMap << " existenceProbability = " << state.existenceProbability << endl;
 
       cout << "The folder contain " << maps_number << " maps to integrate in the global map" << endl;
@@ -615,13 +616,13 @@ int main(int argc, char **argv)
         /*fusion_node.evaluateSemanticMap(global_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);*/
 
         // Track object state
-        /*
-        fusion_node.trackGtObjectState(objectToTrackName, objectId, global_map.getGroundTruthObjectList(), filtered_received_map.getObjectList(),
+        
+        /*fusion_node.trackGtObjectState(objectToTrackName, objectId, global_map.getGroundTruthObjectList(), filtered_received_map.getObjectList(),
         global_map.getObjectList(), waiting_objects.getObjectList(), state ,trackBackupFileName);
         cout << "Object state at iteration" << filecount << " : wasMapped = " << state.wasMapped << " wasAdded = " << state.wasAdded
           << " wasUpdated = " << state.wasUpdated << " wasRemoved = " << state.wasRemoved << " isInGlobalMap = " << state.isInGlobalMap 
-          << " isInWaitingList = " << state.isInWaitingList << " notInMap = " << state.notInMap << " existenceProbability = " << state.existenceProbability << endl;
-        */
+          << " isInWaitingList = " << state.isInWaitingList << " notInMap = " << state.notInMap << " existenceProbability = " << state.existenceProbability << endl;*/
+        
 
         // Update the cleared reference map
         filtered_ref_map.clearAll();

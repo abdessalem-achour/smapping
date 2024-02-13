@@ -657,6 +657,7 @@ namespace semmapping
         for (auto &val : received_map.getObjectList()){
             SemanticObject &new_obj = val.second;
             bool addedToGlobalMap = false;
+            bool inWaitingObjects = false;
 
             if (new_obj.exist_certainty > 0.25){
                 // Updating objects already in the global map
@@ -674,10 +675,24 @@ namespace semmapping
                     }
                 }
 
+                for (auto &wObj : waiting_objects.getObjectList()){
+                    SemanticObject &wRefObj = wObj.second;
+                    double overlap = iou(wRefObj.obb, new_obj.obb);
+
+                    if(overlap && (new_obj.name == wRefObj.name || similarClasses(new_obj.name, wRefObj.name))){
+                        inWaitingObjects = true; 
+                        if(overlap > overlap_threshold){
+                            SemanticObject fused_obj = objectUpdate(wRefObj, new_obj, waiting_objects, P, Q, R);
+                            waiting_objects.removeObject(wObj.first);
+                            waiting_objects.addObject(fused_obj);
+                        }   
+                    }
+                }
+
                 // Adding new object when an OBB is created and the number of mapped objects from that category is still less then the category total number of objects
                 // Otherwise, adding the object to the waiting list
                 CategoryPriorKnowledge classKnowledge = getCategoryPriorKnowledge(new_obj.name);
-                if (!addedToGlobalMap && new_obj.obb_score > 0){
+                if (!addedToGlobalMap && !inWaitingObjects && new_obj.obb_score > 0){
                     if(getCategoryObjectNumber(new_obj.name)< classKnowledge.objectNumber){
                         new_obj.point_cloud = nullptr;
                         new_obj.isCombined = true;
@@ -686,7 +701,7 @@ namespace semmapping
                     }
                     else
                     {
-                        bool inWaitingObjects = false;
+                        /*bool inWaitingObjects = false;
                         for (auto &wObj : waiting_objects.getObjectList()){
                             SemanticObject &wRefObj = wObj.second;
                             double overlap = iou(wRefObj.obb, new_obj.obb);
@@ -699,7 +714,7 @@ namespace semmapping
                                     waiting_objects.addObject(fused_obj);
                                 }   
                             }
-                        }
+                        }*/
 
                         if (!inWaitingObjects){
                             new_obj.point_cloud = nullptr;
@@ -901,7 +916,7 @@ namespace semmapping
                                 orientation_offset= abs(objectOrientation(gtObj.obb)-objectOrientation(obj.obb));
                                 std::pair<double, double> dimensions= get_real_object_length_width(obj.name);
 
-                                if (isCloseDistance(dimensions.first, dimensions.second) && orientation_offset > 70)
+                                if (isCloseDistance(dimensions.first, dimensions.second) && orientation_offset > 60)
                                     orientation_offset = abs(orientation_offset-90);
                                 if (orientation_offset > 170)
                                     orientation_offset = abs(orientation_offset-180);
@@ -954,7 +969,7 @@ namespace semmapping
                 std::cout << std::left << std::setw(20) << classData.first << std::setw(20) << stats.true_positive << std::setw(20) << stats.false_positive << std::setw(30) << stats.false_negative
                     << std::setw(20) << stats.mean_iou << std::setw(20) << stats.mean_com_offset << std::setw(40) << stats.mean_orientation_offset << std::setw(20) << stats.F1_score << std::endl;
             }
-            saveMapStats(all_classes_stats, backup_file_name);
+            //saveMapStats(all_classes_stats, backup_file_name);
 
         } else {
             ROS_INFO_STREAM("Map is empty, so it can't be evaluated!");
@@ -979,7 +994,7 @@ namespace semmapping
         for (const auto& val : recievedObjectList) {
             const SemanticObject& obj = val.second;
             if (obj.exist_certainty > 0.25 && (obj.name == gtObj.name || similarClasses(obj.name, gtObj.name))) {
-                double overlap= iou(obj.obb, gtObj.obb);
+                double overlap= iou(obj.shape_union, gtObj.obb);
                 if (overlap){
                     state.wasMapped = true;
                     std::cout<< gtObj.name <<" is mapped."<< endl;

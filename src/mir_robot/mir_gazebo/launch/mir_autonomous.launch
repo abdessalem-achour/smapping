@@ -3,12 +3,25 @@
   <arg name="gui" default="false" />
   <arg name="mir_type" default="mir_100" doc="The MiR variant. Can be 'mir_100' or 'mir_250' for now." />
   <arg name="tf_prefix" default="" doc="tf_prefix to be used by gazebo plugins and in the robot's urdf etc." />
+  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_small.world" />-->
+  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_small_well_arranged.world" />-->
+  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered.world" />-->
+  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_groundTruth_copy.world" />-->
+  <arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_added_chair.world" />
+  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_deplaced_chair.world" />-->
+  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_deplaced_chair_added_couch.world" />-->
+  
+  <arg name="map_file" value="$(find mir_gazebo)/maps/map_office_with_objects/map.yaml" />
+  <!--<arg name="map_file" value="$(find mir_gazebo)/maps/map_office_empty/empty_occupancy.yaml" />-->
+  <!--<arg name="map_file" value="$(find mir_gazebo)/maps/map_office_small_well_arranged/well_arranged_occupancy_map.yaml" />-->
+  
 
   <!-- Launch the environment world-->
   <include file="$(find mir_gazebo)/launch/mir_office_world.launch">
     <arg name="gui" value="$(arg gui)" />
     <arg name="mir_type" value="$(arg mir_type)" />
     <arg name="tf_prefix" value="$(arg tf_prefix)" />
+    <arg name="world"       value="$(arg world)" />
   </include>
 
 
@@ -27,14 +40,14 @@
   <!--<include file="$(find mir_navigation)/launch/amcl.launch">
     <arg name="initial_pose_x"       value="0.0" />
     <arg name="initial_pose_y"       value="0.0" />
+    <arg name="initial_pose_a"       value="0.0" />
   </include>-->
 
   <!-- Launch the navigation nodes-->
   <!--<arg name="map_file" value="$(find mir_gazebo)/maps/map_office_empty/empty_occupancy.yaml" />-->
   <include file="$(find mir_navigation)/launch/start_planner.launch">
     <arg name="local_planner" value="dwa"/>
-    <!--<arg name="map_file" value="$(find mir_gazebo)/maps/map_office_small_well_arranged/well_arranged_occupancy_map.yaml" />-->
-    <arg name="map_file" value="$(find mir_gazebo)/maps/map_office_empty/empty_occupancy.yaml" />
+    <arg name="map_file" value="$(arg map_file)" />
     <arg name="prefix" value="$(arg tf_prefix)" />
   </include>
 
@@ -47,10 +60,5 @@
     <remap from='points' to='/camera/depth/points'/>
 	  <param name="compressed" value="true" />
 	</node>-->
-
-
-  <!--<node pkg="image_view" type="image_view" name="image_view">
-    <remap from="image" to="debug_image"/>
-  </node>-->
 
 </launch>

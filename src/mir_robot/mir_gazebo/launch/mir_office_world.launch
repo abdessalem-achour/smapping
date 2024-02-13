@@ -3,13 +3,7 @@
   <arg name="gui" default="true" />
   <arg name="mir_type" default="mir_100" doc="The MiR variant. Can be 'mir_100' or 'mir_250' for now." />
   <arg name="tf_prefix" default="" doc="tf_prefix to be used by gazebo plugins and in the robot's urdf etc." />
-  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_small.world" />-->
-  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_small_well_arranged.world" />-->
-  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered.world" />-->
-  <arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_groundTruth.world" />
-  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_added_chair.world" />-->
-  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_deplaced_chair.world" />-->
-  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_deplaced_chair_added_couch.world" />-->
+  <arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_groundTruth_copy.world" />
 
   <include file="$(find mir_gazebo)/launch/mir_empty_world.launch">
     <arg name="world_name" value="$(arg world)" />
@@ -20,7 +14,14 @@
     <arg name="robot_y"   value="0.0" />
   </include>
 
-  <!--<node name="spawn_office" pkg="gazebo_ros" type="spawn_model" args="-sdf
-      -file /home/abdessalem/gazebo_models_worlds_collection/models/office_small/model.sdf -model office" output="screen" />-->
+  <!-- Remove comments when using this launch file withe hector mapping-->
+  <!-- Launch the fake localization node-->
+  <!--<include file="$(find mir_gazebo)/launch/fake_localization.launch">
+    <arg name="delta_x"       value="0.0" />
+    <arg name="delta_y"       value="0.0" />
+  </include>-->
+
+  <!-- Launch RVIZ-->
+  <!--<node name="rviz" pkg="rviz" type="rviz" args="-d $(find mir_navigation)/rviz/navigation.rviz"/>-->
 
 </launch>

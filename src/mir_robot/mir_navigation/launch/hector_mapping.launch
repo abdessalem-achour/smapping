@@ -10,7 +10,7 @@
     <!-- set use_tf_pose_start_estimate and map_with_known_poses to `true` when
          the map-base_footprint transform is provided by a different node, such
          as fake_localization -->
-  <arg name="disable_localization" default="false"/>
+  <arg name="disable_localization" default="true"/>
 
   <node pkg="hector_mapping" type="hector_mapping" name="hector_mapping" output="screen">
 
