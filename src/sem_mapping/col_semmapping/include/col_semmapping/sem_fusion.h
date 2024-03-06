@@ -126,11 +126,14 @@ namespace semmapping
             bool isCloseDistance(double distance1, double distance2);
             double objectOrientation(polygon poly);
             void updateClassStats(ClassStats& stats, double overlap, double comOffset, double orientationOffset);
+            void saveObjectStats(int id, std::string category, double overlap, double ComError, double orientationError, const std::string& filename);
             void saveMapStats(const std::map<std::string, ClassStats>& all_classes_stats, const std::string& filename);
             void evaluateSemanticMap(const std::map<size_t, SemanticObject>& objectList, const std::map<size_t, SemanticObject>& groundTruthObjectList, const std::string& backup_file_name);
             void trackGtObjectState(std::string objectName, int objectId, std::map<size_t, SemanticObject> groundTruthObjectList, std::map<size_t, SemanticObject> recievedObjectList, 
                 std::map<size_t, SemanticObject> ObjectList, std::map<size_t, SemanticObject> waitingObjectList, ObjectState& state, std::string trackBackupFileName);
-            
+            void evaluateObjectCategoriesOverAllMaps(int mapID, std::map<std::string, ClassStats>& all_classes_stats, int& numberObjectsWithOBB, const std::map<size_t, SemanticObject>& objectList,
+                const std::map<size_t, SemanticObject>& groundTruthObjectList, const std::string& backup_file_name);
+
             // Methods to compute F1 score of a map
             int numberFalseNegativeInMap(std::map<size_t, SemanticObject> objectList, std::map<size_t, SemanticObject> groundTruthObjectList);
             std::pair<int,int> numberTrueFalseDetectionInMap(std::map<size_t, SemanticObject> objectList, std::map<size_t, SemanticObject> groundTruthObjectList);

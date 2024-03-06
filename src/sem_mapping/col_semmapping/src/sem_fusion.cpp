@@ -869,7 +869,7 @@ namespace semmapping
     void SemanticFusion::saveMapStats(const std::map<std::string, ClassStats>& all_classes_stats, const std::string& filename) {
         std::ofstream myfile;
         myfile.open(filename, std::ios::out | std::ios::app);
-        myfile << "Map data" << "\n";
+        myfile << "Map average metrics" << "\n";
         
         for (const auto& classData : all_classes_stats) {
             const std::string& className = classData.first;
@@ -877,6 +877,13 @@ namespace semmapping
             myfile << className << "," << stats.true_positive << "," << stats.false_positive << "," << stats.false_negative << "," << stats.mean_iou << "," << stats.mean_com_offset << "," << stats.mean_orientation_offset << "," << stats.F1_score << "\n";
         }
         
+        myfile.close();
+    }
+
+    void SemanticFusion::saveObjectStats(int id, std::string category, double overlap, double ComError, double orientationError, const std::string& filename) {
+        std::ofstream myfile;
+        myfile.open(filename, std::ios::out | std::ios::app);
+        myfile << "Object" << id << "," << category << "," << overlap << "," << ComError << "," << orientationError << "\n";
         myfile.close();
     }
 
@@ -888,6 +895,7 @@ namespace semmapping
         all_classes_stats["Table"] = ClassStats();
         all_classes_stats["Shelf"] = ClassStats();
         all_classes_stats["Couch"] = ClassStats();
+        int numberObjectsWithOBB = 0;
 
         if (!objectList.empty()) {
             for (const auto& val : objectList) {
@@ -925,6 +933,9 @@ namespace semmapping
                             if (overlap_with_polygon && obbIsRectangular){
                                 std::cout<<"obj "<< obj.name << " gt orientation = "<<objectOrientation(gtObj.obb)<<" | obj orientation = "<<objectOrientation(obj.obb)
                                     <<" | orientation error = "<< orientation_offset << endl;
+                                numberObjectsWithOBB ++;
+
+                                saveObjectStats(numberObjectsWithOBB, obj.name, overlap, com_offset, orientation_offset, backup_file_name);
 
                                 object_not_in_ground_truth_map = false;
                                 auto it = all_classes_stats.find(obj.name);
@@ -970,6 +981,97 @@ namespace semmapping
                     << std::setw(20) << stats.mean_iou << std::setw(20) << stats.mean_com_offset << std::setw(40) << stats.mean_orientation_offset << std::setw(20) << stats.F1_score << std::endl;
             }
             //saveMapStats(all_classes_stats, backup_file_name);
+
+        } else {
+            ROS_INFO_STREAM("Map is empty, so it can't be evaluated!");
+        }
+    }
+
+    void SemanticFusion::evaluateObjectCategoriesOverAllMaps(int mapID, std::map<std::string, ClassStats>& all_classes_stats, int& numberObjectsWithOBB, const std::map<size_t, SemanticObject>& objectList,
+        const std::map<size_t, SemanticObject>& groundTruthObjectList, const std::string& backup_file_name) {
+        if (!objectList.empty()) {
+            for (const auto& val : objectList) {
+                const SemanticObject& obj = val.second;
+                bool object_not_in_ground_truth_map = true;
+
+                if (obj.exist_certainty > 0.25) {
+                    for (const auto& val2 : groundTruthObjectList) {
+                        const SemanticObject& gtObj = val2.second;
+                        if (obj.name == gtObj.name || similarClasses(obj.name, gtObj.name)) {
+                            point truth_centroid; bg::centroid(gtObj.obb, truth_centroid);
+                            double com_offset = bg::distance(obj.oriented_box_cen, truth_centroid);
+                            
+                            // Used to verify overlap
+                            double overlap_with_polygon= iou(obj.shape_union, gtObj.obb);
+
+                            // Compute the mean overlap indicator
+                            double overlap= iou(obj.obb, gtObj.obb);
+
+                            // Verify that object OBB is rectangular
+                            bool obbIsRectangular = isRectangular(obj.obb);
+
+                            // Compute the orientation offset indicator if the OBB is rectangular
+                            double orientation_offset;
+                            if (obbIsRectangular){
+                                orientation_offset= abs(objectOrientation(gtObj.obb)-objectOrientation(obj.obb));
+                                std::pair<double, double> dimensions= get_real_object_length_width(obj.name);
+
+                                if (isCloseDistance(dimensions.first, dimensions.second) && orientation_offset > 60)
+                                    orientation_offset = abs(orientation_offset-90);
+                                if (orientation_offset > 170)
+                                    orientation_offset = abs(orientation_offset-180);
+                            }
+
+                            if (overlap_with_polygon && obbIsRectangular){
+                                std::cout<<"obj "<< obj.name << " gt orientation = "<<objectOrientation(gtObj.obb)<<" | obj orientation = "<<objectOrientation(obj.obb)
+                                    <<" | orientation error = "<< orientation_offset << endl;
+                                numberObjectsWithOBB ++;
+
+                                saveObjectStats(numberObjectsWithOBB, obj.name, overlap, com_offset, orientation_offset, backup_file_name);
+
+                                object_not_in_ground_truth_map = false;
+                                auto it = all_classes_stats.find(obj.name);
+                                if (it != all_classes_stats.end()) {
+                                    updateClassStats(it->second, overlap, com_offset, orientation_offset);
+                                }
+                            } else if(overlap_with_polygon){
+                                std::cout<<"obj "<< obj.name << " is not rectangular, considered in number of f1 score but not the other metrics."<< endl;
+                                object_not_in_ground_truth_map = false;
+                                auto it = all_classes_stats.find(obj.name);
+                                if (it != all_classes_stats.end())
+                                    it->second.true_positive++;
+                            }
+                        }
+                    }
+
+                    if (object_not_in_ground_truth_map) {
+                        auto it = all_classes_stats.find(obj.name);
+                        if (it != all_classes_stats.end())
+                            it->second.false_positive++;
+                    }
+
+                    CategoryPriorKnowledge classKnowledge = getCategoryPriorKnowledge(obj.name);
+                    auto it = all_classes_stats.find(obj.name);
+                        if (it != all_classes_stats.end()){
+                            it->second.false_negative= (classKnowledge.objectNumber * mapID) - it->second.true_positive;
+                            std::array<double,3> F1_score_metrics;
+                            F1_score_metrics = computeMapF1Score(it->second.true_positive, it->second.false_positive, it->second.false_negative);
+                            it->second.F1_score= F1_score_metrics[2];
+                        }
+                }
+            }
+
+            // ... Output and save statistics ...
+
+            std::cout << "--- Map Evaluation ---" << std::endl;
+            std::cout << std::left << std::setw(20) << "class name" << std::setw(20) << "TP" << std::setw(20) << "FP" << std::setw(30) << "FN - Missing objects " << std::setw(20) << "Mean IOU" 
+            << std::setw(20) << "Mean CoM offset" << std::setw(40) << "Mean orientation offset"<< std::setw(20) << "F1 score" << std::endl;
+
+            for (const auto& classData : all_classes_stats) {
+                const ClassStats& stats = classData.second;
+                std::cout << std::left << std::setw(20) << classData.first << std::setw(20) << stats.true_positive << std::setw(20) << stats.false_positive << std::setw(30) << stats.false_negative
+                    << std::setw(20) << stats.mean_iou << std::setw(20) << stats.mean_com_offset << std::setw(40) << stats.mean_orientation_offset << std::setw(20) << stats.F1_score << std::endl;
+            }
 
         } else {
             ROS_INFO_STREAM("Map is empty, so it can't be evaluated!");

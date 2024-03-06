@@ -17,7 +17,7 @@ ros::Publisher waitingObjPub;
 std::string algorithm = "our_solution"; // our_solution or modified_nms
 double fusion_overlap_threshold = 0.1;
 std::string buffer = "0.1";
-std::string reference_map_name = "ref_map_test2"; // ref_cluttered good map with false orientations & ref_map2 very bad_map & ref_map3 good map
+std::string reference_map_name = "ref_map_test1"; // ref_cluttered good map with false orientations & ref_map2 very bad_map & ref_map3 good map
 std::string reference_map_file_name = "src/sem_mapping/col_semmapping/fused_maps/reference_maps/" + reference_map_name + ".yaml";
 std::string fused_map_file_name = "src/sem_mapping/col_semmapping/fused_maps/fused_maps/test_fusion.yaml";
 
@@ -29,7 +29,7 @@ backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/stat
 received_map_file_name= "src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/testing_maps/test1.yaml";*/
 
 // validation
-std::string ground_truth_map_file_name = "src/sem_mapping/col_semmapping/fused_maps/ground_truth_maps/truth_map_cluttered_world_2final.yaml"; // validation environment
+std::string ground_truth_map_file_name = "src/sem_mapping/col_semmapping/fused_maps/ground_truth_maps/truth_map_cluttered_world_2.yaml"; // validation environment
 std::string single_robot_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/single_robot_maps/last_version_maps";
 std::string global_map_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/global_map";
 std::string fused_maps_directory = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/fused_maps/fused_maps/global_map";
@@ -42,7 +42,8 @@ std::string prior_knowledge_file_name = "/home/abdessalem/smapping/src/sem_mappi
 // Indicators saving files
 // std::string backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/validation_data/fusion evaluation/" + algorithm + "/threshold_0.1.csv"; //"_nms"+".csv";
 //std::string backup_file_name = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/inputMaps.csv";
-std::string backup_file_name = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/progressive_fusion_updated.csv";
+//std::string backup_file_name = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/progressive_fusion_updated.csv";
+std::string backup_file_name = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/inputMapsAsOneList.csv";
 
 void printAvailableCommands()
 {
@@ -246,7 +247,7 @@ int main(int argc, char **argv)
       file.close();
       // Evaluate reference map
       fusion_node.evaluateSemanticMap(ref_map.getObjectList(), ref_map.getGroundTruthObjectList(), 
-        "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/referenceMap.csv");
+        "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/referenceMap1.csv");
       break;
     }
     case 3: // evaluate_received_map
@@ -304,13 +305,25 @@ int main(int argc, char **argv)
     {
       std::ifstream ground_truth_map_file(ground_truth_map_file_name);
       global_map.loadGroundTruthMap(ground_truth_map_file);
-      for (const auto &dir_entry : boost::filesystem::directory_iterator(fused_maps_directory))
+
+      std::map<std::string, semmapping::ClassStats> all_classes_stats;
+      // Populate all_classes_stats with class names and initialize to zero
+      all_classes_stats["Chair"] = semmapping::ClassStats();
+      all_classes_stats["Table"] = semmapping::ClassStats();
+      all_classes_stats["Shelf"] = semmapping::ClassStats();
+      all_classes_stats["Couch"] = semmapping::ClassStats();
+      int numberObjectsWithOBB = 0;
+      int mapID = 0;
+
+      for (const auto &dir_entry : boost::filesystem::directory_iterator(single_robot_maps_directory))
       {
         std::ifstream fused_map_file(dir_entry.path().string());
         global_map.readMapData(fused_map_file);
         fused_map_file.close();
-        fusion_node.evaluateSemanticMap(global_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);
+        mapID++;
+        fusion_node.evaluateObjectCategoriesOverAllMaps(mapID, all_classes_stats, numberObjectsWithOBB, global_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);
       }
+      fusion_node.saveMapStats(all_classes_stats, backup_file_name);
       break;
     }
     case 7: // evaluate_cleared_reference_map
@@ -320,7 +333,7 @@ int main(int argc, char **argv)
       file.close();
       // Evaluate reference map
       fusion_node.evaluateSemanticMap(filtered_ref_map.getObjectList(), filtered_ref_map.getGroundTruthObjectList(), 
-        "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/referenceMap.csv");
+        "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/referenceMap1.csv");
       break;
     }
     case 8: // f1Score_all_maps_in_directory
