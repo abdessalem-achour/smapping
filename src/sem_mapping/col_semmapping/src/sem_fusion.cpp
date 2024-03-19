@@ -322,7 +322,7 @@ namespace semmapping
         double received_obb_score = calculateOBBscore(received_obj, initial_obj);    
 
         SemanticObject obj;
-        if (iou(initial_obj.obb, received_obj.obb) < 0.7) { //0.7
+        if (iou(initial_obj.obb, received_obj.obb) < 0.6) { //0.7
             if (initial_obb_score > received_obb_score)
                 obj = initial_obj;
             else
@@ -935,7 +935,7 @@ namespace semmapping
                                     <<" | orientation error = "<< orientation_offset << endl;
                                 numberObjectsWithOBB ++;
 
-                                saveObjectStats(numberObjectsWithOBB, obj.name, overlap, com_offset, orientation_offset, backup_file_name);
+                                //saveObjectStats(numberObjectsWithOBB, obj.name, overlap, com_offset, orientation_offset, backup_file_name);
 
                                 object_not_in_ground_truth_map = false;
                                 auto it = all_classes_stats.find(obj.name);

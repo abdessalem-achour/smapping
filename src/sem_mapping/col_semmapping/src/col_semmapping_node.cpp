@@ -17,7 +17,7 @@ ros::Publisher waitingObjPub;
 std::string algorithm = "our_solution"; // our_solution or modified_nms
 double fusion_overlap_threshold = 0.1;
 std::string buffer = "0.1";
-std::string reference_map_name = "ref_map_test1"; // ref_cluttered good map with false orientations & ref_map2 very bad_map & ref_map3 good map
+std::string reference_map_name = "ref_map_test2"; // ref_cluttered good map with false orientations & ref_map2 very bad_map & ref_map3 good map
 std::string reference_map_file_name = "src/sem_mapping/col_semmapping/fused_maps/reference_maps/" + reference_map_name + ".yaml";
 std::string fused_map_file_name = "src/sem_mapping/col_semmapping/fused_maps/fused_maps/test_fusion.yaml";
 
@@ -43,7 +43,7 @@ std::string prior_knowledge_file_name = "/home/abdessalem/smapping/src/sem_mappi
 // std::string backup_file_name= "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/validation_data/fusion evaluation/" + algorithm + "/threshold_0.1.csv"; //"_nms"+".csv";
 //std::string backup_file_name = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/inputMaps.csv";
 //std::string backup_file_name = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/progressive_fusion_updated.csv";
-std::string backup_file_name = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/inputMapsAsOneList.csv";
+std::string backup_file_name = "/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/iterations _0_10_20_test2.csv";
 
 void printAvailableCommands()
 {
@@ -555,6 +555,11 @@ int main(int argc, char **argv)
       fusion_node.initializeCategoryObjectNumber();
       fusion_node.countObjectNumberPerCategoryInMap(filtered_ref_map);
 
+      // Load ground truth map
+      /*std::ifstream ground_truth_map_file(ground_truth_map_file_name);
+      global_map.loadGroundTruthMap(ground_truth_map_file);
+      fusion_node.evaluateSemanticMap(filtered_ref_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);*/
+
       waiting_objects.clearAll();
 
       int maps_number = 0;
@@ -626,7 +631,7 @@ int main(int argc, char **argv)
         cout << "Waiting objects updated " << filecount << " time(s)" << endl;
 
         // Evaluate Global map
-        /*fusion_node.evaluateSemanticMap(global_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);*/
+        //fusion_node.evaluateSemanticMap(global_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);
 
         // Track object state
         
