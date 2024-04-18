@@ -4,6 +4,7 @@
 #include <semanticmap.h>
 #include <csignal>
 #include <Eigen/Dense>
+#include <chrono>
 using namespace Eigen;
 
 ros::Publisher refMapPub;
@@ -556,9 +557,10 @@ int main(int argc, char **argv)
       fusion_node.countObjectNumberPerCategoryInMap(filtered_ref_map);
 
       // Load ground truth map
-      /*std::ifstream ground_truth_map_file(ground_truth_map_file_name);
+      std::ifstream ground_truth_map_file(ground_truth_map_file_name);
       global_map.loadGroundTruthMap(ground_truth_map_file);
-      fusion_node.evaluateSemanticMap(filtered_ref_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);*/
+      
+      //fusion_node.evaluateSemanticMap(filtered_ref_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);
 
       waiting_objects.clearAll();
 
@@ -583,14 +585,14 @@ int main(int argc, char **argv)
       {
         std::cin.get();
 
+        /* Launch chrono to compute fusion time */
+        //std::chrono::time_point<std::chrono::system_clock> start, end;
+        //start = std::chrono::system_clock::now();
+
         // Acquisition of prior knowledge
         std::ifstream prior_knowledge_file(prior_knowledge_file_name);
         fusion_node.updatePriorKnowledge(prior_knowledge_file);
         prior_knowledge_file.close();
-
-        // Load ground truth map
-        std::ifstream ground_truth_map_file(ground_truth_map_file_name);
-        global_map.loadGroundTruthMap(ground_truth_map_file);
 
         std::ostringstream map_index;
         map_index << filecount;
@@ -612,7 +614,7 @@ int main(int argc, char **argv)
         // Evaluate recieved map
         /*fusion_node.evaluateSemanticMap(received_map.getObjectList(), global_map.getGroundTruthObjectList(), backup_file_name);*/
 
-        // Filter and publish the received map after the filtering process
+        // Filter and publish the filtered received map
         filtered_received_map.clearAll();
         fusion_node.removeMapInconsistencies(received_map, filtered_received_map);
         mapping_msgs::SemanticMap::Ptr filteredRecMapMsg = filtered_received_map.createMapMessage(robot, true);
@@ -656,6 +658,15 @@ int main(int argc, char **argv)
         std::ofstream global_map_file(filename.str().c_str());
         global_map.writeMapData(global_map_file);
         global_map_file.close();*/
+
+        /* Computing the fusion time */
+        /*end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end - start;
+        cout<<"Fusion iteration number : "<< filecount <<"     Fusion time = "<< elapsed_seconds.count() <<endl;
+        std::ofstream myfile;
+        myfile.open ("/home/abdessalem/smapping/src/sem_mapping/col_semmapping/statistical_data/progressive_fusion/fusion time.csv", ios::out | ios::app);
+        myfile << "Fusion : " << filecount << " , " << "Time : " << elapsed_seconds.count() << "\n";
+        myfile.close();*/
       }
       break;
     }

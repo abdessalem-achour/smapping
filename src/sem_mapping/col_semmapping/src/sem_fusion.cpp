@@ -672,27 +672,31 @@ namespace semmapping
                             global_map.removeObject(val2.first);
                             global_map.addObject(fused_obj);
                         }   
+                        break; // No need to continue iterating once the object is added
                     }
                 }
 
-                for (auto &wObj : waiting_objects.getObjectList()){
-                    SemanticObject &wRefObj = wObj.second;
-                    double overlap = iou(wRefObj.obb, new_obj.obb);
+                if (!addedToGlobalMap){
+                    for (auto &wObj : waiting_objects.getObjectList()){
+                        SemanticObject &wRefObj = wObj.second;
+                        double overlap = iou(wRefObj.obb, new_obj.obb);
 
-                    if(overlap && (new_obj.name == wRefObj.name || similarClasses(new_obj.name, wRefObj.name))){
-                        inWaitingObjects = true; 
-                        if(overlap > overlap_threshold){
-                            SemanticObject fused_obj = objectUpdate(wRefObj, new_obj, waiting_objects, P, Q, R);
-                            waiting_objects.removeObject(wObj.first);
-                            waiting_objects.addObject(fused_obj);
-                        }   
+                        if(overlap && (new_obj.name == wRefObj.name || similarClasses(new_obj.name, wRefObj.name))){
+                            inWaitingObjects = true; 
+                            if(overlap > overlap_threshold){
+                                SemanticObject fused_obj = objectUpdate(wRefObj, new_obj, waiting_objects, P, Q, R);
+                                waiting_objects.removeObject(wObj.first);
+                                waiting_objects.addObject(fused_obj);
+                            }   
+                            break; // No need to continue iterating once the object is added
+                        }
                     }
                 }
 
                 // Adding new object when an OBB is created and the number of mapped objects from that category is still less then the category total number of objects
                 // Otherwise, adding the object to the waiting list
-                CategoryPriorKnowledge classKnowledge = getCategoryPriorKnowledge(new_obj.name);
                 if (!addedToGlobalMap && !inWaitingObjects && new_obj.obb_score > 0){
+                    CategoryPriorKnowledge classKnowledge = getCategoryPriorKnowledge(new_obj.name);
                     if(getCategoryObjectNumber(new_obj.name)< classKnowledge.objectNumber){
                         new_obj.point_cloud = nullptr;
                         new_obj.isCombined = true;
@@ -716,17 +720,15 @@ namespace semmapping
                             }
                         }*/
 
-                        if (!inWaitingObjects){
-                            new_obj.point_cloud = nullptr;
-                            new_obj.isCombined = true;
-                            waiting_objects.addObject(new_obj);
-                        }
+                        new_obj.point_cloud = nullptr;
+                        new_obj.isCombined = true;
+                        waiting_objects.addObject(new_obj);
                     }
                 }
             }
         }
 
-        // Reducing the existence probability of not re-observed objects in the main map
+        // Update existence probability for objects not re-observed in the main map
         for (auto &val3 : global_map.getObjectList()){
             SemanticObject &map_obj = val3.second;
             if(!map_obj.isCombined){
@@ -740,7 +742,7 @@ namespace semmapping
             }
         }
 
-        // Reducing the existence probability of not re-observed objects in the waiting list
+        // Update existence probability for objects not re-observed in the waiting list
         for (auto &wObj2 : waiting_objects.getObjectList()){
             SemanticObject &waiting_obj = wObj2.second;
             if(!waiting_obj.isCombined){
@@ -751,7 +753,7 @@ namespace semmapping
             }
         }
 
-        // Moving objects from waiting list to the main map if valid condition
+        // Move objects from waiting list to the main map if valid condition
         for(const std::string category: consideredCategories){
             CategoryPriorKnowledge classKnowledge = getCategoryPriorKnowledge(category);
             for (auto &wObj2 : waiting_objects.getObjectList()){
