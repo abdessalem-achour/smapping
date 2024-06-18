@@ -99,6 +99,9 @@
 #include <pcl/sample_consensus/sac_model_normal_plane.h>
 
 
+#include <cv_bridge/cv_bridge.h>
+#include <opencv2/opencv.hpp>
+
 //#define SHOW_POINTCLOUD_VISUALIZATION
 
 tf2_ros::Buffer tfBuffer(ros::Duration(20));
@@ -113,7 +116,7 @@ ros::Publisher gtSemanticMapPub;
 ros::Publisher debugCloudPub;
 ros::Publisher debug2CloudPub;
 ros::Publisher position_pub;
-//ros::Publisher ObbMapPub;
+
 
 //Testing files paths
 //std::string ground_truth_map_file_name= "src/sem_mapping/semmapping/maps/truth_map_well_arranged_world.yaml";
@@ -134,6 +137,35 @@ int viewer_index = 0;
 bool static_map;
 
 std::list<std::string> consideredCategories{"Chair","Table","Couch","Shelf"};
+
+// Function to add Gaussian noise to a sensor_msgs::PointCloud2 message
+sensor_msgs::PointCloud2::Ptr addNoiseToPointCloud(const sensor_msgs::PointCloud2::ConstPtr& input_cloud)
+{
+    // Convert sensor_msgs::PointCloud2 to PCL point cloud
+    pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::fromROSMsg(*input_cloud, *pcl_cloud);
+
+    // Parameters for noise addition (you can adjust these as needed)
+    double mean = 0.0;
+    double stddev = 0.02; // standard deviation of the noise
+
+    // Add Gaussian noise to each point
+    for (size_t i = 0; i < pcl_cloud->points.size(); ++i)
+    {
+        pcl_cloud->points[i].x += static_cast<float>(mean + stddev * std::rand() / (RAND_MAX + 1.0));
+        pcl_cloud->points[i].y += static_cast<float>(mean + stddev * std::rand() / (RAND_MAX + 1.0));
+        pcl_cloud->points[i].z += static_cast<float>(mean + stddev * std::rand() / (RAND_MAX + 1.0));
+    }
+
+    // Convert back to sensor_msgs::PointCloud2
+    sensor_msgs::PointCloud2::Ptr noisy_cloud(new sensor_msgs::PointCloud2);
+    pcl::toROSMsg(*pcl_cloud, *noisy_cloud);
+
+    // Set the same header as the input cloud
+    noisy_cloud->header = input_cloud->header;
+
+    return noisy_cloud;
+}
 
 inline bool operator==(const geometry_msgs::Vector3 &lhs, const geometry_msgs::Vector3 &rhs) {
     return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z;
@@ -187,8 +219,8 @@ std::pair<double, double> get_real_object_length_width(const std::string &name)
     {
         std::pair<double, double> dimensions;
 
-        if(name=="Chair") {dimensions.first= 0.6; dimensions.second= 0.57;} // Chair model in world well arranged
-        //if(name=="Chair") {dimensions.first= 0.57; dimensions.second= 0.57;}  // Chair model in world cluttered
+        //if(name=="Chair") {dimensions.first= 0.6; dimensions.second= 0.57;} // Chair model in world well arranged
+        if(name=="Chair") {dimensions.first= 0.57; dimensions.second= 0.57;}  // Chair model in world cluttered
         else if (name== "Table") {dimensions.first= 1.782; dimensions.second= 0.8;}
         else if (name=="Shelf") {dimensions.first= 0.9; dimensions.second= 0.4;}
         else if (name=="Couch"){dimensions.first= 0.97; dimensions.second= 2.009;}
@@ -261,8 +293,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloudFromIndSingle(pcl::PointIndices::P
     return result_cloud;
 }
 
-std::vector<pcl::PointIndices>
-getObjectPointsEuc(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, pcl::PointIndices::ConstPtr input_indicies) {
+std::vector<pcl::PointIndices> getObjectPointsEuc(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, pcl::PointIndices::ConstPtr input_indicies) {
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
     std::vector<pcl::PointIndices> cluster_indices;
@@ -430,14 +461,17 @@ void mapUpdateAndPublish(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclCloud, semm
         completeAreaPgPub.publish(comp_area_msg);
         map.removeEvidence(comp_area, robot_position);
     }
-    mapping_msgs::SemanticMap::Ptr map_msg = map.createMapMessage(robot_position, false);
+    mapping_msgs::SemanticMap::Ptr map_msg = map.createMapMessage(robot_position, false, debugCloudPub);
     semanticMapPub.publish(map_msg);
     return;
 }
 
 void processBoxes(const mapping_msgs::BoxesAndClouds &data){   
     if (static_map == false) {
-        const sensor_msgs::PointCloud2::Ptr cloud(new sensor_msgs::PointCloud2(data.point_cloud));
+        const sensor_msgs::PointCloud2::Ptr input_cloud(new sensor_msgs::PointCloud2(data.point_cloud));
+        
+        sensor_msgs::PointCloud2::Ptr cloud = addNoiseToPointCloud(input_cloud);
+
         const mapping_msgs::BoundingBoxes::ConstPtr boxes(new mapping_msgs::BoundingBoxes(data.bounding_boxes));
 
         tf2_ros::TransformListener tfListener(tfBuffer);
@@ -449,11 +483,35 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data){
             ROS_ERROR("%s", ex.what());
             ros::Duration(1.0).sleep();
         }
+
         semmapping::point robot_position;
         robot_position.x(transform.transform.translation.x);
         robot_position.y(transform.transform.translation.y);
 
-        static Eigen::Affine3d lastCamPose;
+        // check if robot has moved, if not, do nothing
+        // Static variable to store the last known position of the robot
+
+        semmapping::point last_robot_position;
+        static bool is_first_run = true;
+
+        if (!is_first_run) {
+            // Calculate the distance between the current and last robot positions
+            double position_error = sqrt(pow(robot_position.x() - last_robot_position.x(), 2) +
+                                         pow(robot_position.y() - last_robot_position.y(), 2));
+
+            // Check if the position error is less than 1 mm (0.001 meters)
+            if (position_error < 0.001) {
+                // ROS_INFO("Robot has not moved significantly, position error: %f meters", position_error);
+                return;
+            }
+        }
+
+        // Update the last known position
+        last_robot_position = robot_position;
+        is_first_run = false; 
+
+
+        // Get camera position and transform it to Eigen
         geometry_msgs::TransformStamped camPose;
         try {
             camPose = tfBuffer.lookupTransform("map", cloud->header.frame_id, cloud->header.stamp, ros::Duration(0));
@@ -462,12 +520,9 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data){
             ROS_WARN_STREAM("Could not read transform: " << ex.what());
             return;
         }
-
-        /*check if robot has moved, if not, do nothing*/
         Eigen::Affine3d camPoseEigen = tf2::transformToEigen(camPose.transform);
-        lastCamPose = camPoseEigen;
 
-        /*Transform our point cloud to a pcl one*/
+        // Transform the point cloud to a PCL
         pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud(new pcl::PointCloud<pcl::PointXYZ>);
         pcl::fromROSMsg(*cloud, *pclCloud);
 
@@ -544,15 +599,20 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data){
             std::vector<pcl::PointIndices> best_inds;
             pcl::PointIndices::Ptr box_inds(new pcl::PointIndices);
             box_inds = dsBoxPoints(box.ymin, box.xmin, box.ymax - box.ymin, box.xmax - box.xmin, orig_cloud, sor);
+
             std::string Class = box.Class;
 
+            // Consider Sofa bed and Couch as similar classes
+            if (Class == "Sofa bed") 
+                Class = "Couch" ;
+
             if(!inConsideredObjectList(Class)){
-                ROS_WARN_STREAM("Object "<< box.Class<<" is not in considered object list.");
+                ROS_WARN_STREAM("Object "<< Class<<" is not in considered object list.");
                 continue;
             }
 
             /*Associate clusters to detection boxes*/
-            if (box.Class == "Table") {
+            if (Class == "Table") {
                 if (table_clusters.size() > 0)
                     indiceBoxAssociaton(table_clusters, box_inds, best_inds, true, Class);
                 else indiceBoxAssociaton(clusters, box_inds, best_inds, false, Class);
@@ -566,7 +626,7 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data){
             if (best_inds.size() > 0)
                 res_cloud = pointCloudFromInd(best_inds, pclCloud);
             else {
-                ROS_WARN_STREAM("best ind size = 0 for obj: " << box.Class);
+                ROS_WARN_STREAM("best ind size = 0 for obj: " << Class);
                 continue;
             }
 
@@ -574,32 +634,34 @@ void processBoxes(const mapping_msgs::BoxesAndClouds &data){
             semmapping::polygon res_pg = getPolygonInMap(res_cloud);
 
             if (res_pg.outer().empty()) {
-                ROS_WARN_STREAM("Polygon in map could not be reconstructed for obj: " << box.Class);
+                ROS_WARN_STREAM("Polygon in map could not be reconstructed for obj: " << Class);
                 continue;
             }
 
             /*Verify that the polygon is in robot good perception zone*/
             semmapping::point res_pg_cen;
             semmapping::bg::centroid(res_pg, res_pg_cen);
-            double distance_from_robot = sqrt((res_pg_cen.x() - robot_position.x())*(res_pg_cen.x() - robot_position.x()) 
-                                + (res_pg_cen.y() - robot_position.y())*(res_pg_cen.y() - robot_position.y()));
+            double dx = res_pg_cen.x() - robot_position.x();
+            double dy = res_pg_cen.y() - robot_position.y();
+            double distance_from_robot = sqrt(dx * dx + dy * dy);
 
-            if(distance_from_robot < 1.7 || distance_from_robot > 3.0){ //distance_from_robot < 2.2
-                ROS_WARN_STREAM(box.Class <<" object is not in the robot good perception zone.");
-                cout << box.Class <<" object is not in the robot good perception zone."<< endl;
+            if (distance_from_robot < 1.7 || distance_from_robot > 3.0) {
+                std::string warning_message = Class + " object is not in the robot good perception zone.";
+                ROS_WARN_STREAM(warning_message);
                 continue;
             }
             
-            /*Verify that the polygon area is good enough to be added to the map ( >= 0.3*realArea and <= realArea).*/
-            std::pair<double, double> dimensions = get_real_object_length_width(box.Class);
+            /* Verify that the polygon area is good enough to be added to the map ( >= 0.3*realArea and <= realArea). */
+            std::pair<double, double> dimensions = get_real_object_length_width(Class);
             double realArea = dimensions.first * dimensions.second;
 
-            if (semmapping::bg::area(res_pg) >= 0.3 * realArea && semmapping::bg::area(res_pg) <= realArea) {      
-                map.addEvidence(box.Class, box.probability, res_pg, calculateMeanHight(res_cloud), res_cloud);
+            double polygonArea = semmapping::bg::area(res_pg);
+            if (polygonArea >= 0.3 * realArea && polygonArea <= realArea) {      
+                map.addEvidence(Class, box.probability, res_pg, calculateMeanHight(res_cloud), res_cloud);
             } else {
-                map.updateEvidenceCertainty(box.Class, res_pg);
-                ROS_WARN_STREAM("Object "<< box.Class << " area is not good enough to update object shape.");
-                cout << "Object "<< box.Class << " area is not good enough to update object shape." << endl;
+                map.updateEvidenceCertainty(Class, res_pg);
+                std::string warning_message = "Object " + Class + " area is not good enough to update object shape.";
+                ROS_WARN_STREAM(warning_message);
             }
         }
         mapUpdateAndPublish(orig_cloud, robot_position, cloud);
@@ -663,8 +725,7 @@ int main(int argc, char **argv) {
     std::string detector = nh.param<std::string>("detector", "detector_node");
 
     //hsr
-    std::string point_cloud_topic = nh.param<std::string>("point_cloud",
-                                                          "/camera/depth/points");
+    std::string point_cloud_topic = nh.param<std::string>("point_cloud", "/camera/depth/points");
     std::string camera_info_topic = nh.param<std::string>("camera_info", "/camera/rgb/camera_info");
     std::string laser_scanner_topic = nh.param<std::string>("laser_scanner", "/scan");
 
@@ -683,8 +744,6 @@ int main(int argc, char **argv) {
     debugCloudPub = nh.advertise<sensor_msgs::PointCloud2>("debug_cloud", 1, true);
     debug2CloudPub = nh.advertise<sensor_msgs::PointCloud2>("debug2_cloud", 1, true);
     position_pub = nh.advertise<mapping_msgs::ObjectPositions>("found_objects", 1, true);
-    
-    //ObbMapPub = nh.advertise<mapping_msgs::ObbMap>("/obb_map", 1, true);
 
     ros::AsyncSpinner spinner(16); //16
     spinner.start();
@@ -706,7 +765,7 @@ int main(int argc, char **argv) {
             if (map.readMapData(file)) {
                 semmapping::point robot;
                 ROS_INFO("Map loaded successfully yeay");
-                mapping_msgs::SemanticMap::Ptr map_msg = map.createMapMessage(robot, true);
+                mapping_msgs::SemanticMap::Ptr map_msg = map.createMapMessage(robot, true, debugCloudPub);
                 semanticMapPub.publish(map_msg);
             } else {
                 ROS_ERROR("Failed loading map");
@@ -716,6 +775,7 @@ int main(int argc, char **argv) {
     }
 
     signal(SIGINT, sigintHandler);
+
     /*Terminal input loop*/
     std::cout << "Waiting for input. type \"help\" for help." << std::endl;
     while (1) {
@@ -737,7 +797,7 @@ int main(int argc, char **argv) {
             }
             if (map.readMapData(file)) {
                 semmapping::point robot;
-                mapping_msgs::SemanticMap::Ptr map_msg= map.createMapMessage(robot, true);
+                mapping_msgs::SemanticMap::Ptr map_msg= map.createMapMessage(robot, true, debugCloudPub);
                 semanticMapPub.publish(map_msg);
                 std::cout << "Map loaded successfully" << std::endl;
             } else {
@@ -793,7 +853,7 @@ int main(int argc, char **argv) {
             map.loadGroundTruthMap(file);
             mapping_msgs::SemanticMap::Ptr gt_map_msg= map.createGroundTruthMapMessage();
             gtSemanticMapPub.publish(gt_map_msg);
-            map.evaluteMap("src/sem_mapping/semmapping/maps/map_stats/world2_tests.csv");
+            map.evaluteMap("src/sem_mapping/semmapping/maps/final_map_stats/world2_with_noise.csv");
         }
         else if (command == "save") {
             std::string fname = readNext(in, it);

@@ -6,8 +6,8 @@
   <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_small.world" />-->
   <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_small_well_arranged.world" />-->
   <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered.world" />-->
-  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_groundTruth_copy.world" />-->
-  <arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_added_chair.world" />
+  <arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_groundTruth_copy.world" />
+  <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_added_changedchaircolor.world" />-->
   <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_deplaced_chair.world" />-->
   <!--<arg name="world" default="/home/abdessalem/gazebo_models_worlds_collection/worlds/office_iros_cluttered_deplaced_chair_added_couch.world" />-->
   
@@ -55,10 +55,10 @@
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mir_navigation)/rviz/navigation.rviz"/>
 
   <!-- Object Detection-->
-  <!--<node pkg= "tensorflow_object_detector" name="detect_ros" type="detect_ros.py"  output="screen"> 
+  <node pkg= "tensorflow_object_detector" name="detect_ros" type="detect_ros.py"  output="screen"> 
     <remap from="image" to="/camera/rgb/image_raw/compressed"/>
     <remap from='points' to='/camera/depth/points'/>
 	  <param name="compressed" value="true" />
-	</node>-->
+	</node>
 
 </launch>

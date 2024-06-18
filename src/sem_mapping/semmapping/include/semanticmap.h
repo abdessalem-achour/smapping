@@ -233,6 +233,11 @@ namespace semmapping
 
         public:
             SemanticMap(tf2_ros::Buffer &tfBuffer, pcl::visualization::PCLVisualizer* &viewer, boost::mutex &viewer_mtx, int &semmap_vport0, int &semmap_vport1, semmapping::ParamsConfig &param_config );
+            
+            // Functions used to verify to prior knowledge
+            bool similarClasses(std::string object1_name, std::string object2_name);
+            bool checkTheAbilityOfObjectsToOverlap(std::string object1_name, std::string object2_name);
+            
             //Getter and setter methods
             std::map<size_t, SemanticObject> getObjectList();
             void setObjectList(std::map<size_t, SemanticObject> object_List);
@@ -240,6 +245,7 @@ namespace semmapping
             void setNextIndex(size_t next_index);
             std::map<size_t, SemanticObject> getGroundTruthObjectList();
             void setGroundTruthObjectList(std::map<size_t, SemanticObject> object_List);
+            pcl::PointCloud<pcl::PointXYZRGB>::Ptr createColoredPointCloud(std::string name, pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, double objectExistenceCertainty);
 
             //Semantic Mapping Methods
             void addEvidence(const std::string &name, const float &confidence, const polygon &pg, double mean_height,  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
@@ -267,6 +273,7 @@ namespace semmapping
             std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsEuc(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
             std::vector<pcl::PointCloud<pcl::PointXYZ>>getObjectPointsReg(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
             mapping_msgs::SemanticMap::Ptr createMapMessage(const point &robot,double loaded);
+            mapping_msgs::SemanticMap::Ptr createMapMessage(const point &robot,double loaded, const ros::Publisher& publisher);
             mapping_msgs::ObjectPositions::Ptr findObjectPosition(const mapping_msgs::FindObjects &request);
 
             //Prior knowledge integration

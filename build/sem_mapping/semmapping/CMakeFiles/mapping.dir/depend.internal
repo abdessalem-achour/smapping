@@ -16,6 +16,7 @@ sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o
  /home/abdessalem/smapping/src/sem_mapping/semmapping/include/point_cloud_color_handler_clusters.h
  /home/abdessalem/smapping/src/sem_mapping/semmapping/include/semanticmap.h
  /home/abdessalem/smapping/src/sem_mapping/semmapping/src/mapping.cpp
+ /opt/ros/noetic/include/cv_bridge/cv_bridge.h
  /opt/ros/noetic/include/dynamic_reconfigure/BoolParameter.h
  /opt/ros/noetic/include/dynamic_reconfigure/Config.h
  /opt/ros/noetic/include/dynamic_reconfigure/ConfigDescription.h
@@ -131,6 +132,7 @@ sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o
  /opt/ros/noetic/include/rosgraph_msgs/Clock.h
  /opt/ros/noetic/include/sensor_msgs/CameraInfo.h
  /opt/ros/noetic/include/sensor_msgs/ChannelFloat32.h
+ /opt/ros/noetic/include/sensor_msgs/CompressedImage.h
  /opt/ros/noetic/include/sensor_msgs/Image.h
  /opt/ros/noetic/include/sensor_msgs/LaserScan.h
  /opt/ros/noetic/include/sensor_msgs/PointCloud.h
@@ -479,6 +481,8 @@ sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o
  /usr/include/opencv4/opencv2/core/base.hpp
  /usr/include/opencv4/opencv2/core/bufferpool.hpp
  /usr/include/opencv4/opencv2/core/check.hpp
+ /usr/include/opencv4/opencv2/core/core.hpp
+ /usr/include/opencv4/opencv2/core/core_c.h
  /usr/include/opencv4/opencv2/core/cuda.hpp
  /usr/include/opencv4/opencv2/core/cuda.inl.hpp
  /usr/include/opencv4/opencv2/core/cuda_types.hpp
@@ -502,6 +506,7 @@ sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o
  /usr/include/opencv4/opencv2/core/saturate.hpp
  /usr/include/opencv4/opencv2/core/traits.hpp
  /usr/include/opencv4/opencv2/core/types.hpp
+ /usr/include/opencv4/opencv2/core/types_c.h
  /usr/include/opencv4/opencv2/core/utility.hpp
  /usr/include/opencv4/opencv2/core/utils/instrumentation.hpp
  /usr/include/opencv4/opencv2/core/utils/tls.hpp
@@ -551,6 +556,7 @@ sem_mapping/semmapping/CMakeFiles/mapping.dir/src/mapping.cpp.o
  /usr/include/opencv4/opencv2/imgcodecs.hpp
  /usr/include/opencv4/opencv2/imgproc.hpp
  /usr/include/opencv4/opencv2/imgproc/imgproc.hpp
+ /usr/include/opencv4/opencv2/imgproc/types_c.h
  /usr/include/opencv4/opencv2/ml.hpp
  /usr/include/opencv4/opencv2/ml/ml.inl.hpp
  /usr/include/opencv4/opencv2/objdetect.hpp

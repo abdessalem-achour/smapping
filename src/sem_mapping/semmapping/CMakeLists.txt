@@ -9,11 +9,12 @@ add_compile_options(-std=gnu++14)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  dynamic_reconfigure roscpp rospy tf2_ros tf2_geometry_msgs tf2_sensor_msgs pcl_ros sensor_msgs  mapping_msgs image_geometry laser_geometry
+  dynamic_reconfigure roscpp rospy tf2_ros tf2_geometry_msgs tf2_sensor_msgs pcl_ros sensor_msgs  mapping_msgs image_geometry laser_geometry cv_bridge image_transport
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
+find_package(OpenCV REQUIRED)
 find_package(Boost 1.58 REQUIRED)
 find_package(PCL REQUIRED)
 find_package(OpenMP REQUIRED)
@@ -133,6 +134,7 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
   ${YAMLCPP_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 link_directories(
@@ -185,6 +187,7 @@ target_link_libraries(mapping
   ${PCL_LIBRARIES}
   ${YAMLCPP_LIBRARIES}
   ${OpenMP_LIBS}
+  ${OpenCV_LIBRARIES}
 )
 
 #target_link_libraries(rec_server
