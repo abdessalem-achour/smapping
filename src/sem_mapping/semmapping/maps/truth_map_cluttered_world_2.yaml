@@ -1,15 +1,15 @@
 - name: Chair
   id: 1
   shape_union: POLYGON((-1.81 4.37, -1.23 4.35, -1.26 3.79, -1.82 3.82, -1.81 4.37))
-- name: Shelf
-  id: 1
-  shape_union: POLYGON((-3.72 4.92, -2.8 4.9, -2.82 4.51, -3.72 4.52, -3.72 4.92))
-- name: Couch
-  id: 1
-  shape_union: POLYGON((1.79 4.9, 3.78 4.9, 3.78 3.92, 1.79 3.92, 1.79 4.9))
 - name: Table
   id: 1
   shape_union: POLYGON((-2.44 4.91, -0.667 4.92, -0.66 4.12, -2.43 4.11, -2.44 4.91))
+- name: Couch
+  id: 1
+  shape_union: POLYGON((1.79 4.9, 3.78 4.9, 3.78 3.92, 1.79 3.92, 1.79 4.9))
+- name: Shelf
+  id: 1
+  shape_union: POLYGON((-3.72 4.92, -2.8 4.9, -2.82 4.51, -3.72 4.52, -3.72 4.92))
 - name: Couch
   id: 2
   shape_union: POLYGON((3.87 3.81, 4.86 3.8, 4.87 1.81, 3.87 1.82, 3.87 3.81))

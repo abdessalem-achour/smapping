@@ -136,7 +136,7 @@ semmapping::SemanticMap map(tfBuffer, viewer, viewer_mtx, semmap_vport0, semmap_
 int viewer_index = 0;
 bool static_map;
 
-std::list<std::string> consideredCategories{"Chair","Table","Couch","Shelf"};
+std::list<std::string> consideredCategories{"Chair","Table","Couch","Shelf", "Man"};
 
 // Function to add Gaussian noise to a sensor_msgs::PointCloud2 message
 sensor_msgs::PointCloud2::Ptr addNoiseToPointCloud(const sensor_msgs::PointCloud2::ConstPtr& input_cloud)
@@ -224,7 +224,7 @@ std::pair<double, double> get_real_object_length_width(const std::string &name)
         else if (name== "Table") {dimensions.first= 1.782; dimensions.second= 0.8;}
         else if (name=="Shelf") {dimensions.first= 0.9; dimensions.second= 0.4;}
         else if (name=="Couch"){dimensions.first= 0.97; dimensions.second= 2.009;}
-        else if (name=="Ball"){dimensions.first= 0.2; dimensions.second= 0.2;}
+        else if (name=="Man"){dimensions.first= 0.6; dimensions.second= 0.3;}
         else {dimensions.first= 0.0; dimensions.second= 0.0;}
 
         return dimensions;
